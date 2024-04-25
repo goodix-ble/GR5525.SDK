@@ -605,7 +605,8 @@
 0x00043db5 T pwr_mgmt_sleep
 0x00043f91 T pwr_mgmt_warm_boot_reg
 0x00043fa9 T pwr_mgmt_wfe_sleep
-0x00043e55 T pwr_mgmt_ultra_sleep
+#0x00043e55 T pwr_mgmt_ultra_sleep
+0x00043bed T pwr_mgmt_locker
 0x00043fb9 T ranging_mode_set
 0x00043fc5 T ranging_one_way_ch_set
 0x00043fd9 T ranging_one_way_param_set
