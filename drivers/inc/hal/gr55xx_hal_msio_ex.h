@@ -90,8 +90,8 @@ extern "C" {
   * @{
   */
 
-#if defined (GR553xx)
-/*---------------------------------- GR553xx ------------------------------*/
+#if defined (GR5X25)
+/*---------------------------------- GR5X25 ------------------------------*/
 
 /** @defgroup MSIOEx_Common_Selection MSIO PIN common MUX selection(Available for all MSIO pins)
   * @{
@@ -188,7 +188,7 @@ extern "C" {
 #define IS_MSIO_MUX(__MUX__)        (((__MUX__) <= MSIO_MUX_7))
 
 /*------------------------------------------------------------------------------------------*/
-#endif /* GR553xx */
+#endif /* GR5X25 */
 
 /** @} */
 

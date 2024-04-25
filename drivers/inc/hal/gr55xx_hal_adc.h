@@ -211,7 +211,7 @@ typedef struct _hal_adc_callback
 /** @defgroup ADC_CLK ADC Clock Select
   * @{
   */
-#if defined(GR553xx)
+#if defined(GR5X25)
 #define ADC_CLK_16M                 LL_ADC_CLK_16M           /**< ADC Clock = 16 MHz  */
 #define ADC_CLK_8M                  LL_ADC_CLK_8M            /**< ADC Clock = 8 MHz  */
 #define ADC_CLK_4M                  LL_ADC_CLK_4M            /**< ADC Clock = 4 MHz  */
@@ -376,7 +376,7 @@ typedef struct _hal_adc_callback
   * @param __CLOCK__ ADC clock.
   * @retval SET (__CLOCK__ is valid) or RESET (__CLOCK__ is invalid)
   */
-#if defined(GR553xx)
+#if defined(GR5X25)
 #define IS_ADC_CLOCK(__CLOCK__)             (((__CLOCK__) == ADC_CLK_16M) || \
                                              ((__CLOCK__) == ADC_CLK_8M)  || \
                                              ((__CLOCK__) == ADC_CLK_1M)  || \

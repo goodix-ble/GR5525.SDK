@@ -53,31 +53,6 @@
  * DEFINES
  *****************************************************************************************
  */
-#if (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR551X)
-#define QSPI_SMART_CS_LOW(id)                                           \
-    do {                                                                \
-            if(p_qspi_env[id]->p_pin_cfg->cs.enable == APP_QSPI_PIN_ENABLE) \
-            {                                                           \
-                app_io_write_pin(p_qspi_env[id]->p_pin_cfg->cs.type,    \
-                                p_qspi_env[id]->p_pin_cfg->cs.pin,      \
-                                APP_IO_PIN_RESET);                      \
-            }                                                           \
-        } while(0)
-
-#define QSPI_SMART_CS_HIGH(id)                                          \
-    do {                                                                \
-            if(p_qspi_env[id]->p_pin_cfg->cs.enable == APP_QSPI_PIN_ENABLE) \
-            {                                                           \
-                app_io_write_pin(p_qspi_env[id]->p_pin_cfg->cs.type,    \
-                                 p_qspi_env[id]->p_pin_cfg->cs.pin,     \
-                                 APP_IO_PIN_SET);                       \
-            }                                                           \
-    } while(0)
-#else
-#define QSPI_SMART_CS_LOW(id)
-#define QSPI_SMART_CS_HIGH(id)
-#endif
-
 #define APP_QSPI_EXCEPT_DEBUG_EN            1u
 #if (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR551X)
 /********************************************************************

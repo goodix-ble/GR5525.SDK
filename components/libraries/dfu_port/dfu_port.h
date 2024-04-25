@@ -41,9 +41,6 @@
 #include "otas.h"
 #include "gr5xx_dfu.h"
 
-#define ONCE_WRITE_DATA_LEN                 1024                                                          /**< The data length of flash write-once. */
-#define DFU_BUFFER_SIZE                     2048                                                         /**< The dfu buffer size. */
-
 #define DFU_COPY_UPGRADE_MODE_PATTERN       0x44425942                                                    /**< Double Bank update mode. */
 #define DFU_NON_COPY_UPGRADE_MODE_PATTERN   0x53424e42                                                    /**< Single Bank update mode. */
 
@@ -87,9 +84,15 @@ void dfu_service_init(dfu_enter_callback dfu_enter);
  * @param[in] uart_send_data  : Function is used to send data to master by UART.
  * @param[in] dfu_fw_save_addr: The start address of the upgraded firmware stored in flash
  * @param[in] p_dfu_callback  : DFU program state callback functions.
+ * @param[in] p_buffer        : The buffer is allocated by user. Set it to NULL to disable DFU and then recycle buffer.
+ * @param[in] buffer_size     : The size of buffer. 6KB at least.
  *****************************************************************************************
  */
+#ifdef ENABLE_DFU_CUSTOM_BUFFER
+uint16_t dfu_port_init(dfu_uart_send_data uart_send_data, uint32_t dfu_fw_save_addr, dfu_pro_callback_t *p_dfu_callback, uint8_t * p_buffer, uint32_t buffer_size);
+#else
 uint16_t dfu_port_init(dfu_uart_send_data uart_send_data, uint32_t dfu_fw_save_addr, dfu_pro_callback_t *p_dfu_callback);
+#endif
 
 /**
  *****************************************************************************************

@@ -15,19 +15,6 @@ extern void DebugMon_Handler(void);
 extern void PendSV_Handler(void);
 extern void SysTick_Handler(void);
 
-extern void adv_func_init(void);
-extern void scan_func_init(void);
-extern void master_func_init(void);
-extern void slave_func_init(void);
-extern void legacy_pair_func_init(void);
-extern void sc_pair_func_init(void);
-extern void coc_func_init(void);
-extern void gatts_func_init(void);
-extern void gattc_func_init(void);
-extern void conn_aoa_aod_func_init(void);
-extern void connless_aoa_aod_func_init(void);
-extern void ranging_func_init(void);
-extern void power_control_func_init(void);
 extern void platform_xqspi_env_init(void);
 
 extern void vector_table_init(void);
@@ -45,6 +32,18 @@ extern xqspi_handle_t g_xqspi_handle;
 
 typedef void (*FuncVector_t)(void);
 typedef void (*FUNC_t)(void);
+
+
+#define SYS_RESET_REASON_NONE          (0U)
+#define SYS_RESET_REASON_AONWDT        (1U << 2U)   //AONWDT reset
+/**
+  * @brief  Get chip reset reason.
+  *
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref SYS_RESET_REASON_NONE
+  *         @arg @ref SYS_RESET_REASON_AONWDT
+  */
+uint8_t sys_device_reset_reason(void);
 
 #endif
 

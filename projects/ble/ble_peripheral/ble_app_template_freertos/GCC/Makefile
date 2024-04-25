@@ -50,6 +50,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_log/app_log_dump_port.c  \
 ../../../../../components/libraries/app_log/app_log_store.c  \
 ../../../../../components/libraries/dfu_port/dfu_port.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/otas/otas.c  \
 ../../../../../components/profiles/lms/lms.c  \

@@ -46,6 +46,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_assert/app_assert.c  \
 ../../../../../components/libraries/pmu_calibration/pmu_calibration.c  \
 ../../../../../components/libraries/virt_key/uart_simu_key_init.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/ams_c/ams_c.c  \
 ../../../../../external/segger_rtt/SEGGER_RTT.c  \

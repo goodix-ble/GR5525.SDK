@@ -47,6 +47,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_error/app_error.c  \
 ../../../../../components/libraries/app_assert/app_assert.c  \
 ../../../../../components/libraries/virt_key/uart_simu_key_init.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/ancs_c/ancs_c.c  \
 ../../../../../components/profiles/ancs_c/ancs_protocol.c  \

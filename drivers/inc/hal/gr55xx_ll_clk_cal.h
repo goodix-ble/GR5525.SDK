@@ -528,6 +528,9 @@ __STATIC_INLINE void ll_hs_clk_cal_clear_over_it(void)
     SET_BITS(CLK_CAL->HS_CLK_INT_CLR, CLK_CAL_HS_CLK_INT_CLR_OVER);
 }
 /** @} */
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 /** @} */

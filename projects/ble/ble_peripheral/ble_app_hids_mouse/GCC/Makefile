@@ -46,6 +46,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_key/app_key.c  \
 ../../../../../components/libraries/app_key/app_key_core.c  \
 ../../../../../components/libraries/virt_key/uart_simu_key_init.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/hids/hids.c  \
 ../../../../../components/profiles/bas/bas.c  \

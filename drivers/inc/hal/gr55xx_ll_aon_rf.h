@@ -296,6 +296,10 @@ __STATIC_INLINE void ll_mcu_set_cpll_drift_irq_enable(void)
     SET_BITS(MCU_SUB->CPLL_IRQ_CFG, MCU_SUB_CPLL_IRQ_CFG_DRIFT_IRQ_EN);
 }
 /** @} */
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 /** @} */

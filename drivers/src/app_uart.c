@@ -636,7 +636,7 @@ void app_uart_flush(app_uart_id_t id)
             {
                 tx_wait_count++;
             }
-            while (HAL_UART_STATE_READY != hal_uart_get_state(&p_uart_env[id]->handle) &&
+            while (HAL_UART_STATE_READY != p_uart_env[id]->handle.tx_state &&
                    (tx_wait_count <= data_width * TX_ONCE_MAX_SIZE * (SystemCoreClock/p_uart_env[id]->handle.init.baud_rate)));
         }
 

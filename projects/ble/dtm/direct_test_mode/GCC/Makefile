@@ -43,6 +43,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_key/app_key.c  \
 ../../../../../components/libraries/app_key/app_key_core.c  \
 ../../../../../components/libraries/app_assert/app_assert.c  \
+../../../../../components/sdk/ble.c  \
 ../Src/user/main.c  \
 ../Src/user/user_app.c  \
 

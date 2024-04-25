@@ -51,18 +51,31 @@
 #endif
 
 
-#define FAST_DFU_INIT_STATE             0x00
-#define FAST_DFU_ERASE_FLASH_STATE      0x01
-#define FAST_DFU_PROGRAM_FLASH_STATE    0x02
-
+#define DFU_BUFFER_SIZE                 2048                                                         /**< The dfu buffer size. */
 #define FLASH_CACHE_BUFFER_SIZE         4096
+#define ONCE_WRITE_DATA_LEN             1024                                                          /**< The data length of flash write-once. */
 
-#ifdef SOC_GR5332
+#define MIN_RING_BUFFER_SIZE                (DFU_BUFFER_SIZE + FLASH_CACHE_BUFFER_SIZE - ONCE_WRITE_DATA_LEN)
+#if DFU_BUFFER_SIZE < 2*1024
+#error "Error: DFU_BUFFER_SIZE < 2KB"
+#endif
+#if FLASH_CACHE_BUFFER_SIZE < 4*1024
+#error "Error: FLASH_CACHE_BUFFER_SIZE < 4KB"
+#endif
+#if MIN_RING_BUFFER_SIZE < 2*1024
+#error "Error: MIN_RING_BUFFER_SIZE < 2KB"
+#endif
+
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 #define ENV_BUFFER_SIZE                 400
 #define ENV_CHECK_SUM_OFFSET            0x28
 #define ENV_PAGE_START_ADDR_OFFSET      0x24
 #endif
 
+
+#define FAST_DFU_INIT_STATE             0x00
+#define FAST_DFU_ERASE_FLASH_STATE      0x01
+#define FAST_DFU_PROGRAM_FLASH_STATE    0x02
 
 enum
 {
@@ -97,7 +110,7 @@ enum
     DFU_ERASE_EXT_FLASH_NOT_EXIST,
 };
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 extern uint32_t         dfu_env_all;
 #else
 extern uint32_t         all_check_sum;
@@ -120,7 +133,7 @@ extern uint32_t dfu_flash_cal_check_sum(uint32_t start_addr, uint16_t len);
 extern uint32_t dfu_flash_programe(uint32_t address, uint8_t *p_write_buf, uint16_t write_len);
 #endif
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 extern void dfu_programing_start(uint32_t all_size);
 extern void dfu_programing_end(uint8_t status);
 extern void dfu_frame_send(uint8_t *data,uint16_t len,uint16_t cmd_type);
@@ -134,9 +147,25 @@ extern void dfu_send_frame(uint8_t *data,uint16_t len,uint16_t cmd_type);
 
 static void ble_send_data(uint8_t *p_data, uint16_t length);
 
+#ifdef ENABLE_DFU_CUSTOM_BUFFER
+static uint8_t * s_p_cmd_buffer         = NULL;
+#if defined(SOC_GR5526) || defined(SOC_GR5X25) || defined(SOC_GR533X)
+static uint8_t * s_p_flash_cache_buffer = NULL;
+#endif
+static uint8_t * s_p_ring_buffer        = NULL;
+static uint16_t  s_ring_buffer_size     = 0;
+static uint8_t * s_p_fast_cache_buffer  = NULL;
+#else
+static uint8_t                 __s_buffer_pool[DFU_BUFFER_SIZE + FLASH_CACHE_BUFFER_SIZE];
+#define s_p_cmd_buffer         __s_buffer_pool
+#define s_p_flash_cache_buffer (__s_buffer_pool + DFU_BUFFER_SIZE)
+#define s_p_ring_buffer        __s_buffer_pool
+#define s_ring_buffer_size     MIN_RING_BUFFER_SIZE
+#define s_p_fast_cache_buffer  (__s_buffer_pool + s_ring_buffer_size)
+#endif
+
 static dfu_info_t           s_dfu_info;
 static ring_buffer_t        s_ble_rx_ring_buffer;
-static uint8_t              s_flash_cache_buffer[FLASH_CACHE_BUFFER_SIZE];
 static bool                 s_ring_buffer_over_flag = false;
 static uint8_t              s_fast_dfu_state  = FAST_DFU_INIT_STATE;
 static bool                 s_program_end_flag = false;
@@ -146,11 +175,12 @@ static uint16_t             s_erase_all_count = 0;
 static uint32_t             s_all_write_size  = 0x00;
 static uint16_t             s_erase_count = 0;
 static uint8_t              s_fast_dfu_mode    = 0x00;
-static uint8_t              s_data_buffer[DFU_BUFFER_SIZE];
 static dfu_image_info_t     s_now_img_info;
 static dfu_enter_callback   s_dfu_enter_func = NULL;
 
-#ifdef SOC_GR5332
+static uint8_t              s_ota_conn_index = BLE_GAP_INVALID_CONN_INDEX;
+
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 static uint32_t     page_start_addr;
 static uint32_t     *p_page_start_addr = NULL;
 static uint32_t     all_check_sum;
@@ -169,14 +199,18 @@ static dfu_func_t       s_dfu_func  =
 
 static dfu_buf_table_t dfu_buffer =
 {
-    .frame_buf  = s_data_buffer,
+    #ifdef ENABLE_DFU_CUSTOM_BUFFER
+    0
+    #else
+    .frame_buf  = s_p_cmd_buffer,
     .frame_size = DFU_BUFFER_SIZE,
     .jlink_buf  = NULL,
     .jlink_size = 0,
-    .cache_buf  = s_flash_cache_buffer,
+    .cache_buf  = s_p_flash_cache_buffer,
     .cache_size = FLASH_CACHE_BUFFER_SIZE,
     .env_buf    = env_data_buffer,
     .env_size = ENV_BUFFER_SIZE,
+    #endif
 };
 #else
 static bool          s_flash_security_status = false;
@@ -198,10 +232,14 @@ static dfu_func_t    s_dfu_func =
 
 static dfu_buffer_t         dfu_buffer =
 {
-    .rec_data_buffer      = s_data_buffer,
+    #ifdef ENABLE_DFU_CUSTOM_BUFFER
+    0
+    #else
+    .rec_data_buffer      = s_p_cmd_buffer,
     .rec_data_buffer_size = DFU_BUFFER_SIZE,
-    .flash_op_buffer      = s_flash_cache_buffer,
+    .flash_op_buffer      = s_p_flash_cache_buffer,
     .flash_op_buffer_size = FLASH_CACHE_BUFFER_SIZE
+    #endif
 };
 #endif
 
@@ -212,7 +250,7 @@ static uint32_t dfu_spi_flash_read(uint32_t address, uint8_t *buffer, uint32_t n
 static uint32_t dfu_spi_flash_write(uint32_t address, uint8_t *buffer, uint32_t nbytes);    /**< write flash data. */
 static void dfu_spi_flash_device_info(uint32_t *id, uint32_t *size);                        /**< get flash device information. */
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 static bool dfu_spi_flash_erase(uint32_t erase_type, uint32_t addr, uint32_t size);         /**< erase flash. */
 
 static dfu_spi_flash_func_t s_dfu_spi_flash_func=                                           /**< SPI used functions config definition. */
@@ -246,7 +284,7 @@ static dfu_spi_flash_func_t s_dfu_spi_flash_func=                               
  * LOCAL FUNCTION DEFINITIONS
  *****************************************************************************************
  */
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 static void dfu_program_start(uint32_t all_size)
 {
     dfu_programing_start(all_size);
@@ -410,7 +448,7 @@ static void dfu_spi_flash_init(uint8_t *p_data)
     }
 #endif
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
     uint8_t flash_type = p_data[0];
     const app_io_type_t gpio_type[]   = {APP_IO_TYPE_GPIOA, APP_IO_TYPE_GPIOB, APP_IO_TYPE_GPIOC, APP_IO_TYPE_AON, APP_IO_TYPE_MSIO, APP_IO_TYPE_NORMAL};
     const uint32_t      gpio_pin[]    = {APP_IO_PIN_0,APP_IO_PIN_1,APP_IO_PIN_2,APP_IO_PIN_3,APP_IO_PIN_4,APP_IO_PIN_5,APP_IO_PIN_6,APP_IO_PIN_7,\
@@ -454,7 +492,7 @@ static uint32_t dfu_spi_flash_write(uint32_t address, uint8_t *buffer, uint32_t 
     return spi_flash_write(address, buffer, nbytes);
 }
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 static bool dfu_spi_flash_erase(uint32_t erase_type, uint32_t addr, uint32_t size)
 {
     return spi_flash_erase(erase_type, addr, size);
@@ -466,7 +504,7 @@ static bool dfu_spi_flash_sector_erase(uint32_t address, uint32_t size)
 }
 #endif
 
-#ifndef SOC_GR5332
+#if !defined(SOC_GR533X) && !defined(SOC_GR5405)
 static bool dfu_spi_flash_chip_erase(void)
 {
     return spi_flash_chip_erase();
@@ -479,14 +517,21 @@ static void dfu_spi_flash_device_info(uint32_t *id, uint32_t *size)
 }
 #endif
 
+#if !defined(SOC_GR533X) && !defined(SOC_GR5405)
+static uint32_t __l_irq_rest ;
+#endif
+
 
 static void security_disable(void)
 {
-#ifndef SOC_GR5332
+#if !defined(SOC_GR533X) && !defined(SOC_GR5405)
     uint32_t sys_security = sys_security_enable_status_check();
     if(sys_security)
     {
         s_flash_security_status = hal_flash_get_security();
+        __l_irq_rest = __get_PRIMASK(); 
+        __set_PRIMASK(1);
+        
         hal_flash_set_security(false);
     }
 #endif
@@ -494,11 +539,12 @@ static void security_disable(void)
 
 static void security_state_recovery(void)
 {
-#ifndef SOC_GR5332
+#if !defined(SOC_GR533X) && !defined(SOC_GR5405)
     uint32_t sys_security = sys_security_enable_status_check();
     if(sys_security)
     {
         hal_flash_set_security(s_flash_security_status);
+        __set_PRIMASK(__l_irq_rest);  
     }
 #endif
 }
@@ -539,6 +585,23 @@ void fast_dfu_state_machine_reset(void)
 
 static void otas_evt_process(otas_evt_t *p_evt)
 {
+#ifdef ENABLE_DFU_CUSTOM_BUFFER
+    if (NULL == s_p_cmd_buffer)
+    {
+        // disable DFU
+        return;
+    }
+#endif
+    if (s_ota_conn_index != BLE_GAP_INVALID_CONN_INDEX && s_ota_conn_index != p_evt->conn_idx)
+    {
+        return;
+    }
+
+    if (s_ota_conn_index == BLE_GAP_INVALID_CONN_INDEX)
+    {
+        s_ota_conn_index = p_evt->conn_idx;
+    }
+
     switch (p_evt->evt_type)
     {
         case OTAS_EVT_TX_NOTIFICATION_ENABLED:
@@ -577,7 +640,7 @@ static void otas_evt_process(otas_evt_t *p_evt)
 
 static void ble_send_data(uint8_t *p_data, uint16_t length)
 {
-    otas_notify_tx_data(0, p_data, length);
+    otas_notify_tx_data(s_ota_conn_index, p_data, length);
 }
 
 static bool wait_for_disconnection(void)
@@ -585,7 +648,7 @@ static bool wait_for_disconnection(void)
     // wait mobile phone to release connection.
     for (int i = 0; i < 200; i++)
     {
-        uint16_t hdl = get_conn_hdl_by_idx(0);
+        uint16_t hdl = get_conn_hdl_by_idx(s_ota_conn_index);
         if (0xFFFF == hdl)
         {
             delay_ms(100);
@@ -594,7 +657,7 @@ static bool wait_for_disconnection(void)
         delay_ms(10);
     }
     // disconnect by self
-    ble_gap_disconnect_with_reason(0, BLE_GAP_HCI_REMOTE_DEV_TERMINATION_DUE_TO_POWER_OFF);
+    ble_gap_disconnect_with_reason(s_ota_conn_index, BLE_GAP_HCI_REMOTE_DEV_TERMINATION_DUE_TO_POWER_OFF);
     delay_ms(100);
     return false;
 }
@@ -685,7 +748,7 @@ static void fast_dfu_erase_flash(void)
         for (int i = 0; i < 20; i++)
         {
             uint32_t address = page_start_addr + (s_erase_count * DFU_FLASH_SECTOR_SIZE);
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
             if (!dfu_flash_erase(address, DFU_FLASH_SECTOR_SIZE))
 #else
             if (dfu_flash_erase(address, DFU_FLASH_SECTOR_SIZE))
@@ -708,30 +771,30 @@ static void fast_dfu_erase_flash(void)
         {
             report_state = true;
             fast_dfu_state_machine_reset(); // abort progress if error encountered
-            s_data_buffer[0] = DFU_ACK_ERROR;
-            s_data_buffer[1] = DFU_ERASE_FLASH_OPER_FAILED;
+            s_p_cmd_buffer[0] = DFU_ACK_ERROR;
+            s_p_cmd_buffer[1] = DFU_ERASE_FLASH_OPER_FAILED;
         }
         else
         {
             report_state = true;
-            s_data_buffer[0] = DFU_ACK_SUCCESS;
-            s_data_buffer[1] = DFU_ERASING_FLASH;
+            s_p_cmd_buffer[0] = DFU_ACK_SUCCESS;
+            s_p_cmd_buffer[1] = DFU_ERASING_FLASH;
         }
-        s_data_buffer[2] = s_erase_count & 0xff;
-        s_data_buffer[3] = (s_erase_count >> 8) & 0xff;
+        s_p_cmd_buffer[2] = s_erase_count & 0xff;
+        s_p_cmd_buffer[3] = (s_erase_count >> 8) & 0xff;
     }
 
     if (!erase_not_complete)
     {
         report_state = true;
         s_fast_dfu_state = FAST_DFU_INIT_STATE;
-        s_data_buffer[0] = DFU_ACK_SUCCESS;
-        s_data_buffer[1] = DFU_ERASE_FLASH_END;
+        s_p_cmd_buffer[0] = DFU_ACK_SUCCESS;
+        s_p_cmd_buffer[1] = DFU_ERASE_FLASH_END;
     }
 
     if (report_state)
     {
-        dfu_send_frame(&s_data_buffer[0], 4, 0x0023);
+        dfu_send_frame(&s_p_cmd_buffer[0], 4, 0x0023);
         delay_ms(30);
     }
 }
@@ -739,12 +802,12 @@ static void fast_dfu_erase_flash(void)
 static void fast_dfu_cal_check_sum(uint32_t address, uint16_t len)
 {
     security_disable();
-    dfu_flash_read(address, s_flash_cache_buffer, len);
+    dfu_flash_read(address, s_p_fast_cache_buffer, len);
     security_state_recovery();
 
     for(uint16_t i=0; i<len; i++)
     {
-        all_check_sum += s_flash_cache_buffer[i];
+        all_check_sum += s_p_fast_cache_buffer[i];
     }
 }
 
@@ -752,9 +815,10 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
 {
     uint8_t dfu_type = p_frame->data[0] & 0x0F;
 
-#ifndef SOC_GR5332
+#if !defined(SOC_GR533X) && !defined(SOC_GR5405)
     uint8_t firmware_type = (p_frame->data[0] & 0xF0) >> 4;
 #else
+    uint8_t firmware_type = (p_frame->data[0] & 0xF0) >> 4;
     p_all_check_sum = (uint32_t *)(dfu_env_all + ENV_CHECK_SUM_OFFSET);
     p_page_start_addr = (uint32_t *)(dfu_env_all + ENV_PAGE_START_ADDR_OFFSET);
 #endif
@@ -776,7 +840,7 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
             return;
         }
 
-#ifndef SOC_GR5332
+#if !defined(SOC_GR533X) && !defined(SOC_GR5405)
         if (dfu_security_check_enable() == true)//security mode
         {
             s_file_size = s_now_img_info.boot_info.bin_size + 48 + 856;
@@ -788,7 +852,14 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
         
         page_start_addr = (s_now_img_info.boot_info.load_addr & 0xfffff000);
 #else
-        s_file_size = s_now_img_info.boot_info.bin_size + 48;
+        if (firmware_type == SIGN_FIRMWARE)
+        {
+            s_file_size = s_now_img_info.boot_info.bin_size + 48 + 856;
+        }
+        else
+        {
+            s_file_size = s_now_img_info.boot_info.bin_size + 48;
+        }
         (*p_page_start_addr) = (s_now_img_info.boot_info.load_addr & 0xfffff000);
 #endif
     }
@@ -801,7 +872,7 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
             memcpy(&s_now_img_info, &p_frame->data[1], sizeof(dfu_image_info_t));
             page_start_addr = (s_now_img_info.boot_info.load_addr & 0xfffff000);
 
-#ifndef SOC_GR5332
+#if !defined(SOC_GR533X) && !defined(SOC_GR5405)
             if (dfu_security_check_enable() == true)//security mode
             {
                 s_file_size = s_now_img_info.boot_info.bin_size + 48 + 856;
@@ -822,7 +893,14 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
                 }
             }
 #else
-            s_file_size = s_now_img_info.boot_info.bin_size + 48;
+            if (firmware_type == SIGN_FIRMWARE)
+            {
+                s_file_size = s_now_img_info.boot_info.bin_size + 48 + 856;
+            }
+            else
+            {
+                s_file_size = s_now_img_info.boot_info.bin_size + 48;
+            }
 #endif
         }
         else  // data or code in exflash or data in flash(fast)
@@ -862,7 +940,7 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
         s_erase_count = 0;
         all_check_sum = 0;
         s_program_end_flag = false;
-        ring_buffer_init(&s_ble_rx_ring_buffer, s_data_buffer, DFU_BUFFER_SIZE);
+        ring_buffer_init(&s_ble_rx_ring_buffer, s_p_ring_buffer, s_ring_buffer_size);
         ring_buffer_clean(&s_ble_rx_ring_buffer);
         dfu_program_start(s_file_size);
         cmd_receive_flag = 0;
@@ -870,7 +948,7 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
     }
     else// data in flash, data in exflash, code in exflash
     {
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
         (*p_page_start_addr) = ((p_frame->data[4] << 24) | (p_frame->data[3] << 16) | (p_frame->data[2] << 8) | (p_frame->data[1]));
         s_now_img_info.boot_info.load_addr = (*p_page_start_addr);
 #else
@@ -889,7 +967,7 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
         dfu_flash_type_set(DFU_FLASH_SPI);
     }
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
     erase_state = dfu_flash_erase((*p_page_start_addr), DFU_FLASH_SECTOR_SIZE);
     if (!erase_state)
 #else
@@ -904,7 +982,7 @@ static void program_start_replace(dfu_receive_frame_t *p_frame)
         p_frame->data[0] = DFU_ACK_ERROR;
     }
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
     *p_all_check_sum = 0;
 #else
     all_check_sum = 0;
@@ -1020,7 +1098,7 @@ static void program_end_replace(dfu_receive_frame_t *p_frame)
         check_result = true;
     }
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
     if (!s_fast_dfu_mode && bin_check_sum == (*p_all_check_sum))
     {
         check_result = true;
@@ -1094,8 +1172,59 @@ static void program_end_replace(dfu_receive_frame_t *p_frame)
     cmd_receive_flag = 0;
 }
 
+#ifdef ENABLE_DFU_CUSTOM_BUFFER
+uint16_t dfu_port_init(dfu_uart_send_data uart_send_data, uint32_t dfu_fw_save_addr, dfu_pro_callback_t *p_dfu_callback, uint8_t * p_buffer, uint32_t buffer_size)
+{
+    if (buffer_size < (DFU_BUFFER_SIZE + FLASH_CACHE_BUFFER_SIZE)) // at least 6KB.
+    {
+        // disable DFU.
+        s_p_cmd_buffer         = NULL;
+        return SDK_ERR_INVALID_PARAM;
+    }
+
+    if (p_buffer == NULL)
+    {
+        // just disable DFU.
+        s_p_cmd_buffer         = NULL;
+        #if defined(SOC_GR5526) || defined(SOC_GR5X25) || defined(SOC_GR533X)
+        s_p_flash_cache_buffer = NULL;
+        #endif
+        s_p_ring_buffer        = NULL;
+        s_p_fast_cache_buffer  = NULL;
+        return SDK_SUCCESS;
+    }
+
+    s_p_cmd_buffer         = p_buffer;
+    #if defined(SOC_GR5526) || defined(SOC_GR5X25) || defined(SOC_GR533X)
+    s_p_flash_cache_buffer = p_buffer + DFU_BUFFER_SIZE;
+    #endif
+    s_p_ring_buffer        = p_buffer;
+    s_ring_buffer_size     = (uint16_t)(buffer_size - ONCE_WRITE_DATA_LEN);
+    s_p_fast_cache_buffer  = p_buffer + buffer_size - ONCE_WRITE_DATA_LEN;
+
+    #if defined(SOC_GR533X) || defined(SOC_GR5405)
+    dfu_buffer.frame_buf  = s_p_cmd_buffer;
+    dfu_buffer.frame_size = DFU_BUFFER_SIZE;
+    dfu_buffer.jlink_buf  = NULL;
+    dfu_buffer.jlink_size = 0;
+    dfu_buffer.cache_buf  = s_p_flash_cache_buffer;
+    dfu_buffer.cache_size = FLASH_CACHE_BUFFER_SIZE;
+    dfu_buffer.env_buf    = env_data_buffer;
+    dfu_buffer.env_size = ENV_BUFFER_SIZE;
+    #endif
+
+    #if defined(SOC_GR5526) || defined(SOC_GR5X25)
+    dfu_buffer.rec_data_buffer      = s_p_cmd_buffer;
+    dfu_buffer.rec_data_buffer_size = DFU_BUFFER_SIZE;
+    dfu_buffer.flash_op_buffer      = s_p_flash_cache_buffer;
+    dfu_buffer.flash_op_buffer_size = FLASH_CACHE_BUFFER_SIZE;
+    #endif
+
+#else
 uint16_t dfu_port_init(dfu_uart_send_data uart_send_data, uint32_t dfu_fw_save_addr, dfu_pro_callback_t *p_dfu_callback)
 {
+#endif
+
     memset(&s_dfu_info, 0, sizeof(s_dfu_info));
 
     if (uart_send_data != NULL)
@@ -1104,7 +1233,7 @@ uint16_t dfu_port_init(dfu_uart_send_data uart_send_data, uint32_t dfu_fw_save_a
     }
 
 #ifdef SOC_GR5515
-    dfu_init(&s_dfu_func, s_data_buffer, p_dfu_callback);
+    dfu_init(&s_dfu_func, s_p_cmd_buffer, p_dfu_callback);
     s_dfu_info.dfu_fw_save_addr = dfu_fw_save_addr;
 
     dfu_set_cmd_handler(0x00, 0x01, get_info_replace);
@@ -1140,7 +1269,7 @@ uint16_t dfu_port_init(dfu_uart_send_data uart_send_data, uint32_t dfu_fw_save_a
     dfu_set_cmd_handler(0x1D, 0X42, dfu_fw_info_get);
 #endif
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
     if (SDK_SUCCESS != dfu_init(&s_dfu_func, &dfu_buffer, p_dfu_callback))
     {
         return SDK_ERR_SDK_INTERNAL;
@@ -1170,12 +1299,12 @@ void dfu_service_init(dfu_enter_callback dfu_enter)
     {
         s_dfu_enter_func = dfu_enter;
     }
-
+    s_ota_conn_index = BLE_GAP_INVALID_CONN_INDEX;
     otas_init.evt_handler   = otas_evt_process;
     otas_service_init(&otas_init);
 }
 
-#ifdef SOC_GR5332
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
 void dfu_ble_set_mtu_size(uint16_t mtu_size)
 {
 
@@ -1190,13 +1319,13 @@ static void fast_dfu_program_schedule(void)
     items_size = ring_buffer_items_count_get(&s_ble_rx_ring_buffer);
     if (items_size >= ONCE_WRITE_DATA_LEN)
     {
-        read_len = ring_buffer_read(&s_ble_rx_ring_buffer, s_flash_cache_buffer, ONCE_WRITE_DATA_LEN);
+        read_len = ring_buffer_read(&s_ble_rx_ring_buffer, s_p_fast_cache_buffer, ONCE_WRITE_DATA_LEN);
 
         security_disable();
-#ifdef SOC_GR5332
-        if(HAL_OK != dfu_flash_write(s_program_address, s_flash_cache_buffer, read_len))
+#if defined(SOC_GR533X) || defined(SOC_GR5405)
+        if(HAL_OK != dfu_flash_write(s_program_address, s_p_fast_cache_buffer, read_len))
 #else
-        if(read_len != dfu_flash_write(s_program_address, s_flash_cache_buffer, read_len))
+        if(read_len != dfu_flash_write(s_program_address, s_p_fast_cache_buffer, read_len))
 #endif
         {
             fast_dfu_state_machine_reset();
@@ -1212,11 +1341,11 @@ static void fast_dfu_program_schedule(void)
     {
         if (s_all_write_size + items_size == s_file_size)
         {
-            read_len = ring_buffer_read(&s_ble_rx_ring_buffer, s_flash_cache_buffer, items_size);
+            read_len = ring_buffer_read(&s_ble_rx_ring_buffer, s_p_fast_cache_buffer, items_size);
             if (read_len)
             {
                 security_disable();
-                dfu_flash_write(s_program_address, s_flash_cache_buffer, read_len);
+                dfu_flash_write(s_program_address, s_p_fast_cache_buffer, read_len);
                 security_state_recovery();
 
                 fast_dfu_cal_check_sum(s_program_address, read_len);
@@ -1225,8 +1354,8 @@ static void fast_dfu_program_schedule(void)
             dfu_programing(read_len);
 
             s_program_end_flag = true;
-            s_data_buffer[0] = DFU_ACK_SUCCESS;
-            dfu_send_frame(s_data_buffer, 1, 0xFF); // write over
+            s_p_cmd_buffer[0] = DFU_ACK_SUCCESS;
+            dfu_send_frame(s_p_cmd_buffer, 1, 0xFF); // write over
             s_fast_dfu_state = FAST_DFU_INIT_STATE;
         }
     }
@@ -1276,7 +1405,7 @@ uint16_t dfu_fw_image_info_get(uint32_t dfu_fw_save_addr, uint32_t fw_image_size
     if (is_sign_fw)
     {
         fw_image_info_addr = dfu_fw_save_addr + fw_image_size - 856;
-        if (sizeof(dfu_image_info_t) != hal_flash_read(fw_image_info_addr, (uint8_t *)&p_image_info, sizeof(dfu_image_info_t)))
+        if (sizeof(dfu_image_info_t) != hal_flash_read(fw_image_info_addr, (uint8_t *)p_image_info, sizeof(dfu_image_info_t)))
         {
             return SDK_ERR_SDK_INTERNAL;
         }
@@ -1284,7 +1413,7 @@ uint16_t dfu_fw_image_info_get(uint32_t dfu_fw_save_addr, uint32_t fw_image_size
     else
     {
         fw_image_info_addr = dfu_fw_save_addr + fw_image_size - 48;
-        if (sizeof(dfu_image_info_t) != hal_flash_read(fw_image_info_addr, (uint8_t *)&p_image_info, sizeof(dfu_image_info_t)))
+        if (sizeof(dfu_image_info_t) != hal_flash_read(fw_image_info_addr, (uint8_t *)p_image_info, sizeof(dfu_image_info_t)))
         {
             return SDK_ERR_SDK_INTERNAL;
         }
@@ -1304,7 +1433,7 @@ uint16_t dfu_info_update(uint32_t dfu_info_start_addr, dfu_image_info_t *p_image
     }
 
     dfu_info.dfu_fw_save_addr = dfu_fw_save_addr;
-    memcpy(&dfu_info.dfu_fw_save_addr, p_image_info, sizeof(dfu_image_info_t));
+    memcpy(&dfu_info.dfu_img_info, p_image_info, sizeof(dfu_image_info_t));
     dfu_info.dfu_mode_pattern = dfu_mode_pattern;
 
     if (!hal_flash_erase(dfu_info_start_addr, DFU_FLASH_SECTOR_SIZE))
@@ -1312,7 +1441,7 @@ uint16_t dfu_info_update(uint32_t dfu_info_start_addr, dfu_image_info_t *p_image
         return SDK_ERR_SDK_INTERNAL;
     }
 
-    if (sizeof(dfu_image_info_t) != hal_flash_write(dfu_info_start_addr, (uint8_t *)&dfu_info, sizeof(dfu_info_t)))
+    if (sizeof(dfu_info_t) != hal_flash_write(dfu_info_start_addr, (uint8_t *)&dfu_info, sizeof(dfu_info_t)))
     {
         return SDK_ERR_SDK_INTERNAL;
     }

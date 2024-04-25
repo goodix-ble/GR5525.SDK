@@ -13,9 +13,15 @@
 #define DEFAULT_SCRN_PARAM_CONFIG                {SCREEN_QSPI_ID, g_qspi_pin_groups[QSPI2_PIN_GROUP_0], DEFAULT_SCRN_MODE_CONFIG, DEFAULT_SCRN_QSPI_CONFIG}
 
 /* misc pins */
-#define DISP_RST_CONFIG                  { APP_IO_TYPE_GPIOA, APP_IO_PIN_13, APP_IO_MODE_OUTPUT, APP_IO_NOPULL, NULL}
-#define DISP_TE_CONFIG                   { APP_IO_TYPE_GPIOA, APP_IO_PIN_12, APP_IO_MODE_INPUT,   APP_IO_NOPULL, NULL}
-#define DISP_DC_CONFIG                   { APP_IO_TYPE_GPIOA, APP_IO_PIN_14, APP_IO_MODE_INPUT,   APP_IO_NOPULL, NULL}
+#if 0 // EVB_BOARD
+    #define DISP_RST_CONFIG                  { APP_IO_TYPE_AON, APP_IO_PIN_5, APP_IO_MODE_OUTPUT, APP_IO_NOPULL, NULL}
+    #define DISP_TE_CONFIG                   { APP_IO_TYPE_AON, APP_IO_PIN_1, APP_IO_MODE_INPUT,   APP_IO_NOPULL, NULL}
+    #define DISP_DC_CONFIG                   { APP_IO_TYPE_AON, APP_IO_PIN_6, APP_IO_MODE_INPUT,   APP_IO_NOPULL, NULL}
+#else //SK Board
+    #define DISP_RST_CONFIG                  { APP_IO_TYPE_AON, APP_IO_PIN_6, APP_IO_MODE_OUTPUT, APP_IO_NOPULL, NULL}
+    #define DISP_TE_CONFIG                   { APP_IO_TYPE_AON, APP_IO_PIN_5, APP_IO_MODE_INPUT,   APP_IO_NOPULL, NULL}
+    #define DISP_DC_CONFIG                   { APP_IO_TYPE_AON, APP_IO_PIN_7, APP_IO_MODE_INPUT,   APP_IO_NOPULL, NULL}
+#endif
 
 static  app_qspi_params_t g_qspi_screen_params;
 static  app_qspi_evt_handler_t display_evt_handler;

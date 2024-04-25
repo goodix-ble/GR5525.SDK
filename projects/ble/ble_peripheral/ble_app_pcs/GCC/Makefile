@@ -40,6 +40,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_key/app_key_core.c  \
 ../../../../../components/libraries/app_timer/app_timer.c  \
 ../../../../../components/libraries/pmu_calibration/pmu_calibration.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/pcs/pcs.c  \
 ../../../../../external/segger_rtt/SEGGER_RTT.c  \

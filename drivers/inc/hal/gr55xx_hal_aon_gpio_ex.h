@@ -92,8 +92,8 @@ extern "C" {
 
 
 
-#if defined (GR553xx)
-/*---------------------------------- GR553xx ------------------------------*/
+#if defined (GR5X25)
+/*---------------------------------- GR5X25 ------------------------------*/
 
 /** @defgroup AON_GPIOEx_Common_Selection AON_GPIO PIN common MUX selection(Available for all AON GPIO pins)
   * @{
@@ -193,7 +193,7 @@ extern "C" {
 #define IS_AON_GPIO_MUX(__MUX__)        (((__MUX__) <= AON_GPIO_MUX_7))
 
 /*------------------------------------------------------------------------------------------*/
-#endif /* GR553xx */
+#endif /* GR5X25 */
 
 /** @} */
 

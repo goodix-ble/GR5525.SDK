@@ -681,6 +681,10 @@ __STATIC_FORCEINLINE void ll_aon_pmu_disable_short_aon_digcore(void)
     CLEAR_BITS(AON_PMU->RF_REG_4, AON_PMU_RF_REG_4_SHORT_AON_DIGCORE);
 }
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 
 /** @} */

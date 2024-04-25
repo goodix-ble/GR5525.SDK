@@ -44,6 +44,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_assert/app_assert.c  \
 ../../../../../components/libraries/app_key/app_key.c  \
 ../../../../../components/libraries/app_key/app_key_core.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/lls/lls.c  \
 ../../../../../components/profiles/ias/ias.c  \

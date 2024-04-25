@@ -57,8 +57,8 @@ extern "C" {
    application
   */
 
-#if !defined (GR553xx)
-    #define GR553xx
+#if !defined (GR5X25)
+    #define GR5X25
 #endif
 
 /** @} */
@@ -66,7 +66,7 @@ extern "C" {
 /** @addtogroup Device_Included
   * @{
   */
-#if defined(GR553xx)
+#if defined(GR5X25)
 
     #include "gr5525_a0.h"
     #include "gr5525_int_a0.h"
@@ -76,7 +76,7 @@ extern "C" {
     #define GR55XX_FLASH_SIZE              0x01000000
     #define GR55XX_ALIAS_ADDRESS           0x00100000
 #else
-    #error "Please select first the target GR55xx device used in your application (in gr553xx.h file)"
+    #error "Please select first the target GR55xx device used in your application (in gr55xx.h file)"
 #endif
 
 /** @} */
@@ -189,6 +189,8 @@ typedef enum
     #else
       #define SECTION_RAM_CODE __ramfunc
     #endif /* CFG_LAYER_TAG_ROM */
+    #pragma diag_suppress=Ta022
+    #pragma diag_suppress=Ta023
   #endif /* SECTION_RAM_CODE */
 #else
   #error Unknown compiler.

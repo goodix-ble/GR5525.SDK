@@ -357,13 +357,13 @@ void SPI_FLASH_Enable_Quad(void)
 
     io_init.mode = APP_IO_MODE_MUX;
     io_init.pin = g_qspi_params.pin_cfg.io_2.pin;
-    io_init.mux = g_qspi_params.pin_cfg.io_2.mux;
+    io_init.mux = APP_IO_MUX_0;
     io_init.pull = APP_IO_PULLUP;
     app_io_init(g_qspi_params.pin_cfg.io_2.type, &io_init);
 
     io_init.mode = APP_IO_MODE_MUX;
     io_init.pin = g_qspi_params.pin_cfg.io_3.pin;
-    io_init.mux = g_qspi_params.pin_cfg.io_3.mux;
+    io_init.mux = APP_IO_MUX_0;
     io_init.pull = APP_IO_PULLUP;
     app_io_init(g_qspi_params.pin_cfg.io_3.type, &io_init);
 }

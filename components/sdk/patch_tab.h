@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#if (CFG_MAX_ADVS || CFG_MAX_SCAN || CFG_MAX_CONNECTIONS || DTM_TEST_ENABLE)
-
 typedef uint16_t task_id_t;
 typedef uint16_t msg_id_t;
 
@@ -32,16 +30,6 @@ typedef struct
     gapm_hci_evt_hdl_func_t ori_func_addr;
     gapm_hci_evt_hdl_func_t new_func_addr;
 } gapm_hci_evt_tab_item_t;
-
-extern void ble_common_env_init(void);
-extern void ble_con_env_init(void);
-extern void ble_scan_env_init(void);
-extern void ble_adv_env_init(void);
-extern void ble_test_evn_init(void);
-extern void ble_iso_env_init(void);
-extern void ble_car_key_env_init(void);
-extern void ble_bt_bredr_env_init(void);
-extern void ble_mul_link_env_init(void);
 
 // // gapm task for common
 extern int gapm_set_dev_config_cmd_handler_patch(msg_id_t const msgid, void *param,
@@ -115,6 +103,8 @@ ke_msg_tab_item_t ke_msg_tab[] =
 
 extern int hci_le_add_dev_to_rslv_list_cmd_handler_patch(void const *param, uint16_t opcode);
 
+extern int hci_le_set_ext_scan_rsp_data_cmd_handler_patch(void const *param, uint16_t opcode);
+
 extern int hci_le_rmv_dev_from_rslv_list_cmd_handler_patch(void const *param, uint16_t opcode);
 
 extern int hci_le_clear_rslv_list_cmd_handler_patch(void const *param, uint16_t opcode);
@@ -134,6 +124,7 @@ llm_hci_cmd_tab_item_t llm_hci_cmd_tab[] =
     #if (!DTM_TEST_ENABLE)
      // hci cmd for common
     {(llm_hci_cmd_hdl_func_t)0x0001c071, (llm_hci_cmd_hdl_func_t)hci_le_add_dev_to_rslv_list_cmd_handler_patch},
+    {(llm_hci_cmd_hdl_func_t)0x00020731, (llm_hci_cmd_hdl_func_t)hci_le_set_ext_scan_rsp_data_cmd_handler_patch},
     {(llm_hci_cmd_hdl_func_t)0x0001efd5, (llm_hci_cmd_hdl_func_t)hci_le_rmv_dev_from_rslv_list_cmd_handler_patch},
     {(llm_hci_cmd_hdl_func_t)0x0001c4bd, (llm_hci_cmd_hdl_func_t)hci_le_clear_rslv_list_cmd_handler_patch},
     {(llm_hci_cmd_hdl_func_t)0x0001f295, (llm_hci_cmd_hdl_func_t)hci_le_set_addr_resol_en_cmd_handler_patch},
@@ -159,9 +150,4 @@ gapm_hci_evt_tab_item_t gapm_hci_evt_tab[] =
     #endif
 };
 
-extern void reg_ke_msg_patch_tab(ke_msg_tab_item_t *ke_msg_tab, uint16_t ke_msg_cnt);
-extern void reg_gapm_hci_evt_patch_tab(gapm_hci_evt_tab_item_t *gapm_hci_evt_tab, uint16_t gapm_hci_evt_cnt);
-extern void reg_llm_hci_cmd_patch_tab(llm_hci_cmd_tab_item_t *hci_cmd_tab, uint16_t hci_cmd_cnt);
 #endif
-
-#endif  //(CFG_MAX_ADVS || CFG_MAX_SCAN || CFG_MAX_CONNECTIONS || DTM_TEST_ENABLE)

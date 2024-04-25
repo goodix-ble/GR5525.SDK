@@ -373,7 +373,7 @@ void hal_rng_irq_handler(rng_handle_t *p_rng);
  * @retval None
  ****************************************************************************************
  */
-__weak void hal_rng_ready_data_callback(rng_handle_t *p_rng, uint32_t random32bit);
+void hal_rng_ready_data_callback(rng_handle_t *p_rng, uint32_t random32bit);
 
 /** @} */
 

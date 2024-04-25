@@ -592,13 +592,13 @@ __STATIC_INLINE uint32_t ll_msio_get_pin_pull(msio_pad_t MSIOx, uint32_t pin)
 __STATIC_INLINE void ll_msio_set_pin_mux(msio_pad_t MSIOx, uint32_t pin, uint32_t mux)
 {
     uint32_t pos = POSITION_VAL(pin) << 2;
+    MODIFY_REG(MCU_RET->MSIO_A_PAD_MUX_CTL, 0xF << pos, mux << pos);
     if (LL_MSIO_MUX_8 == mux)
     {
         CLEAR_BITS(AON_MSIO->MSIO_MCU_OVR, pin << AON_MSIO_MCU_OVR_MSIO_OVR_POS);
     }
     else
     {
-        MODIFY_REG(MCU_RET->MSIO_A_PAD_MUX_CTL, 0xF << pos, mux << pos);
         SET_BITS(AON_MSIO->MSIO_MCU_OVR, pin << AON_MSIO_MCU_OVR_MSIO_OVR_POS);
     }
 }

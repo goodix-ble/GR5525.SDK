@@ -49,6 +49,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/sensorsim/sensorsim.c  \
 ../../../../../components/libraries/app_memory/app_memory.c  \
 ../../../../../components/libraries/app_scheduler/app_scheduler.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/dis/dis.c  \
 ../../../../../components/profiles/uds/uds.c  \

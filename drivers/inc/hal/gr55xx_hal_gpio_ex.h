@@ -91,8 +91,8 @@ extern "C" {
   */
 
 
-#if defined (GR553xx)
-/*---------------------------------- GR553xx ------------------------------*/
+#if defined (GR5X25)
+/*---------------------------------- GR5X25 ------------------------------*/
 
 /** @defgroup GPIOEx_Common_Selection GPIO PIN common MUX selection(Available for all GPIO pins)
   * @{
@@ -399,7 +399,7 @@ extern "C" {
 #define IS_GPIO_MUX(__MUX__)        (((__MUX__) <= GPIO_MUX_8))
 
 /*------------------------------------------------------------------------------------------*/
-#endif /* GR553xx */
+#endif /* GR5X25 */
 
 /** @} */
 

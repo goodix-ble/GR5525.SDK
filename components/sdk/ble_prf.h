@@ -75,6 +75,14 @@ sdk_err_t ble_gatts_prf_add(ble_gatts_create_db_t *p_gatts_db, ble_evt_handler_t
 
 /**
  ****************************************************************************************
+ * @brief Cleanup all server profile database.
+ *
+ ****************************************************************************************
+ */
+void ble_gatts_prf_database_cleanup(void);
+
+/**
+ ****************************************************************************************
  * @brief Add a client profile by providing its detail information.
  *
  * @param[in]  p_uuid:       Pointer to the target service uuid. See @ref ble_uuid_t.
@@ -85,7 +93,8 @@ sdk_err_t ble_gatts_prf_add(ble_gatts_create_db_t *p_gatts_db, ble_evt_handler_t
  * @retval ::SDK_ERR_NO_RESOURCES: The profile number is up to the maximum number the system can support.
  ****************************************************************************************
  */
-uint16_t ble_gattc_prf_add(ble_uuid_t *p_uuid,  ble_evt_handler_t evt_handler);
+sdk_err_t ble_gattc_prf_add(ble_uuid_t *p_uuid,  ble_evt_handler_t evt_handler);
+
 /** @} */
 
 #endif

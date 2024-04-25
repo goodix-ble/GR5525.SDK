@@ -51,6 +51,7 @@
  * DEFINES
  *****************************************************************************************
  */
+// Note: Note: TEST_CONV_LENGTH must be aligned on a four-byte boundary.
 #define TEST_CONV_LENGTH      (128UL)
 
 /*
@@ -96,7 +97,6 @@ void app_adc_evt_handler(app_adc_evt_t * p_evt)
     if (p_evt->type == APP_ADC_EVT_CONV_CPLT)
     {
         covn_done = 1;
-        printf("DMA conversion is done.\r\n");
     }
 }
 

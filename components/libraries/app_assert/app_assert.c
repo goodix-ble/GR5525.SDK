@@ -142,7 +142,7 @@ static void app_assert_info_output(uint8_t assert_type)
                    "%s",
                    assert_info);
 
-    app_log_flush();
+    app_log_assert_flush();
 }
 
 

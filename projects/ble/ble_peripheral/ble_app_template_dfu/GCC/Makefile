@@ -51,6 +51,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_key/app_key.c  \
 ../../../../../components/libraries/app_key/app_key_core.c  \
 ../../../../../components/libraries/dfu_port/dfu_port.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/otas/otas.c  \
 ../../../../../components/drivers_ext/gr55xx/gr55xx_spi_flash.c  \

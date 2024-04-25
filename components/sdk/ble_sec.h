@@ -113,33 +113,6 @@ typedef enum
     BLE_SEC_KEY_PRESS_COMPLETED = 0x04         /**< Passkey entry completed. */
 } ble_sec_keypress_notify_t;
 
-/**@brief SEC pair result.  */
-typedef enum
-{
-    ENC_SUCCESS                     = 0x00, /**< Encrypt success. */
-    ENC_FAIL_PASSKEY_ENTRY_FAIL     = 0x01, /**< The user input of passkey failed, for example, the user cancelled the operation. */
-    ENC_FAIL_OOB_NOT_AVAILBL        = 0x02, /**< The OOB data is not available. */
-    ENC_FAIL_AUTH_REQ               = 0x03, /**< The pairing procedure cannot be performed as authentication requirements cannot be met 
-                                                 due to IO incapability of one or both devices. */                                                                                
-    ENC_FAIL_CONFIRM_VAL_FAIL       = 0x04, /**< The confirm value does not match the calculated compare value. */
-    ENC_FAIL_PAIRING_NOT_SUPPORT    = 0x05, /**< Pairing is not supported by the device. */
-    ENC_FAIL_ENCRPT_KEY_SIZE        = 0x06, /**< The resultant encryption key size is insufficient for the security requirements of this device. */
-    ENC_FAIL_COMMAND_NOT_SUPPORT    = 0x07, /**< The SMP command received is not supported on this device. */
-    ENC_FAIL_UNSPECIFIED            = 0x08, /**< Pairing failed due to an unspecified reason. */
-    ENC_FAIL_REPEAT_ATTEMPT         = 0x09, /**< Pairing or authentication procedure is disallowed because too little time has elapsed 
-                                                 since last pairing request or security request. */
-    ENC_FAIL_INVALID_PARAM          = 0x0A, /**< The Invalid Parameters error code indicates that the command length is invalid 
-                                                 or that a parameter is outside of the specified range. */
-    ENC_FAIL_DHKEY_CHECK_FAIL       = 0x0B, /**< Indicate to the remote device that the DHKey Check value received doesn't  match the one calculated 
-                                                 by the local device. */
-    ENC_FAIL_NUM_CMP_FAIL           = 0x0C, /**< Indicate that the confirm values in the numeric comparison protocol do not match. */
-    ENC_FAIL_BR_EDR_IN_PROGRESS     = 0x0D, /**< Indicate that the pairing over the LE transport failed due to 
-                                                 a Pairing Request sent over the BR/EDR transport in process. */
-    ENC_FAIL_KEY_DRIV_GEN_NOT_ALLOW = 0x0E, /**< Indicate that the BR/EDR Link Key generated on the BR/EDR transport 
-                                                 cannot be used to derive and distribute keys for the LE transport. */
-    ENC_FAIL_LTK_MISSING = 0x0F,            /**< Indicate the LTK of peer devices missing. */
-} ble_sec_enc_ind_t;
-
 /**@brief SEC mode and level.  */
 typedef enum
 {

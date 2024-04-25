@@ -78,6 +78,14 @@
 #define APP_LOG_ENABLE          1
 #endif
 
+// <o> APP log port type
+// <0=> UART
+// <1=> RTT
+// <2=> ITM
+#ifndef APP_LOG_PORT
+#define APP_LOG_PORT              0
+#endif
+
 // <o> Eanble APP log store module
 // <0=> DISABLE
 // <1=> ENABLE
@@ -357,6 +365,7 @@
 #define SECURITY_CFG_VAL                 0
 #endif
 // </h>
+
 
 // <<< end of configuration section >>>
 #endif //__CUSTOM_CONFIG_H__

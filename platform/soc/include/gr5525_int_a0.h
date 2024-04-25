@@ -1,7 +1,7 @@
 /**************************************************************************//**
- * @file     gr553xx_int.h
+ * @file     gr5525_int_a0.h
  * @brief    CMSIS Cortex-M# Core Peripheral Access Layer Header File for
- *           Device gr553xx
+ *           Device gr5x25
  * @version  V1.00
  * @date     03. Feb 2020
  ******************************************************************************/
@@ -27,12 +27,12 @@
   * @{
   */
 
-/** @addtogroup GR553xx_int
+/** @addtogroup GR5x25_int
   * @{
   */
 
-#ifndef __GR553xx_INT_H__
-#define __GR553xx_INT_H__
+#ifndef __GR5525_INT_A0_H__
+#define __GR5525_INT_A0_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -4630,9 +4630,9 @@ typedef struct _ddvs_ctrl_regs
   }
 #endif
 
-#endif // __GR553xx_INT_H__
+#endif // __GR5525_INT_A0_H__
 
-/** @} */ /* End of group GR553xx */
+/** @} */ /* End of group GR5x25 */
 
 /** @} */ /* End of group CMSIS_Device */
 

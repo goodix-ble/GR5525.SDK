@@ -45,6 +45,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_log/app_log.c  \
 ../../../../../components/libraries/app_error/app_error.c  \
 ../../../../../components/libraries/app_assert/app_assert.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/rscs_c/rscs_c.c  \
 ../../../../../components/profiles/dis_c/dis_c.c  \
 ../../../../../components/profiles/bas_c/bas_c.c  \

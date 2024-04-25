@@ -48,6 +48,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/ring_buffer/ring_buffer.c  \
 ../../../../../components/libraries/utility/utility.c  \
 ../../../../../components/libraries/dfu_port/dfu_port.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/otas/otas.c  \
 ../../../../../components/drivers_ext/gr55xx/gr55xx_spi_flash.c  \
@@ -142,6 +143,7 @@ PRJ_C_INCLUDE_PATH :=   \
 ../../../../../platform/soc/include  \
 ../../../../../platform/soc/linker/keil  \
 ../Src/sign_verify/inc  \
+../../../../../components/libraries/app_crypto  \
 
 
 PRJ_C_MICRO_DEFINES :=   \
@@ -211,6 +213,7 @@ endif
 LDFLAGS += -Wl,--gc-sections
 #LDFLAGS += -specs=nano.specs
 LDFLAGS += -L../../../../../platform/soc/linker/gcc/ -lble_sdk
+LDFLAGS += -L../../../../../components/libraries/app_crypto/gcc/ -lapp_crypto
 
 
 ## Set compile output directory

@@ -7,7 +7,6 @@
 #include "hal_flash.h"
 #include "platform_sdk.h"
 #include "pmu_calibration.h"
-#include "patch_tab.h"
 #include "app_pwr_mgmt.h"
 
 #define PUYA_FLASH_HP_CMD              (0xA3)
@@ -18,6 +17,21 @@
 #define SOFTWARE_REG_WAKEUP_FLAG_POS   (8)
 
 /******************************************************************************/
+
+#define SDK_VER_MAJOR                   1
+#define SDK_VER_MINOR                   0
+#define SDK_VER_BUILD                   1
+#define COMMIT_ID                       0xecd527bd
+
+static const sdk_version_t sdk_version = {SDK_VER_MAJOR,
+                                          SDK_VER_MINOR,
+                                          SDK_VER_BUILD,
+                                          COMMIT_ID,};//sdk version
+
+void sys_sdk_verison_get(sdk_version_t *p_version)
+{
+    memcpy(p_version, &sdk_version, sizeof(sdk_version_t));
+}
 
 uint32_t SystemCoreClock = CLK_64M;  /* System Core Clock Frequency as 64Mhz     */
 
@@ -45,6 +59,18 @@ void soc_register_nvic(IRQn_Type indx, uint32_t func)
     FuncVector_table[indx + 16] = (FuncVector_t)func;
 }
 
+__WEAK void nvds_init_error_handler(uint8_t err_code)
+{
+    /* nvds_deinit will erase the flash area and old data will be lost */
+#ifdef NVDS_START_ADDR
+    nvds_deinit(NVDS_START_ADDR, NVDS_NUM_SECTOR);
+    nvds_init(NVDS_START_ADDR, NVDS_NUM_SECTOR);
+#else
+    nvds_deinit(0, NVDS_NUM_SECTOR);
+    nvds_init(0, NVDS_NUM_SECTOR);
+#endif
+}
+
 static void nvds_setup(void)
 {
 #ifndef ATE_TEST_ENABLE
@@ -58,32 +84,49 @@ static void nvds_setup(void)
 
     switch(err_code)
     {
-        case NVDS_FAIL:
-        case NVDS_STORAGE_ACCESS_FAILED:
-            {
-                extern uint32_t nvds_get_start_addr(void);
-                uint32_t start_addr  = nvds_get_start_addr();
-                uint32_t sector_size = hal_flash_sector_size();
-                if (hal_flash_erase(start_addr, NVDS_NUM_SECTOR * sector_size))
-                {
-                    err_code = nvds_init(start_addr, NVDS_NUM_SECTOR);
-                    if (NVDS_SUCCESS == err_code)
-                    {
-                        break;
-                    }
-                }
-                /* Flash fault, cannot startup.
-                 * TODO: Output log via UART or Dump an error code to flash. */
-                while(1);
-            }
         case NVDS_SUCCESS:
             break;
         default:
-            /* Illegal NVDS Parameters.
-             * Please check the start address and number of sectors. */
-            while(1);
+            /* Nvds initialization errors.
+             * For more information, please see NVDS_INIT_ERR_CODE. */
+            nvds_init_error_handler(err_code);
+            break;
     }
-    #endif //ATE_TEST_ENABLE
+#endif //ATE_TEST_ENABLE
+}
+
+void sys_device_reset_reason_enable(void)
+{
+    //Clear all status and enable reset record
+    AON_CTL->DBG_REG_RST_SRC = (1UL << 24) | (1UL << 31);
+    //Busy configuration, Wait
+    while (AON_CTL->DBG_REG_RST_SRC & (1UL << 30));
+    //Wait record ready
+    while (!(AON_CTL->DBG_REG_RST_SRC & (1UL << 16)));
+}
+
+uint8_t sys_device_reset_reason(void)
+{
+    uint8_t reset_season = AON_CTL->DBG_REG_RST_SRC & 0x1FUL;
+
+    //Clear all status
+    AON_CTL->DBG_REG_RST_SRC = ((1UL << 25) | (1UL << 31));
+    //Busy configuration, Wait
+    while (AON_CTL->DBG_REG_RST_SRC & (1UL << 30));
+    //enable reset record
+    AON_CTL->DBG_REG_RST_SRC = (1UL << 24) | (1UL << 31);
+    //Busy configuration, Wait
+    while (AON_CTL->DBG_REG_RST_SRC & (1UL << 30));
+    //Wait record ready
+    while (!(AON_CTL->DBG_REG_RST_SRC & (1UL << 16)));
+    if(reset_season & SYS_RESET_REASON_AONWDT)
+    {
+        return SYS_RESET_REASON_AONWDT;
+    }
+    else
+    {
+        return SYS_RESET_REASON_NONE;
+    }
 }
 
 void first_class_task(void)
@@ -103,6 +146,8 @@ void first_class_task(void)
     hp_init.xqspi_hp_end_dummy = FLASH_HP_END_DUMMY;
     platform_flash_enable_quad(&hp_init);
 
+    /* Enable chip reset reason record. */
+    sys_device_reset_reason_enable();
     /* nvds module init process. */
     nvds_setup();
 
@@ -153,7 +198,7 @@ void svc_func_register(uint8_t svc_num, uint32_t user_func)
 void svc_user_handler(uint8_t svc_num)
 {
     if (svc_user_func)
-		svc_user_func();
+        svc_user_func();
 }
 
 
@@ -164,69 +209,18 @@ static void patch_init(void)
 
 void platform_init(void)
 {
-	patch_init();
+    patch_init();
     first_class_task();
     second_class_task();
 }
 
-void ble_feature_init(void)
+boot_mode_t pwr_mgmt_get_wakeup_flag(void)
 {
-    #if (CFG_MAX_ADVS)
-    adv_func_init();
-    #endif
-
-    #if (CFG_MAX_SCAN)
-    scan_func_init();
-    #endif
-
-    #if (CFG_MASTER_SUPPORT)
-    master_func_init();
-    #endif
-
-    #if (CFG_SLAVE_SUPPORT)
-    slave_func_init();
-    #endif
-
-    #if (CFG_LEGACY_PAIR_SUPPORT)
-    legacy_pair_func_init();
-    #endif
-
-    #if (CFG_SC_PAIR_SUPPORT)
-    sc_pair_func_init();
-    #endif
-
-    #if (CFG_COC_SUPPORT)
-    coc_func_init();
-    #endif
-
-    #if (CFG_GATTS_SUPPORT)
-    gatts_func_init();
-    #endif
-
-    #if (CFG_GATTC_SUPPORT)
-    gattc_func_init();
-    #endif
-
-    #if (CFG_CONN_AOA_AOD_SUPPORT)
-    conn_aoa_aod_func_init();
-    #endif
-
-    #if (CFG_CONNLESS_AOA_AOD_SUPPORT)
-    connless_aoa_aod_func_init();
-    #endif
-
-    #if (CFG_RANGING_SUPPORT)
-    ranging_func_init();
-    #endif
-
-    #if (CFG_POWER_CONTROL_SUPPORT)
-    power_control_func_init();
-    #endif
-}
-
-uint32_t get_wakeup_flag(void)
-{
-    return (AON_CTL->SOFTWARE_REG0 & (1 << SOFTWARE_REG_WAKEUP_FLAG_POS));
+    if ( AON_CTL->SOFTWARE_REG0 & (1 << SOFTWARE_REG_WAKEUP_FLAG_POS) )
+    {
+        return WARM_BOOT;
+    }
+    return COLD_BOOT;
 }
 
 void vector_table_init(void)
@@ -249,52 +243,3 @@ void soc_init(void)
 }
 
 __WEAK void sdk_init(void){};
-
-void ble_sdk_patch_env_init(void)
-{
-    #if (CFG_MAX_ADVS || CFG_MAX_SCAN || CFG_MAX_CONNECTIONS || DTM_TEST_ENABLE)
-
-    // register the msg handler for patch
-    uint16_t ke_msg_cnt = sizeof(ke_msg_tab) / sizeof(ke_msg_tab_item_t);
-    reg_ke_msg_patch_tab(ke_msg_tab, ke_msg_cnt);
-
-    // register the llm hci cmd handler for patch
-    uint16_t llm_hci_cmd_cnt = sizeof(llm_hci_cmd_tab) / sizeof(llm_hci_cmd_tab_item_t);
-    reg_llm_hci_cmd_patch_tab(llm_hci_cmd_tab, llm_hci_cmd_cnt);
-
-    // register the gapm hci evt handler for patch
-    uint16_t gapm_hci_evt_cnt = sizeof(gapm_hci_evt_tab) / sizeof(gapm_hci_evt_tab_item_t);
-    reg_gapm_hci_evt_patch_tab(gapm_hci_evt_tab, gapm_hci_evt_cnt);
-
-    ble_common_env_init();
-
-    #if CFG_MAX_CONNECTIONS
-    ble_con_env_init();
-    #endif
-
-    #if CFG_MAX_SCAN
-    ble_scan_env_init();
-    #endif
-
-    #if CFG_MAX_ADVS
-    ble_adv_env_init();
-    #endif
-
-    #if DTM_TEST_ENABLE
-    ble_test_evn_init();
-    #endif
-
-    #if CFG_CAR_KEY_SUPPORT
-    ble_car_key_env_init();
-    #endif
-
-    #if CFG_BT_BREDR
-    ble_bt_bredr_env_init();
-    #endif
-
-    #if CFG_MUL_LINK_WITH_SAME_DEV
-    ble_mul_link_env_init();
-    #endif
-
-    #endif  // (CFG_MAX_ADVS || CFG_MAX_SCAN || CFG_MAX_CONNECTIONS || DTM_TEST_ENABLE)
-}

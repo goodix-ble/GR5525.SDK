@@ -54,32 +54,6 @@
  * DEFINES
  *****************************************************************************************
  */
-
-#if (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR551X)
-#define QSPI_SMART_CS_LOW(id)                                           \
-    do {                                                                \
-            if(p_qspi_env[id]->p_pin_cfg->cs.enable == APP_QSPI_PIN_ENABLE) \
-            {                                                           \
-                app_io_write_pin(p_qspi_env[id]->p_pin_cfg->cs.type,    \
-                                p_qspi_env[id]->p_pin_cfg->cs.pin,      \
-                                APP_IO_PIN_RESET);                      \
-            }                                                           \
-        } while(0)
-
-#define QSPI_SMART_CS_HIGH(id)                                          \
-    do {                                                                \
-            if(p_qspi_env[id]->p_pin_cfg->cs.enable == APP_QSPI_PIN_ENABLE) \
-            {                                                           \
-                app_io_write_pin(p_qspi_env[id]->p_pin_cfg->cs.type,    \
-                                 p_qspi_env[id]->p_pin_cfg->cs.pin,     \
-                                 APP_IO_PIN_SET);                       \
-            }                                                           \
-    } while(0)
-#else
-#define QSPI_SMART_CS_LOW(id)
-#define QSPI_SMART_CS_HIGH(id)
-#endif
-
 #define REG(x)                              (*(volatile uint32_t*)(x))
 
 #define APP_QSPI_EXCEPT_DEBUG_EN            1u
@@ -337,22 +311,22 @@ const app_qspi_pin_cfg_t g_qspi_pin_groups[QSPIx_PIN_GROUP_MAX] = {
         .io_3 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOB, APP_IO_MUX_0, APP_IO_PIN_4,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
     }
 #else
-    /* CAN MODIFY THE FOLLOWING CONFIGS FOR GR5x25 */
+    /* CAN MODIFY THE FOLLOWING CONFIGS FOR GR5525 */
     [QSPI0_PIN_GROUP_0] = {
-        .cs   = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_AON, APP_IO_MUX_1, APP_IO_PIN_2,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .clk  = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_AON, APP_IO_MUX_1, APP_IO_PIN_5,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_0 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_AON, APP_IO_MUX_1, APP_IO_PIN_3,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_1 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_AON, APP_IO_MUX_1, APP_IO_PIN_4,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_2 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_AON, APP_IO_MUX_1, APP_IO_PIN_0,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_3 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_AON, APP_IO_MUX_1, APP_IO_PIN_1,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .cs   = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_0, APP_IO_PIN_15,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .clk  = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOB, APP_IO_MUX_0, APP_IO_PIN_2,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_0 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOB, APP_IO_MUX_0, APP_IO_PIN_3,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_1 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_0, APP_IO_PIN_14,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_2 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_0, APP_IO_PIN_13,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_3 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_0, APP_IO_PIN_12,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
     },
     [QSPI1_PIN_GROUP_0] = {
-        .cs   = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_2, APP_IO_PIN_15,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .clk  = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_2, APP_IO_PIN_9,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_0 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_2, APP_IO_PIN_8,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_1 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_2, APP_IO_PIN_14,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_2 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_2, APP_IO_PIN_13,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
-        .io_3 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_2, APP_IO_PIN_12,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .cs   = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOB, APP_IO_MUX_7, APP_IO_PIN_5,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .clk  = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOB, APP_IO_MUX_7, APP_IO_PIN_6,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_0 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOB, APP_IO_MUX_7, APP_IO_PIN_4,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_1 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOB, APP_IO_MUX_7, APP_IO_PIN_7,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_2 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOC, APP_IO_MUX_7, APP_IO_PIN_0,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
+        .io_3 = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOC, APP_IO_MUX_7, APP_IO_PIN_1,   APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
     },
     [QSPI2_PIN_GROUP_0] = {
         .cs   = APP_QSPI_PIN_CONFIG(APP_IO_TYPE_GPIOA, APP_IO_MUX_7, APP_IO_PIN_6,  APP_IO_MODE_MUX, APP_QSPI_IO_PULL_DEFAULT, APP_QSPI_PIN_ENABLE),
@@ -1332,22 +1306,21 @@ static uint16_t qspi_gpio_config(app_qspi_pin_cfg_t *p_pin_cfg)
 
     if (p_pin_cfg->cs.enable == APP_QSPI_PIN_ENABLE)
     {
-#if (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR5526X) || (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR5525X)
+#if QSPI_SMART_CS_ENABLE
+        io_init.pull = p_pin_cfg->cs.pull;
+        io_init.mode = APP_IO_MODE_OUTPUT;
+        io_init.pin  = p_pin_cfg->cs.pin;
+        io_init.mux  = APP_IO_MUX;
+        err_code = app_io_init(p_pin_cfg->cs.type, &io_init);
+        APP_DRV_ERR_CODE_CHECK(err_code);
+        app_io_write_pin(p_pin_cfg->cs.type, p_pin_cfg->cs.pin, APP_IO_PIN_SET);
+#else
         io_init.pull = p_pin_cfg->cs.pull;
         io_init.pin  = p_pin_cfg->cs.pin;
         io_init.mux  = p_pin_cfg->cs.mux;
         io_init.mode = p_pin_cfg->cs.mode;
         err_code = app_io_init(p_pin_cfg->cs.type, &io_init);
         APP_DRV_ERR_CODE_CHECK(err_code);
-#endif
-#if (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR551X)
-        io_init.pull = p_pin_cfg->cs.pull;
-        io_init.mode = APP_IO_MODE_OUTPUT;
-        io_init.pin  = p_pin_cfg->cs.pin;
-        io_init.mux  = APP_IO_MUX_7;
-        err_code = app_io_init(p_pin_cfg->cs.type, &io_init);
-        APP_DRV_ERR_CODE_CHECK(err_code);
-        app_io_write_pin(p_pin_cfg->cs.type, p_pin_cfg->cs.pin, APP_IO_PIN_SET);
 #endif
     }
     if (p_pin_cfg->clk.enable == APP_QSPI_PIN_ENABLE)

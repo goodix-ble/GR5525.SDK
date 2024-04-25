@@ -48,6 +48,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_key/app_key_core.c  \
 ../../../../../components/libraries/fault_trace/fault_trace.c  \
 ../../../../../components/libraries/app_error/cortex_backtrace.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/bas/bas.c  \
 ../../../../../components/profiles/dis/dis.c  \

@@ -593,7 +593,6 @@
 --define_symbol pwr_mgmt_dev_init=0x00043a09
 --define_symbol pwr_mgmt_dev_resume=0x00043a19
 --define_symbol pwr_mgmt_dev_suspend=0x00043a29
---define_symbol pwr_mgmt_get_wakeup_flag=0x00043a95
 --define_symbol pwr_mgmt_init=0x00043aa9
 --define_symbol pwr_mgmt_mode_get=0x00043bf9
 --define_symbol pwr_mgmt_mode_set=0x00043c05
@@ -736,6 +735,7 @@
 --define_symbol jump_app=0x00022b7d
 --define_symbol rom_init=0x00048585
 --define_symbol drv_modular_exponet_65537=0x00001231
+--define_symbol bl_pkc_ecdsa_verify=0x00000b9f
 --define_symbol gm_drv_sha_encrypt=0x000021ad
 --define_symbol bl1_boot_info=0x200022d8
 --define_symbol sch_prog_env=0x200020f4
@@ -934,7 +934,16 @@
 --define_symbol gapc_send_disconect_ind=0x000105d5
 --define_symbol gapc_send_error_evt=0x000105fb
 --define_symbol gapm_con_cleanup=0x000143f1
+--define_symbol llm_adv_check_ext_scan_rsp_data=0x0003f82d
+--define_symbol llm_adv_dur=0x0003f961
+--define_symbol llm_ext_adv_data_changed=0x00040905
+--define_symbol llm_rpa_renew=0x00042515
+--define_symbol ble_util_buf_adv_tx_alloc=0x0000ad15
+--define_symbol ble_util_buf_adv_tx_free=0x0000ad39
+--define_symbol lld_adv_scan_rsp_data_update=0x0002fe5d
+--define_symbol llm_adv_hdl_to_id=0x0003fb79
 --define_symbol lld_con_cleanup=0x00031255
+--define_symbol sch_slice_fg_remove=0x00046fc5
 --define_symbol lld_con_clear_ccm_counter=0x00031399
 --define_symbol lld_con_comp_subrate_next_timestamp=0x200008e4
 --define_symbol lld_con_compute_new_bit_offset=0x00031575

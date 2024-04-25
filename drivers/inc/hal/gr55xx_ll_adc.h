@@ -124,7 +124,7 @@ typedef struct _ll_adc_init
 /** @defgroup ADC_LL_EC_CLK ADC CLOCK
   * @{
   */
-#if defined(GR553xx)
+#if defined(GR5X25)
 #define LL_ADC_CLK_16M              (4UL << MCU_SUB_SNSADC_CLK_WR_Pos)   /**< ADC Clock = 16 MHz  */
 #define LL_ADC_CLK_8M               (5UL << MCU_SUB_SNSADC_CLK_WR_Pos)   /**< ADC Clock = 8 MHz  */
 #define LL_ADC_CLK_4M               (6UL << MCU_SUB_SNSADC_CLK_WR_Pos)   /**< ADC Clock = 4 MHz  */
@@ -172,7 +172,7 @@ typedef struct _ll_adc_init
 /** @defgroup ADC_LL_EC_REFERENCE_SRC ADC Reference Source
   * @{
   */
-#if defined(GR553xx)
+#if defined(GR5X25)
 #define LL_ADC_REF_SRC_BUF_INT      (0x00000000UL)                            /**< Select buffered internal reference as reference   */
 #define LL_ADC_REF_SRC_IO0          (3UL << AON_PMU_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO0 as reference                         */
 #define LL_ADC_REF_SRC_IO1          (4UL << AON_PMU_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO1 as reference                         */
@@ -228,7 +228,7 @@ typedef struct _ll_adc_init
 /**
   * @brief LL ADC InitStrcut default configuartion
   */
-#if defined(GR553xx)
+#if defined(GR5X25)
 #define LL_ADC_DEFAULT_CONFIG                      \
 {                                                  \
     .channel_p  = LL_ADC_INPUT_SRC_IO0,            \
@@ -275,7 +275,7 @@ typedef struct _ll_adc_init
   */
 __STATIC_INLINE void ll_adc_enable(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     SET_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_EN_Msk);
 #endif
 }
@@ -291,7 +291,7 @@ __STATIC_INLINE void ll_adc_enable(void)
   */
 __STATIC_INLINE void ll_adc_disable(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     CLEAR_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_EN_Msk);
 #endif
 }
@@ -307,7 +307,7 @@ __STATIC_INLINE void ll_adc_disable(void)
   */
 __STATIC_INLINE uint32_t ll_adc_is_enabled(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_EN_Msk) == (AON_PMU_SNSADC_CFG_EN_Msk));
 #endif
 }
@@ -323,7 +323,7 @@ __STATIC_INLINE uint32_t ll_adc_is_enabled(void)
   */
 __STATIC_INLINE void ll_adc_disable_clock(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(MCU_SUB->SENSE_ADC_CLK, MCU_SUB_SNSADC_CLK_WR, MCU_SUB_SNSADC_CLK_NONE);
 #endif
 }
@@ -339,7 +339,7 @@ __STATIC_INLINE void ll_adc_disable_clock(void)
   */
 __STATIC_INLINE uint32_t ll_adc_is_enabled_clock(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (READ_BITS(MCU_SUB->SENSE_ADC_CLK, MCU_SUB_SNSADC_CLK_RD) != 0);
 #endif
 }
@@ -363,7 +363,7 @@ __STATIC_INLINE uint32_t ll_adc_is_enabled_clock(void)
   */
 __STATIC_INLINE void ll_adc_set_clock(uint32_t clk)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(MCU_SUB->SENSE_ADC_CLK, MCU_SUB_SNSADC_CLK_WR, clk);
 #endif
 }
@@ -386,7 +386,7 @@ __STATIC_INLINE void ll_adc_set_clock(uint32_t clk)
   */
 __STATIC_INLINE uint32_t ll_adc_get_clock(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
      return (uint32_t)(READ_BITS(MCU_SUB->SENSE_ADC_CLK, MCU_SUB_SNSADC_CLK_RD) >> MCU_SUB_SNSADC_CLK_RD_Pos);
 #endif
 }
@@ -407,7 +407,7 @@ __STATIC_INLINE uint32_t ll_adc_get_clock(void)
   */
 __STATIC_INLINE void ll_adc_set_ref_value(uint32_t value)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_REF_VALUE_Msk, value);
 #endif
 }
@@ -427,7 +427,7 @@ __STATIC_INLINE void ll_adc_set_ref_value(uint32_t value)
   */
 __STATIC_INLINE uint32_t ll_adc_get_ref_value(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (uint32_t)(READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_REF_VALUE_Msk) >> AON_PMU_SNSADC_CFG_REF_VALUE_Pos);
 #endif
 }
@@ -443,7 +443,7 @@ __STATIC_INLINE uint32_t ll_adc_get_ref_value(void)
   */
 __STATIC_INLINE void ll_adc_enable_temp(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     SET_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_TEMP_EN_Msk);
 #endif
 }
@@ -459,7 +459,7 @@ __STATIC_INLINE void ll_adc_enable_temp(void)
   */
 __STATIC_INLINE void ll_adc_disable_temp(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     CLEAR_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_TEMP_EN_Msk);
 #endif
 }
@@ -475,7 +475,7 @@ __STATIC_INLINE void ll_adc_disable_temp(void)
   */
 __STATIC_INLINE uint32_t ll_adc_is_enabled_temp(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_TEMP_EN_Msk) == (AON_PMU_SNSADC_CFG_TEMP_EN_Msk));
 #endif
 }
@@ -491,7 +491,7 @@ __STATIC_INLINE uint32_t ll_adc_is_enabled_temp(void)
   */
 __STATIC_INLINE void ll_adc_enable_vbat(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     SET_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_VBAT_EN_Msk);
 #endif
 }
@@ -507,7 +507,7 @@ __STATIC_INLINE void ll_adc_enable_vbat(void)
   */
 __STATIC_INLINE void ll_adc_disable_vbat(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     CLEAR_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_VBAT_EN_Msk);
 #endif
 }
@@ -523,7 +523,7 @@ __STATIC_INLINE void ll_adc_disable_vbat(void)
   */
 __STATIC_INLINE uint32_t ll_adc_is_enabled_vbat(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_VBAT_EN_Msk) == (AON_PMU_SNSADC_CFG_VBAT_EN_Msk));
 #endif
 }
@@ -542,7 +542,7 @@ __STATIC_INLINE uint32_t ll_adc_is_enabled_vbat(void)
   */
 __STATIC_INLINE void ll_adc_set_input_mode(uint32_t mode)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_SINGLE_EN_Msk, mode);
 #endif
 }
@@ -560,7 +560,7 @@ __STATIC_INLINE void ll_adc_set_input_mode(uint32_t mode)
   */
 __STATIC_INLINE uint32_t ll_adc_get_input_mode(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (uint32_t)(READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_SINGLE_EN_Msk) >> AON_PMU_SNSADC_CFG_SINGLE_EN_Pos);
 #endif
 }
@@ -578,7 +578,7 @@ __STATIC_INLINE uint32_t ll_adc_get_input_mode(void)
   */
 __STATIC_INLINE void ll_adc_enable_ofs_cal(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     SET_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_OFS_CAL_EN_Msk);
 #endif
 }
@@ -594,7 +594,7 @@ __STATIC_INLINE void ll_adc_enable_ofs_cal(void)
   */
 __STATIC_INLINE void ll_adc_disable_ofs_cal(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     CLEAR_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_OFS_CAL_EN_Msk);
 #endif
 }
@@ -610,7 +610,7 @@ __STATIC_INLINE void ll_adc_disable_ofs_cal(void)
   */
 __STATIC_INLINE uint32_t ll_adc_is_enabled_ofs_cal(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_OFS_CAL_EN_Msk) == (AON_PMU_SNSADC_CFG_OFS_CAL_EN_Msk));
 #endif
 }
@@ -628,7 +628,7 @@ __STATIC_INLINE uint32_t ll_adc_is_enabled_ofs_cal(void)
   */
 __STATIC_INLINE void ll_adc_set_dynamic_rang(uint32_t rang)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_DYMAMIC_Msk, (rang & 0x7) << AON_PMU_SNSADC_CFG_DYMAMIC_Pos);
 #endif
 }
@@ -644,7 +644,7 @@ __STATIC_INLINE void ll_adc_set_dynamic_rang(uint32_t rang)
   */
 __STATIC_INLINE uint32_t ll_adc_get_dynamic_rang(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (uint32_t)(READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_DYMAMIC_Msk) >> AON_PMU_SNSADC_CFG_DYMAMIC_Pos);
 #endif
 }
@@ -668,7 +668,7 @@ __STATIC_INLINE uint32_t ll_adc_get_dynamic_rang(void)
   */
 __STATIC_INLINE void ll_adc_set_channelp(uint32_t source)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_CHN_P_Msk, source << AON_PMU_SNSADC_CFG_CHN_P_Pos);
 #endif
 }
@@ -691,7 +691,7 @@ __STATIC_INLINE void ll_adc_set_channelp(uint32_t source)
   */
 __STATIC_INLINE uint32_t ll_adc_get_channelp(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (uint32_t)(READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_CHN_P_Msk) >> AON_PMU_SNSADC_CFG_CHN_P_Pos);
 #endif
 }
@@ -715,7 +715,7 @@ __STATIC_INLINE uint32_t ll_adc_get_channelp(void)
   */
 __STATIC_INLINE void ll_adc_set_channeln(uint32_t source)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_CHN_N_Msk, source << AON_PMU_SNSADC_CFG_CHN_N_Pos);
 #endif
 }
@@ -738,7 +738,7 @@ __STATIC_INLINE void ll_adc_set_channeln(uint32_t source)
   */
 __STATIC_INLINE uint32_t ll_adc_get_channeln(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (uint32_t)(READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_CHN_N_Msk) >> AON_PMU_SNSADC_CFG_CHN_N_Pos);
 #endif
 }
@@ -754,7 +754,7 @@ __STATIC_INLINE uint32_t ll_adc_get_channeln(void)
   */
 __STATIC_INLINE void ll_adc_enable_mas_rst(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     SET_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_MAS_RST_Msk);
 #endif
 }
@@ -770,7 +770,7 @@ __STATIC_INLINE void ll_adc_enable_mas_rst(void)
   */
 __STATIC_INLINE void ll_adc_disable_mas_rst(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     CLEAR_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_MAS_RST_Msk);
 #endif
 }
@@ -786,7 +786,7 @@ __STATIC_INLINE void ll_adc_disable_mas_rst(void)
   */
 __STATIC_INLINE uint32_t ll_adc_is_enabled_mas_rst(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_MAS_RST_Msk) == (AON_PMU_SNSADC_CFG_MAS_RST_Msk));
 #endif
 }
@@ -808,7 +808,7 @@ __STATIC_INLINE uint32_t ll_adc_is_enabled_mas_rst(void)
   */
 __STATIC_INLINE void ll_adc_set_ref(uint32_t source)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_REF_SEL_Msk, source);
 #endif
 }
@@ -829,7 +829,7 @@ __STATIC_INLINE void ll_adc_set_ref(uint32_t source)
   */
 __STATIC_INLINE uint32_t ll_adc_get_ref(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (uint32_t)(READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_REF_SEL_Msk) >> AON_PMU_SNSADC_CFG_REF_SEL_Pos);
 #endif
 }
@@ -848,7 +848,7 @@ __STATIC_INLINE uint32_t ll_adc_get_ref(void)
   */
 __STATIC_INLINE void ll_adc_set_ref_current(uint32_t source)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     MODIFY_REG(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_REF_HP_Msk, (source & 0x7) << AON_PMU_SNSADC_CFG_REF_HP_Pos);
 #endif
 }
@@ -864,7 +864,7 @@ __STATIC_INLINE void ll_adc_set_ref_current(uint32_t source)
   */
 __STATIC_INLINE uint32_t ll_adc_get_ref_current(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (uint32_t)(READ_BITS(AON_PMU->SNSADC_CFG, AON_PMU_SNSADC_CFG_REF_HP_Msk) >> AON_PMU_SNSADC_CFG_REF_HP_Pos);
 #endif
 }
@@ -930,7 +930,7 @@ __STATIC_INLINE uint32_t ll_adc_get_thresh(void)
   */
 __STATIC_INLINE void ll_adc_enable_dma_req(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     SET_BITS(MCU_SUB->SENSE_FF_THRESH, MCU_SUB_SNSADC_FF_DMA_EN_Msk);
 #endif
 }
@@ -946,7 +946,7 @@ __STATIC_INLINE void ll_adc_enable_dma_req(void)
   */
 __STATIC_INLINE void ll_adc_disable_dma_req(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     CLEAR_BITS(MCU_SUB->SENSE_FF_THRESH, MCU_SUB_SNSADC_FF_DMA_EN_Msk);
 #endif
 }
@@ -963,7 +963,7 @@ __STATIC_INLINE void ll_adc_disable_dma_req(void)
   */
 __STATIC_INLINE uint32_t ll_adc_is_enabled_dma_req(void)
 {
-#if defined(GR553xx)
+#if defined(GR5X25)
     return (READ_BITS(MCU_SUB->SENSE_FF_THRESH, MCU_SUB_SNSADC_FF_DMA_EN_Msk) == (MCU_SUB_SNSADC_FF_DMA_EN_Msk));
 #endif
 }

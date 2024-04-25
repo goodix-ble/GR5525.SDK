@@ -48,6 +48,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/ring_buffer/ring_buffer.c  \
 ../../../../../components/libraries/app_log/app_log.c  \
 ../../../../../components/libraries/app_assert/app_assert.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/otas_c/otas_c.c  \
 ../../../../../components/drivers_ext/gr55xx/gr55xx_spi_flash.c  \

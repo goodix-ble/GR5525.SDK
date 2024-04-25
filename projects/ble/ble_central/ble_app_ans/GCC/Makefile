@@ -48,6 +48,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/app_assert/app_assert.c  \
 ../../../../../components/libraries/app_scheduler/app_scheduler.c  \
 ../../../../../components/libraries/app_memory/app_memory.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../components/profiles/ans/ans.c  \
 ../../../../../external/segger_rtt/SEGGER_RTT.c  \

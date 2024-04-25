@@ -221,6 +221,7 @@ uint16_t app_rng_gen_async(uint16_t *p_seed);
 rng_handle_t *app_rng_get_handle(void);
 
 /** @} */
+
 #endif
 
 #ifdef __cplusplus

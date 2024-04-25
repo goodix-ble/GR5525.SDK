@@ -80,8 +80,8 @@
 /*******KEY DRIVER IO CONFIG********************/
 #define APP_KEY_UP_IO_TYPE                  APP_IO_TYPE_AON
 #define APP_KEY_OK_IO_TYPE                  APP_IO_TYPE_AON
-#define APP_KEY_UP_PIN                      APP_IO_PIN_3
-#define APP_KEY_OK_PIN                      APP_IO_PIN_4
+#define APP_KEY_UP_PIN                      APP_IO_PIN_0
+#define APP_KEY_OK_PIN                      APP_IO_PIN_1
 #define APP_KEY_UP_MUX                      APP_IO_MUX_8
 #define APP_KEY_OK_MUX                      APP_IO_MUX_8
 #define APP_GPIO_PIN0                       APP_IO_PIN_0     /* GPIO16 */

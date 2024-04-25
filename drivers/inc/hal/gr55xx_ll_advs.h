@@ -330,6 +330,10 @@ __STATIC_INLINE uint8_t ll_advs_digcore_vtbias_ctrl_lower_limit_get(void)
 
 /** @} */
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif
 /** @} */
 

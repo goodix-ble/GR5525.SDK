@@ -70,7 +70,7 @@ static bool                 s_is_app_fw_valid;
 static dfu_image_info_t     s_app_img_info;
 static uint8_t              s_flash_read_buff[DFU_FLASH_SECTOR_SIZE];
 
-#ifndef SOC_GR5332
+#ifndef SOC_GR533X
 static bool                 s_flash_security_status = false;
 #endif
 
@@ -93,7 +93,7 @@ static void fw_boot_info_print(dfu_boot_info_t *p_boot_info)
 
 void security_disable(void)
 {
-#ifndef SOC_GR5332
+#ifndef SOC_GR533X
     uint32_t sys_security = sys_security_enable_status_check();
     if(sys_security)
     {
@@ -105,7 +105,7 @@ void security_disable(void)
 
 void security_state_recovery(void)
 {
-#ifndef SOC_GR5332
+#ifndef SOC_GR533X
     uint32_t sys_security = sys_security_enable_status_check();
     if(sys_security)
     {
@@ -139,34 +139,26 @@ static bool bootloader_firmware_verify(uint32_t bin_addr, uint32_t bin_size, uin
 {
     extern bool check_image_crc(const uint8_t * p_data, uint32_t len, uint32_t check);
 
-#ifndef SOC_GR5332
-    if (!sys_security_enable_status_check() && !check_image_crc((uint8_t *)bin_addr, bin_size, check_sum_store))
-    {
-        APP_LOG_DEBUG("    Firmware checksum invalid");
-        return false;
-    }
+#if BOOTLOADER_SIGN_ENABLE
+    bool security_enable = false;
+    #ifndef SOC_GR533X
+    security_enable = sys_security_enable_status_check();
+    #endif
 
-    #if BOOTLOADER_SIGN_ENABLE
         uint8_t public_key_hash[] = {BOOTLOADER_PUBLIC_KEY_HASH};
-        //security_disable();
-        if (!sign_verify(bin_addr, bin_size, public_key_hash, sys_security_enable_status_check()))
+        if (!sign_verify(bin_addr, bin_size, public_key_hash, security_enable))
         {
-            //security_state_recovery();
             APP_LOG_DEBUG("    Signature verify check fail.");
             return false;
         }
-        //security_state_recovery();
         APP_LOG_DEBUG("    Signature verify check success.");
-    #endif
-
-#else
+#endif
 
     if (!check_image_crc((uint8_t *)bin_addr, bin_size, check_sum_store))
     {
         APP_LOG_DEBUG("    Firmware checksum invalid");
         return false;
     }
-#endif
 
     return true;
 }
@@ -233,17 +225,21 @@ SECTION_RAM_CODE static void bootloader_dfu_fw_copy(uint32_t dst_addr, uint32_t 
 
     APP_LOG_DEBUG("    App dfu firmware start copy.");
 
-#ifndef SOC_GR5332
+#ifndef SOC_GR533X
     if (sys_security_enable_status_check())
     {
         temp_size += 856;
     }
     else
     {
-#if BOOTLOADER_SIGN_ENABLE
+    #if BOOTLOADER_SIGN_ENABLE
         temp_size += 856;
-#endif
+    #endif
     }
+#else
+    #if BOOTLOADER_SIGN_ENABLE
+        temp_size += 856;
+    #endif
 #endif
 
     copy_page = temp_size / DFU_FLASH_SECTOR_SIZE;
@@ -313,6 +309,7 @@ static bool bootloader_app_fw_verify()
         }
     }
 
+    APP_LOG_DEBUG("    Not found app firmware image info in APP INFO AREA and SYSTEM CONFIG AREA");
     return false;
 }
 

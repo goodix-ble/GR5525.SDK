@@ -32,6 +32,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/libraries/utility/utility.c  \
 ../../../../../components/libraries/app_timer/app_timer.c  \
 ../../../../../components/libraries/pmu_calibration/pmu_calibration.c  \
+../../../../../components/sdk/ble.c  \
 ../../../../../components/profiles/common/ble_prf_utils.c  \
 ../../../../../external/segger_rtt/SEGGER_RTT.c  \
 ../Src/platform/user_periph_setup.c  \

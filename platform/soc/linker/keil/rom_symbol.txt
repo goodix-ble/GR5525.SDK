@@ -596,7 +596,6 @@
 0x00043a09 T pwr_mgmt_dev_init
 0x00043a19 T pwr_mgmt_dev_resume
 0x00043a29 T pwr_mgmt_dev_suspend
-0x00043a95 T pwr_mgmt_get_wakeup_flag
 0x00043aa9 T pwr_mgmt_init
 0x00043bf9 T pwr_mgmt_mode_get
 0x00043c05 T pwr_mgmt_mode_set
@@ -740,6 +739,7 @@
 0x00022b7d T jump_app
 0x00048585 T rom_init
 0x00001231 T drv_modular_exponet_65537
+0x00000b9f T bl_pkc_ecdsa_verify
 0x000021ad T gm_drv_sha_encrypt
 0x200022d8 D bl1_boot_info
 0x200020f4 D sch_prog_env
@@ -939,8 +939,17 @@
 0x000105d5 T gapc_send_disconect_ind
 0x000105fb T gapc_send_error_evt
 0x000143f1 T gapm_con_cleanup
-
+0x0003f82d T llm_adv_check_ext_scan_rsp_data
+0x0003f961 T llm_adv_dur
+0x00040905 T llm_ext_adv_data_changed
+0x00042515 T llm_rpa_renew
+0x0000ad15 T ble_util_buf_adv_tx_alloc
+0x0000ad39 T ble_util_buf_adv_tx_free
+0x0002fe5d T lld_adv_scan_rsp_data_update
+0x0003fb79 T llm_adv_hdl_to_id
 0x00031255 T lld_con_cleanup
+0x00046fc5 T sch_slice_fg_remove
+
 0x00031399 T lld_con_clear_ccm_counter
 0x200008e4 D lld_con_comp_subrate_next_timestamp
 0x00031575 T lld_con_compute_new_bit_offset

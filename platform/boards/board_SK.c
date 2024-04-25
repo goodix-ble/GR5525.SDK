@@ -151,7 +151,11 @@ void bsp_log_init(void)
 #endif
 
 #endif
+
+#ifndef BOOTLOADER_ENABLE
     app_assert_init();
+#endif
+
 #endif
 }
 

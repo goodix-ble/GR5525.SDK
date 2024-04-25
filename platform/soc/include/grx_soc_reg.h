@@ -36,4 +36,4 @@ extern "C" {
 }
 #endif
 
-#endif /* __SYSTEM_GR55xx_H__ */
+#endif /* __GRX_SOC_REG_H__ */

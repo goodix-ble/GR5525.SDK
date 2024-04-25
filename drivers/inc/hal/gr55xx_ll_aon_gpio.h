@@ -529,13 +529,13 @@ __STATIC_INLINE uint32_t ll_aon_gpio_get_pin_pull(uint32_t pin)
 __STATIC_INLINE void ll_aon_gpio_set_pin_mux(uint32_t pin, uint32_t mux)
 {
     uint32_t pos = POSITION_VAL(pin) << 2;
+    MODIFY_REG(MCU_RET->AON_PAD_MUX_CTL, 0xF << pos, mux << pos);
     if(LL_AON_GPIO_MUX_8 == mux)
     {
         CLEAR_BITS(AON_IO->AON_MCU_OVR, pin << AON_IO_AON_MCU_OVR_OVR_POS);
     }
     else
     {
-        MODIFY_REG(MCU_RET->AON_PAD_MUX_CTL, 0xF << pos, mux << pos);
         SET_BITS(AON_IO->AON_MCU_OVR, pin << AON_IO_AON_MCU_OVR_OVR_POS);
     }
 }

@@ -57,7 +57,7 @@
 #define APP_TIMER_ASSERT_ENABLE   0
 
 /** @brief App timer trigger window enable define. */
-#define APP_TIMER_TRIGGER_WINDOW_ENABLE   0
+#define APP_TIMER_TRIGGER_WINDOW_ENABLE   1
 /** @} */
 
 /**

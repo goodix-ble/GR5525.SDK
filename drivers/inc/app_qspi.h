@@ -53,9 +53,7 @@
 #define _APP_QSPI_H_
 
 #include "app_drv_config.h"
-#if (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR5332X)
-#include "gr533x_hal.h"
-#else
+#if (APP_DRIVER_CHIP_TYPE != APP_DRIVER_GR5405) && (APP_DRIVER_CHIP_TYPE != APP_DRIVER_GR5332X)
 #include "gr55xx_hal.h"
 #endif
 
@@ -100,6 +98,44 @@ extern "C" {
 
 //#define APP_STORAGE_RAM_ID    0xf                  /**< Special ID to handle RAM Source */
 #endif
+
+/** @addtogroup QSPI_SMART_CS_ENABLE smart cs enable defines. NOTE: If QSPI_DATA_MODE_SPI, enable smart cs
+  * @{
+  */
+#ifndef QSPI_SMART_CS_ENABLE
+  #if (APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR551X)
+    #define  QSPI_SMART_CS_ENABLE  1  /**< CS pin is controlled by software */
+  #else
+    #define  QSPI_SMART_CS_ENABLE  0  /**< CS pin is controlled by hardware */
+  #endif
+#endif
+
+#if QSPI_SMART_CS_ENABLE
+  #define QSPI_SMART_CS_LOW(id)                                           \
+      do {                                                                \
+              if(p_qspi_env[id]->p_pin_cfg->cs.enable == APP_QSPI_PIN_ENABLE) \
+              {                                                           \
+                  app_io_write_pin(p_qspi_env[id]->p_pin_cfg->cs.type,    \
+                                  p_qspi_env[id]->p_pin_cfg->cs.pin,      \
+                                  APP_IO_PIN_RESET);                      \
+              }                                                           \
+          } while(0)
+
+  #define QSPI_SMART_CS_HIGH(id)                                          \
+      do {                                                                \
+              if(p_qspi_env[id]->p_pin_cfg->cs.enable == APP_QSPI_PIN_ENABLE) \
+              {                                                           \
+                  app_io_write_pin(p_qspi_env[id]->p_pin_cfg->cs.type,    \
+                                  p_qspi_env[id]->p_pin_cfg->cs.pin,      \
+                                  APP_IO_PIN_SET);                        \
+              }                                                           \
+      } while(0)
+#else
+  #define QSPI_SMART_CS_LOW(id)
+  #define QSPI_SMART_CS_HIGH(id)
+#endif /* QSPI_SMART_CS_ENABLE */
+/** @} */
+
 /** @} */
 
 /** @} */
@@ -205,8 +241,28 @@ typedef enum {
 typedef enum {
 
     QSPI0_PIN_GROUP_0 = 0x00,            /**< QSPI0 Pinmux Group  */
+                                                /* CS  : GPIO_26.MUX0 */
+                                                /* CLK : GPIO_21.MUX0 */
+                                                /* IO0 : GPIO_22.MUX0 */
+                                                /* IO1 : GPIO_23.MUX0 */
+                                                /* IO2 : GPIO_24.MUX0 */
+                                                /* IO3 : GPIO_25.MUX0 */
+
     QSPI1_PIN_GROUP_0 = 0x01,            /**< QSPI1 Pinmux Group 0 */
+                                                /* CS  : GPIO_10.MUX0 */
+                                                /* CLK : GPIO_15.MUX0 */
+                                                /* IO0 : GPIO_11.MUX0 */
+                                                /* IO1 : GPIO_12.MUX0 */
+                                                /* IO2 : GPIO_13.MUX0 */
+                                                /* IO3 : GPIO_14.MUX0 */
+
     QSPI2_PIN_GROUP_0 = 0x02,            /**< QSPI2 Pinmux Group 0 */
+                                                /* CS  : GPIO_27.MUX0 */
+                                                /* CLK : GPIO_16.MUX0 */
+                                                /* IO0 : GPIO_17.MUX0 */
+                                                /* IO1 : GPIO_18.MUX0 */
+                                                /* IO2 : GPIO_19.MUX0 */
+                                                /* IO3 : GPIO_20.MUX0 */
     QSPIx_PIN_GROUP_MAX,
 } qspi_pins_group_e;
 

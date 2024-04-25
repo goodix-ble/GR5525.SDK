@@ -53,10 +53,11 @@ SECTIONS
         __data_start__ = .;
         *(vtable)
         *(.data*)
-            *(.ramfunc)
-            *(RAM_CODE)
-
-                . = ALIGN(4);
+        *(.ramfunc)
+        *(RAM_CODE)
+        . = ALIGN(128);
+        *(FPB*)
+        . = ALIGN(4);
         PROVIDE_HIDDEN (__preinit_array_start = .);
         KEEP(*(.preinit_array))
         PROVIDE_HIDDEN (__preinit_array_end = .);
@@ -73,12 +74,6 @@ SECTIONS
         KEEP(*(.jcr*))
         . = ALIGN(4);
         __data_end__ = .;
-    } > RAM
-
-    .my_section 0x20008000:
-    {
-        . = ALIGN(32);
-        *(FPB*)
     } > RAM
 
     .bss :

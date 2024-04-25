@@ -51,8 +51,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/** @addtogroup NVDS_DEFINES Defines
- * @{ */
+/**
+ * @addtogroup NVDS_DEFINES Defines
+ * @{
+ */
 #define NV_TAGCAT_APP       0x4000                                  /**< NVDS tag mask for user application. */
 #define NV_TAG_APP(idx)     (NV_TAGCAT_APP | ((idx) & 0x3FFF))      /**< Get NVDS tag for user application.
                                                                          The values of Tag 0x0000 and 0xFFFF are invalid.
@@ -60,9 +62,13 @@
                                                                          The range of idx is 0x0000~0x3FFF. */
 /** @} */
 
-/**@addtogroup NVDS_ENUMERATIONS Enumerations
- * @{ */
-/**@brief NVDS Returned Status. */
+/**
+ * @addtogroup NVDS_ENUMERATIONS Enumerations
+ * @{
+ */
+/**
+  * @brief NVDS Returned Status.
+  */
 enum NVDS_STATUS
 {
     NVDS_SUCCESS,                       /**< NVDS succeeds. */
@@ -86,16 +92,23 @@ enum NVDS_STATUS
 };
 /** @} */
 
-/**@addtogroup NVDS_TYPEDEFS Type Typedefs
- * @{ */
-/**@brief NVDS Item tag. */
+/**
+ * @addtogroup NVDS_TYPEDEFS Type Typedefs
+ * @{
+ */
+/**
+  * @brief NVDS Item tag.
+  */
 typedef uint16_t NvdsTag_t;
 /** @} */
 
-
-/**@addtogroup NVDS_STRUCTURES Enumerations
- * @{ */
-/**@brief NVDS drive function struct. */
+/**
+ * @addtogroup NVDS_STRUCTURES Enumerations
+ * @{
+ */
+/**
+  * @brief NVDS drive function struct.
+  */
 typedef struct
 {
     uint32_t (*p_nvds_flash_read)(const uint32_t addr, uint8_t *buf, const uint32_t size);            /**< NVDS flash read function. */
@@ -106,7 +119,9 @@ typedef struct
     void (*p_nvds_flash_get_info)(uint32_t *id, uint32_t *size);                                      /**< NVDS flash information get function. */
 }nvds_drv_func_t;
 
-/**@brief NVDS function struct. */
+/**
+  * @brief NVDS function struct.
+  */
 typedef struct
 {
     uint8_t  (*p_nvds_init)(uint32_t start_addr, uint8_t sectors);     /**< NVDS init function */
@@ -115,17 +130,19 @@ typedef struct
     uint8_t  (*p_nvds_del)(uint16_t tag);                                                       /**< NVDS delete function */
     uint16_t (*p_nvds_tag_length)(uint16_t tag);                                                /**< NVDS tag length get function */
 }nvds_func_t;
+
 /** @} */
 
-
-
-/** @addtogroup NVDS_FUNCTIONS Functions
- * @{ */
+/**
+ * @addtogroup NVDS_FUNCTIONS Functions
+ * @{
+ */
 /**
  ****************************************************************************************
  * @brief Initialize the sectors for NVDS.
  *
  * @note NVDS module will use one more sector flash for garbage collection.
+ *       For example, sectors=1, NVDS area actually use 2 sector(one sector for garbage collection)
  *
  * @param[in] start_addr:      Start address of NVDS area. If the value does not equal zero, it must be sector-aligned.
                                If the value equals zero, NVDS area will locate in the last two sector(s) in flash memory.
@@ -135,6 +152,21 @@ typedef struct
  ****************************************************************************************
  */
 uint8_t nvds_init(uint32_t start_addr, uint8_t sectors);
+
+/**
+ ****************************************************************************************
+ * @brief De-initialize the sectors for NVDS.
+ *
+ * @note nvds_deinit will erase the flash sectors.
+ *
+ * @param[in] start_addr:      Start address of NVDS area. If the value does not equal zero, it must be sector-aligned.
+                               If the value equals zero, NVDS area will locate in the last two sector(s) in flash memory.
+ * @param[in] sectors:         The number of sectors.
+ *
+ * @return Result of nvds deinit.
+ ****************************************************************************************
+ */
+uint8_t nvds_deinit(uint32_t start_addr, uint8_t sectors);
 
 /**
  ****************************************************************************************
@@ -216,9 +248,10 @@ uint8_t nvds_func_replace(nvds_func_t *p_nvds_func);
  ****************************************************************************************
  */
 void nvds_retention_size(uint8_t bond_dev_num);
+
 /** @} */
+
 #endif
 
 /** @} */
 /** @} */
-

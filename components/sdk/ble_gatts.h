@@ -658,6 +658,7 @@ uint16_t ble_gatts_service_discover_all(uint8_t conn_idx);
  */
 uint16_t ble_gatts_service_hide_all(uint8_t conn_idx);
 
+
 /** @} */
 
 #endif // BLE_SDK_GATTS_H_
