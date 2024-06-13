@@ -4,11 +4,15 @@
 #include "lv_hal_disp.h"
 
 
-#define SCREEN_TYPE         1       // 0 - XSJ-QSPI-454; 1 - FLS-QSPI-360
+#define SCREEN_TYPE             2       // 1 - FLS-QSPI-360
+                                        // 2 - PSD-QSPI-360
+
 #if SCREEN_TYPE == 1
-#define TE_SIGNAL_ENABLED   1
+    #define TE_SIGNAL_ENABLED   1
+#elif SCREEN_TYPE == 2
+    #define TE_SIGNAL_ENABLED   1
 #else
-#define TE_SIGNAL_ENABLED   0
+    #define TE_SIGNAL_ENABLED   0
 #endif // SCREEN_TYPE == 1
 
 void disp_crtl_init(void);

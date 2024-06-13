@@ -488,12 +488,12 @@ void ble_app_init(void)
                  bd_addr.gap_addr.addr[1],
                  bd_addr.gap_addr.addr[0]);
     APP_LOG_INFO("GR5625 LVGL example started.");
-
+#if GR5625_SK
     bt_api_addr_t bt_addr;
     memcpy(&bt_addr, bd_addr.gap_addr.addr, 6);
     bt_api_addr_set(&bt_addr);
     bt_api_addr_get();
-
+#endif
     services_init();
     gap_params_init();
 

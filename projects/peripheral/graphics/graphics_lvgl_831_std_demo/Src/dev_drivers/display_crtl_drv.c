@@ -1,16 +1,17 @@
 #include "app_qspi.h"
 #include "app_graphics_qspi.h"
 #include "display_crtl_drv.h"
-#include "display_rm69330_drv.h"
 #include "display_fls_amo139_360p_qspi_drv.h"
+#include "display_st77916_psd_360p_qspi_drv.h"
 #include "lv_refr.h"
 #include "system_manager.h"
 #include "app_log.h"
 
 
-#define FLUSH_SYNC_MODE         1  // 0 - cpu sync wait; 1 - sem async wait
+#define DISPLAY_SYNC_MODE       1  // 0 - cpu sync wait; 1 - sem async wait
 #define DISPLAY_IF_MODE         1  // 0 - Display in SPI Mode ; 1 - Display in QSPI Mode
 #define QSPI_DISP_USE_DYN_MEM   0
+
 
 #if LV_GDX_PATCH_SET_CLIP_AREA_ONCE
 static lv_area_t const *s_clip_area = NULL;
@@ -21,7 +22,7 @@ static void     display_qspi_evt_handler(app_qspi_evt_t *p_evt);
 static void     lv_fps_update(void);
 static void     lv_refresh_fps_draw(void);
 
-#if FLUSH_SYNC_MODE == 0
+#if DISPLAY_SYNC_MODE == 0
 static volatile bool is_display_cmplt = false;
 static void     qspi_display_clear_flag(void);
 static void     qspi_display_wait_cplt(void);
@@ -41,13 +42,13 @@ static void _display_sem_give(void) {
 
 
 void disp_crtl_init(void) {
-#if SCREEN_TYPE == 0
-    qspi_screen_init(APP_QSPI_ID_2, 2, display_qspi_evt_handler);
-#elif SCREEN_TYPE == 1
+#if SCREEN_TYPE == 1
     display_fls_amo139_init(APP_QSPI_ID_2, 2, display_qspi_evt_handler);
+#elif SCREEN_TYPE == 2
+    display_st77916_psd_360p_init(APP_QSPI_ID_2, 2, display_qspi_evt_handler);
 #endif
 
-#if FLUSH_SYNC_MODE == 1
+#if DISPLAY_SYNC_MODE == 1
     _display_sem_init();
     _display_sem_give();
 #endif
@@ -118,7 +119,11 @@ void disp_crtl_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_
     app_qspi_screen_info_t      screen_info;
 #if DISPLAY_IF_MODE > 0
     /* QSPI Mode */
+  #if SCREEN_TYPE == 2
+    screen_cmd.instruction              = 0x38;
+  #else
     screen_cmd.instruction              = 0x12;
+  #endif
     screen_cmd.instruction_size         = QSPI_INSTSIZE_08_BITS;
     screen_cmd.leading_address          = 0x002C00;
     screen_cmd.ongoing_address          = 0x003C00;
@@ -146,7 +151,7 @@ void disp_crtl_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_
     screen_info.scrn_pixel_height = area->y2 - area->y1 + 1;
     screen_info.scrn_pixel_depth  = 2;
 
-#if FLUSH_SYNC_MODE == 1
+#if DISPLAY_SYNC_MODE == 1
     _display_sem_take();
 #endif
 
@@ -156,10 +161,10 @@ void disp_crtl_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_
 #if LV_GDX_PATCH_SET_CLIP_AREA_ONCE
     if (s_clip_area)
     {
-#if SCREEN_TYPE == 0
-        qspi_screen_set_show_area(s_clip_area->x1, s_clip_area->x2, s_clip_area->y1, s_clip_area->y2);
-#elif SCREEN_TYPE == 1
-		display_fls_amo139_set_show_area(s_clip_area->x1, s_clip_area->x2, s_clip_area->y1, s_clip_area->y2);
+#if SCREEN_TYPE == 1
+        display_fls_amo139_set_show_area(s_clip_area->x1, s_clip_area->x2, s_clip_area->y1, s_clip_area->y2);
+#elif SCREEN_TYPE == 2
+        display_st77916_psd_360p_set_show_area(s_clip_area->x1, s_clip_area->x2, s_clip_area->y1, s_clip_area->y2);
 #endif
         s_clip_area = NULL;
     }
@@ -175,23 +180,29 @@ void disp_crtl_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_
         display_fls_amo139_wait_te_signal();
         g_need_te_sync = false;
     }
-#endif // SCREEN_TYPE == 1
+#elif SCREEN_TYPE == 2
+    if (g_need_te_sync)
+    {
+        display_st77916_psd_360p_wait_te_signal();
+        g_need_te_sync = false;
+    }
+#endif // SCREEN_TYPE
 
 #else
-	#if SCREEN_TYPE == 0
-		qspi_screen_set_show_area(area->x1, area->x2, area->y1, area->y2);
-	#elif SCREEN_TYPE == 1
-		display_fls_amo139_set_show_area(area->x1, area->x2, area->y1, area->y2);
-	#endif
+    #if SCREEN_TYPE == 1
+        display_fls_amo139_set_show_area(area->x1, area->x2, area->y1, area->y2);
+    #elif SCREEN_TYPE == 2
+        display_st77916_psd_360p_set_show_area(area->x1, area->x2, area->y1, area->y2);
+    #endif
 #endif // LV_GDX_PATCH_SET_CLIP_AREA_ONCE
 
-#if FLUSH_SYNC_MODE == 0
+#if DISPLAY_SYNC_MODE == 0
     qspi_display_clear_flag();
 #endif
 
     app_qspi_send_display_frame(APP_QSPI_ID_2, &screen_cmd, &screen_info, (const uint8_t *)draw_buf->buf_act);
 
-#if FLUSH_SYNC_MODE == 0
+#if DISPLAY_SYNC_MODE == 0
     qspi_display_wait_cplt();
 #endif
 }
@@ -216,20 +227,20 @@ static void display_qspi_evt_handler(app_qspi_evt_t *p_evt) {
     switch (p_evt->type)
     {
         case APP_QSPI_EVT_TX_CPLT:
-#if FLUSH_SYNC_MODE== 0
+#if DISPLAY_SYNC_MODE== 0
             is_display_cmplt = true;
 #else
             _display_sem_give();
-#endif // FLUSH_SYNC_MODE== 0
+#endif // DISPLAY_SYNC_MODE== 0
             break;
 
         case APP_QSPI_EVT_ERROR:
         case APP_QSPI_EVT_ABORT:
-#if FLUSH_SYNC_MODE== 0
+#if DISPLAY_SYNC_MODE== 0
             is_display_cmplt = true;
 #else
             _display_sem_give();
-#endif // FLUSH_SYNC_MODE== 0
+#endif // DISPLAY_SYNC_MODE== 0
             break;
 
         default:
@@ -237,7 +248,7 @@ static void display_qspi_evt_handler(app_qspi_evt_t *p_evt) {
     }
 }
 
-#if FLUSH_SYNC_MODE == 0
+#if DISPLAY_SYNC_MODE == 0
 static void qspi_display_clear_flag(void) {
     is_display_cmplt = false;
 }

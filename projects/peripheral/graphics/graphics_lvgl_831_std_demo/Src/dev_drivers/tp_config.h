@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 #include "app_drv_config.h"
-
+#include "display_crtl_drv.h"
 
 #define IS_SK_BOARD         1       /* 0 - EVB Board
                                      * 1 - SK Board
@@ -121,15 +121,17 @@
 
 
 
-
 #define TP_I2C_IO_CONFIG            {{ TP_SCL_IO_TYPE, TP_SCL_IO_MUX, TP_SCL_IO_PIN, APP_IO_PULLUP }, \
                                      { TP_SDA_IO_TYPE, TP_SDA_IO_MUX, TP_SDA_IO_PIN, APP_IO_PULLUP }}
 #define TP_I2C_MODE_CONFIG          { DMA1, DMA1, DMA_Channel2, DMA_Channel3 }
 #define TP_I2C_ATTR_CONFIG          { I2C_SPEED_400K, 0x00, I2C_ADDRESSINGMODE_7BIT, I2C_GENERALCALL_DISABLE }
 #define TP_I2C_PARAM_CONFIG         { TP_I2C_ID, APP_I2C_ROLE_MASTER, TP_I2C_IO_CONFIG, TP_I2C_MODE_CONFIG, TP_I2C_ATTR_CONFIG }
 
-
-#define TP_I2C_ADDR          (0x2C)
+#if SCREEN_TYPE == 1
+    #define TP_I2C_ADDR          (0x2C)
+#elif SCREEN_TYPE == 2
+    #define TP_I2C_ADDR          (0x15)
+#endif
 
 typedef void (*tp_int_cb_func_t)(void);
 
