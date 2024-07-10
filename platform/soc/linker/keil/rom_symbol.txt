@@ -961,3 +961,9 @@
 0x0003ea69 T lld_sync_win_compute
 0x200008e8 D lld_con_check_subrate_latency
 0x000418b5 T llm_le_features_set_bit
+0x0000ca6d T compute_pref_period
+0x200007fc D llc_pref_param_compute
+0x00041c81 T llm_plan_elt_get
+0x00044ff9 T sch_plan_chk
+0x00046235 T sch_plan_req
+

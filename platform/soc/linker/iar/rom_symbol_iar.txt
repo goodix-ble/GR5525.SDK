@@ -602,7 +602,7 @@
 --define_symbol pwr_mgmt_sleep=0x00043db5
 --define_symbol pwr_mgmt_warm_boot_reg=0x00043f91
 --define_symbol pwr_mgmt_wfe_sleep=0x00043fa9
---define_symbol pwr_mgmt_ultra_sleep=0x00043e55
+--define_symbol pwr_mgmt_locker=0x00043bed
 --define_symbol ranging_mode_set=0x00043fb9
 --define_symbol ranging_one_way_ch_set=0x00043fc5
 --define_symbol ranging_one_way_param_set=0x00043fd9
@@ -954,3 +954,8 @@
 --define_symbol lld_sync_win_compute=0x0003ea69
 --define_symbol lld_con_check_subrate_latency=0x200008e8
 --define_symbol llm_le_features_set_bit=0x000418b5
+--define_symbol compute_pref_period=0x0000ca6d
+--define_symbol llc_pref_param_compute=0x200007fc
+--define_symbol llm_plan_elt_get=0x00041c81
+--define_symbol sch_plan_chk=0x00044ff9
+--define_symbol sch_plan_req=0x00046235

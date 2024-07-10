@@ -15,13 +15,14 @@
 #define FLASH_HP_CMD                   PUYA_FLASH_HP_CMD
 #define FLASH_HP_END_DUMMY             PUYA_FLASH_HP_END_DUMMY
 #define SOFTWARE_REG_WAKEUP_FLAG_POS   (8)
+#define SOFTWARE_REG2_ULTRA_DEEP_SLEEP_FLAG_POS       (9)
 
 /******************************************************************************/
 
 #define SDK_VER_MAJOR                   1
 #define SDK_VER_MINOR                   0
-#define SDK_VER_BUILD                   1
-#define COMMIT_ID                       0xecd527bd
+#define SDK_VER_BUILD                   2
+#define COMMIT_ID                       0xa7959a3a
 
 static const sdk_version_t sdk_version = {SDK_VER_MAJOR,
                                           SDK_VER_MINOR,
@@ -146,6 +147,13 @@ void first_class_task(void)
     hp_init.xqspi_hp_end_dummy = FLASH_HP_END_DUMMY;
     platform_flash_enable_quad(&hp_init);
 
+    /* Configure the sleep memory retention, it's modifed in ultra deep sleep.
+     * GR5525 dosen't support configuring memory retention bank separately,
+     * so we configure all the memory being retained during deep sleep.
+     */
+    AON_PWR->MEM_PWR_SLP0 = 0x0000FFFF;
+    AON_PWR->MEM_PWR_SLP1 = 0x000003FF;
+
     /* Enable chip reset reason record. */
     sys_device_reset_reason_enable();
     /* nvds module init process. */
@@ -156,6 +164,25 @@ void first_class_task(void)
 
     /* platform init process. */
     platform_sdk_init();
+}
+
+extern bool clock_calibration_is_done(void);
+static bool wait_for_clock_calibration_done(uint32_t timeout)//unit:us
+{
+    bool ret = true;
+    uint32_t wait_time = 0;
+
+    while(!clock_calibration_is_done())
+    {
+        delay_us(1);
+        if(++wait_time >= timeout)
+        {
+            ret = false;
+            break;
+        }
+    }
+
+    return ret;
 }
 
 void second_class_task(void)
@@ -186,6 +213,11 @@ void second_class_task(void)
 
     /* Init peripheral sleep management */
     app_pwr_mgmt_init();
+
+    if(!CHECK_IS_ON_FPGA())
+    {
+        wait_for_clock_calibration_done(1000000);
+    }
 }
 
 static fun_t svc_user_func = NULL;
@@ -223,6 +255,24 @@ boot_mode_t pwr_mgmt_get_wakeup_flag(void)
     return COLD_BOOT;
 }
 
+/**
+ ****************************************************************************************
+ * @brief  Check whether the system wakes up from ultra deep sleep. If it wakes up from ultra
+ *         deep sleep, reset the entire system. If not, do nothing.
+ * @retval: void
+ ****************************************************************************************
+ */
+static void ultra_deep_sleep_wakeup_handle(void)
+{
+    if (AON_CTL->SOFTWARE_REG2 & (1 << SOFTWARE_REG2_ULTRA_DEEP_SLEEP_FLAG_POS))
+    {
+        // Reset the whole system by register
+        MCU_SUB->AON_SW_RST = 0xC5A10100;
+        while (true)
+            ;
+    }
+}
+
 void vector_table_init(void)
 {
     __DMB(); // Data Memory Barrier
@@ -239,6 +289,7 @@ void warm_boot_process(void)
 
 void soc_init(void)
 {
+    ultra_deep_sleep_wakeup_handle();
     platform_init();
 }
 

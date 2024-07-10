@@ -471,6 +471,11 @@ uint16_t app_uart_receive_sync(app_uart_id_t id, uint8_t *p_data, uint16_t size,
         return APP_DRV_ERR_INVALID_PARAM;
     }
 
+    if ((APP_DRV_NEVER_TIMEOUT != timeout) && (APP_DRV_MAX_TIMEOUT < timeout))
+    {
+        return APP_DRV_ERR_INVALID_PARAM;
+    }
+
 #ifdef APP_DRIVER_WAKEUP_CALL_FUN
     uart_wake_up(id);
 #endif
@@ -553,6 +558,11 @@ uint16_t app_uart_transmit_sync(app_uart_id_t id, uint8_t *p_data, uint16_t size
     }
 
     if (p_data == NULL || size == 0 )
+    {
+        return APP_DRV_ERR_INVALID_PARAM;
+    }
+
+    if ((APP_DRV_NEVER_TIMEOUT != timeout) && (APP_DRV_MAX_TIMEOUT < timeout))
     {
         return APP_DRV_ERR_INVALID_PARAM;
     }

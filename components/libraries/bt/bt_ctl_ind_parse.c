@@ -39,6 +39,7 @@ void app_bt_mic_mute_state(bt_rx_info *rx_info);
 void app_bt_local_voice_state(bt_rx_info *rx_info);
 void app_bt_siri_state(bt_rx_info *rx_info);
 void app_bt_notice_vol_level_info(bt_rx_info *rx_info);
+void app_bt_ap_onoff_state(bt_rx_info *rx_info);
 
 bool bt_sniff_state = false;
 
@@ -72,6 +73,7 @@ app_bt_evt_handler_st app_bt_event_handler[IND_MESSAGE_MAX] =
     [IND_LOCAL_VOICE_STATE]    = {app_bt_local_voice_state,    1},
     [IND_SIRI_STATE]           = {app_bt_siri_state,    1},
     [IND_NOTICE_LVL_STATE]           = {app_bt_notice_vol_level_info,    1},
+    [IND_AP_ONOFF_STATE]       = {app_bt_ap_onoff_state,    1},
 #if APP_LOG_ENABLE
     [IND_PROFILE_STATE].log_info                    = "PROFILE_STATE",
     [IND_CONNECTION_STATE].log_info                 = "CONNECTION_STATE",
@@ -101,6 +103,7 @@ app_bt_evt_handler_st app_bt_event_handler[IND_MESSAGE_MAX] =
     [IND_LOCAL_VOICE_STATE].log_info                = "LOCAL_VOICE_STATE",
     [IND_SIRI_STATE].log_info                       = "SIRI_STATE",
     [IND_NOTICE_LVL_STATE].log_info                       = "NOTICE_LVL_STATE",
+    [IND_AP_ONOFF_STATE].log_info                       = "AP_STATE",
 #endif
 };
 
@@ -271,6 +274,24 @@ __WEAK void app_bt_siri_state(bt_rx_info *rx_info)
             break;
         default:
             APP_LOG_DEBUG("siri state unknow :%d", rx_info->data[0]);
+            break;
+    }
+}
+
+__WEAK void app_bt_ap_onoff_state(bt_rx_info *rx_info)
+{
+    uint8_t ap_state = rx_info->data[0];
+    APP_LOG_DEBUG("%s:", __func__);
+    switch (ap_state)
+    {
+        case AP_ON_STATE:
+            APP_LOG_DEBUG("ap on state !!!");
+            break;
+        case AP_OFF_STATE:
+            APP_LOG_DEBUG("ap off state !!!");
+            break;
+        default:
+            APP_LOG_DEBUG("ap state unknow :%d", rx_info->data[0]);
             break;
     }
 }

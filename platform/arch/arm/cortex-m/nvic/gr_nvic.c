@@ -50,7 +50,7 @@ __WEAK void hal_nvic_disable_irq(IRQn_Type IRQn)
 
 void hal_nvic_system_reset(void)
 {
-		// design for new platform .
+    // design for new platform .
 #ifndef HAL_NVIC_RESET_VERSION_LEGACY
     __set_PRIMASK(1); //Disable Global Interrupt.
     ll_misc_global_soft_reset();
@@ -58,8 +58,8 @@ void hal_nvic_system_reset(void)
     {
         ;
     }
-#else 
-	 __set_PRIMASK(1); //Disable Global Interrupt.
+#else
+    __set_PRIMASK(1); //Disable Global Interrupt.
 
     //Power on memory
     WRITE_REG(AON_MEM->MEM_PWR_WKUP0,   0x002AAAAAU);
@@ -99,6 +99,11 @@ void hal_nvic_system_reset(void)
     }
 
     ll_aon_wdt_lock();
+
+    // Wait reset.
+    for (;;)
+    {
+    }
 #endif
 }
 
@@ -140,6 +145,3 @@ __WEAK uint32_t hal_nvic_get_active(IRQn_Type IRQn)
     /* Return 1 if active else 0U */
     return NVIC_GetActive(IRQn);
 }
-
-
-

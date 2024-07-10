@@ -266,7 +266,7 @@ typedef enum {
     IND_SIRI_STATE,//0x1E
 
     IND_NOTICE_LVL_STATE,//0x1F
-
+    IND_AP_ONOFF_STATE = 0x20,
     IND_MESSAGE_MAX,
 
     IND_BT_TEST_MSG = 0xFF,//0xFF

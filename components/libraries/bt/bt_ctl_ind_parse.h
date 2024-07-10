@@ -73,6 +73,11 @@ enum{
     SIRI_OFF_STATE
 };
 
+enum{
+    AP_OFF_STATE,
+    AP_ON_STATE,
+};
+
 enum
 {
     UNMUTE_STATE,

@@ -78,6 +78,14 @@
 #define APP_LOG_ENABLE          1
 #endif
 
+// <o> APP log port type
+// <0=> UART
+// <1=> RTT
+// <2=> ITM
+#ifndef APP_LOG_PORT
+#define APP_LOG_PORT              0
+#endif
+
 // <o> Eanble APP log store module
 // <0=> DISABLE
 // <1=> ENABLE
@@ -180,8 +188,8 @@
 #endif
 
 // <o> Enable internal osc as low power clock
-// <0=> Default: Disable internal osc as low power clock
-// <1=> Enable internal osc as low power clock and force CFG_LF_ACCURACY_PPM to 500ppm
+// <0=> Disable internal osc as low power clock
+// <1=> Default: Enable internal osc as low power clock and force CFG_LF_ACCURACY_PPM to 500ppm
 #ifndef CFG_LPCLK_INTERNAL_EN
 #define CFG_LPCLK_INTERNAL_EN   1
 #endif
@@ -215,18 +223,18 @@
 // <o> Support maximum number of BLE profiles <1-64>
 // <i> Range: 1-64
 #ifndef CFG_MAX_PRFS
-#define CFG_MAX_PRFS             1
+#define CFG_MAX_PRFS             10
 #endif
 
 // <o> Support maximum number of bonded devices
 #ifndef CFG_MAX_BOND_DEVS
-#define CFG_MAX_BOND_DEVS        1
+#define CFG_MAX_BOND_DEVS        4
 #endif
 
 // <o> Support maximum number of BLE Links <1-10>
 // <i> Range: 1-10
 #ifndef CFG_MAX_CONNECTIONS
-#define CFG_MAX_CONNECTIONS      1
+#define CFG_MAX_CONNECTIONS      5
 #endif
 
 // <o> Support maximum number of BLE Legacy/Extended Advertisings <0-5>
@@ -253,7 +261,7 @@
 // <0=> NOT SUPPORT
 // <1=> SUPPORT
 #ifndef CFG_BT_BREDR
-#define CFG_BT_BREDR                      1
+#define CFG_BT_BREDR                      0
 #endif
 
 // <o>  Support car key needs
@@ -274,7 +282,7 @@
 // <0=> NOT SUPPORT
 // <1=> SUPPORT
 #ifndef CFG_MASTER_SUPPORT
-#define CFG_MASTER_SUPPORT               0
+#define CFG_MASTER_SUPPORT               1
 #endif
 
 // <o>  Support slave
@@ -333,6 +341,13 @@
 #define CFG_CONNLESS_AOA_AOD_SUPPORT     0
 #endif
 
+// <o>  Support power control
+// <0=> NOT SUPPORT
+// <1=> SUPPORT
+#ifndef CFG_POWER_CONTROL_SUPPORT
+#define CFG_POWER_CONTROL_SUPPORT        0
+#endif
+
 // <o>  Support ranging
 // <0=> NOT SUPPORT
 // <1=> SUPPORT
@@ -351,7 +366,6 @@
 #endif
 // </h>
 
-#define CHIP_VER                0x5525
 
 // <h> SK configuration
 
