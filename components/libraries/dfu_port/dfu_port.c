@@ -597,11 +597,6 @@ static void otas_evt_process(otas_evt_t *p_evt)
         return;
     }
 
-    if (s_ota_conn_index == BLE_GAP_INVALID_CONN_INDEX)
-    {
-        s_ota_conn_index = p_evt->conn_idx;
-    }
-
     switch (p_evt->evt_type)
     {
         case OTAS_EVT_TX_NOTIFICATION_ENABLED:
@@ -625,7 +620,18 @@ static void otas_evt_process(otas_evt_t *p_evt)
             dfu_ble_send_data_cmpl_process();
             break;
 
+        case OTAS_EVT_DISCONNECT:
+            if (s_ota_conn_index == p_evt->conn_idx)
+            {
+                s_ota_conn_index = BLE_GAP_INVALID_CONN_INDEX;
+            }
+            break;
+
         case OTAS_EVT_DFU_TASK_ENTER:
+            if (s_ota_conn_index == BLE_GAP_INVALID_CONN_INDEX)
+            {
+                s_ota_conn_index = p_evt->conn_idx;
+            }
             if(s_dfu_enter_func != NULL)
             {
                 s_dfu_enter_func();
@@ -1447,5 +1453,13 @@ uint16_t dfu_info_update(uint32_t dfu_info_start_addr, dfu_image_info_t *p_image
     }
 
     return SDK_SUCCESS;
+}
+
+void dfu_mode_update(uint32_t mode_pattern)
+{
+    if (mode_pattern == DFU_NON_COPY_UPGRADE_MODE_PATTERN)
+    {
+        s_ota_conn_index = 0;
+    }
 }
 
