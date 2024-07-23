@@ -278,7 +278,6 @@
 
 /*******QSPI IO CONFIG***************************/
 #define APP_QSPI0_MODULE                    QSPI0
-//#define APP_QSPI0_PORT                      GPIO1
 #define APP_QSPI0_GPIO_MUX                  APP_IO_MUX_1
 #define APP_QSPI0_CS_IO_TYPE                APP_IO_TYPE_AON
 #define APP_QSPI0_CLK_IO_TYPE               APP_IO_TYPE_AON
@@ -325,19 +324,20 @@
 #define APP_QSPI2_IO2_PIN                   APP_IO_PIN_2
 #define APP_QSPI2_IO3_PIN                   APP_IO_PIN_7
 
-#define APP_FLASH_GPIO_MUX                  APP_QSPI0_GPIO_MUX
-#define APP_FLASH_CS_IO_TYPE                APP_QSPI0_CS_IO_TYPE
-#define APP_FLASH_CLK_IO_TYPE               APP_QSPI0_CLK_IO_TYPE
-#define APP_FLASH_IO0_IO_TYPE               APP_QSPI0_IO0_IO_TYPE
-#define APP_FLASH_IO1_IO_TYPE               APP_QSPI0_IO1_IO_TYPE
-#define APP_FLASH_IO2_IO_TYPE               APP_QSPI0_IO2_IO_TYPE
-#define APP_FLASH_IO3_IO_TYPE               APP_QSPI0_IO3_IO_TYPE
-#define APP_FLASH_CS_PIN                    APP_QSPI0_CS_PIN
-#define APP_FLASH_CLK_PIN                   APP_QSPI0_CLK_PIN
-#define APP_FLASH_IO0_PIN                   APP_QSPI0_IO0_PIN
-#define APP_FLASH_IO1_PIN                   APP_QSPI0_IO1_PIN
-#define APP_FLASH_IO2_PIN                   APP_QSPI0_IO2_PIN
-#define APP_FLASH_IO3_PIN                   APP_QSPI0_IO3_PIN
+#define APP_FLASH_GPIO_MUX                  APP_IO_MUX_0
+#define APP_FLASH_CS_IO_TYPE                APP_IO_TYPE_GPIOA
+#define APP_FLASH_CLK_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_FLASH_IO0_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_FLASH_IO1_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_FLASH_IO2_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_FLASH_IO3_IO_TYPE               APP_IO_TYPE_GPIOA
+
+#define APP_FLASH_CS_PIN                    APP_IO_PIN_15
+#define APP_FLASH_CLK_PIN                   APP_IO_PIN_2
+#define APP_FLASH_IO0_PIN                   APP_IO_PIN_3
+#define APP_FLASH_IO1_PIN                   APP_IO_PIN_14
+#define APP_FLASH_IO2_PIN                   APP_IO_PIN_13
+#define APP_FLASH_IO3_PIN                   APP_IO_PIN_12
 #define APP_FLASH_QSPI_ID                   APP_QSPI_ID_0
 
 /**
