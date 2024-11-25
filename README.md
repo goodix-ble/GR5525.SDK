@@ -136,5 +136,5 @@
 
 ## 4. Change Log
 
-- Click to view the [change log](../../wiki/Change-Notes-for-GR5525)
+- Click to view the [change log](../../wiki)
 
