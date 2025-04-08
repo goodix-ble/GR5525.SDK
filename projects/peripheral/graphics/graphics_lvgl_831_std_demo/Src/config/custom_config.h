@@ -144,7 +144,7 @@
 // <o> Chip version
 // <i> Default: 0x00
 #ifndef CHIP_VER
-#define CHIP_VER                0x5525
+#define CHIP_VER                0x5625
 #endif
 
 // <o> Code load address
@@ -366,14 +366,6 @@
 #endif
 // </h>
 
-
-// <h> SK configuration
-
-// <o> SK version
-// <0=> Config as GR5525_SK
-// <1=> Config as GR5625_SK
-#define GR5625_SK               0
-// </h>
 
 // <<< end of configuration section >>>
 #endif //__CUSTOM_CONFIG_H__

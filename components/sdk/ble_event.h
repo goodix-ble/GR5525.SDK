@@ -194,6 +194,7 @@ enum BLE_SEC_EVTS
 {
     BLE_SEC_EVT_LINK_ENC_REQUEST   = BLE_SEC_EVT_BASE,         /**< Link Encrypte Request event. */
     BLE_SEC_EVT_LINK_ENCRYPTED,                                /**< Link Encrypted event. */
+    BLE_SEC_EVT_LTK_REQ,                                       /**< LTK Request event. */
     BLE_SEC_EVT_KEY_PRESS_NTF,                                 /**< Key Press event. */
     BLE_SEC_EVT_KEY_MISSING,                                   /**< Key Missing event. */
     BLE_SEC_EVT_MAX,

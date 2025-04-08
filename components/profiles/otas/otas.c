@@ -401,8 +401,8 @@ static void otas_ble_evt_handler(const ble_evt_t *p_evt)
             event.evt_type = OTAS_EVT_DISCONNECT;
             event.conn_idx = p_evt->evt.gatts_evt.index;
             s_otas_env.otas_init.evt_handler(&event);
+            break;
         }
-        break;
     }
 }
 

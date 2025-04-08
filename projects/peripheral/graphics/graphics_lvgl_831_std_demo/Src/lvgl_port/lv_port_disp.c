@@ -21,7 +21,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 #if LV_GDX_PATCH_SET_CLIP_AREA_ONCE
 static void disp_set_clip_area(struct _lv_disp_drv_t * disp_drv, const lv_area_t * clip_area);
 #endif // LV_GDX_PATCH_SET_CLIP_AREA_ONCE
-#if ((SCREEN_TYPE == 1) || (SCREEN_TYPE == 2)) && TE_SIGNAL_ENABLED
+#if (SCREEN_TYPE == 1) && TE_SIGNAL_ENABLED
 static void disp_start_render(struct _lv_disp_drv_t * disp_drv);
 #endif // (SCREEN_TYPE == 1) && TE_SIGNAL_ENABLED
 static void rounder_cb(lv_disp_drv_t * disp_drv, lv_area_t * area);
@@ -103,7 +103,7 @@ void lv_port_disp_init(void)
     disp_drv.set_clip_area_cb = disp_set_clip_area;
 #endif // LV_GDX_PATCH_SET_CLIP_AREA_ONCE
 
-#if ((SCREEN_TYPE == 1) || (SCREEN_TYPE == 2)) && TE_SIGNAL_ENABLED
+#if (SCREEN_TYPE == 1) && TE_SIGNAL_ENABLED
     disp_drv.render_start_cb = disp_start_render;
 #endif // (SCREEN_TYPE == 1) && TE_SIGNAL_ENABLED
 
@@ -122,9 +122,6 @@ static void disp_init(void)
     disp_crtl_init();
 
     lv_dma_init();
-
-    extern void gx_flash_init(void);
-    gx_flash_init();
 }
 
 /* Flush the content of the internal buffer the specific area on the display
@@ -143,7 +140,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 static void rounder_cb(lv_disp_drv_t * disp_drv, lv_area_t * area)
 {
   /* Per RM69330 datasheet, start coord and size must be even*/
-#if ((SCREEN_TYPE == 1) || (SCREEN_TYPE == 2)) && TE_SIGNAL_ENABLED
+#if (SCREEN_TYPE == 1) && TE_SIGNAL_ENABLED
     area->x1 = 0;
     area->x2 = 359;
     // area->y1 = area->y1 & ~1;
@@ -171,7 +168,7 @@ static void disp_set_clip_area(struct _lv_disp_drv_t * disp_drv, const lv_area_t
 }
 #endif // LV_GDX_PATCH_SET_CLIP_AREA_ONCE
 
-#if ((SCREEN_TYPE == 1) || (SCREEN_TYPE == 2)) && TE_SIGNAL_ENABLED
+#if (SCREEN_TYPE == 1) && TE_SIGNAL_ENABLED
 static void disp_start_render(struct _lv_disp_drv_t * disp_drv)
 {
     extern volatile bool g_need_te_sync;

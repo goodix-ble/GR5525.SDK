@@ -2,9 +2,6 @@
 #include "tp_config.h"
 #include <stdio.h>
 
-#include "display_crtl_drv.h"
-
-#if SCREEN_TYPE == 1
 static const uint16_t s_tp_value_360[] = {
     0, 1, 1, 2, 3, 4, 4, 5, 6, 7, 7, 8, 9, 10, 10, 11,
     12, 13, 13, 14, 15, 16, 16, 17, 18, 19, 19, 20, 21, 21, 22, 23,
@@ -38,7 +35,6 @@ static const uint16_t s_tp_value_360[] = {
     344, 344, 345, 346, 347, 347, 348, 349, 350, 350, 351, 352, 353, 353, 354, 355,
     356, 356, 357, 358, 359, 359,
 };
-#endif
 
 void tp_set_sleep_mode(bool sleep_enable)
 {
@@ -56,7 +52,6 @@ bool tp_get_data(int16_t *p_x, int16_t *p_y)
 {
     uint8_t read_data[5];
 
-#if SCREEN_TYPE == 1
     tp_read(0x5c, read_data, 5);
 
     if (read_data[0] == 128 || (read_data[0] == 0 && read_data[1] == 0 \
@@ -82,29 +77,6 @@ bool tp_get_data(int16_t *p_x, int16_t *p_y)
 
         return true;
     }
-#elif SCREEN_TYPE == 2
-
-    tp_read(0x02, read_data, 5);
-
-    if (read_data[0] == 0 || read_data[0] > 2)
-    {
-        return false;
-    }
-    else
-    {
-        /**
-         * when interrupt generates, set the mcu not to sleep until finger leave the touchpad
-         * or the mcu may lost the interrupts
-         */
-        uint16_t raw_x = (((read_data[1] & 0x0f)) << 8) | read_data[2];
-        uint16_t raw_y = (((read_data[3] & 0x0f)) << 8) | read_data[4];
-
-        *p_x = raw_x;
-        *p_y = raw_y;
-
-        return true;
-    }
-#endif
 }
 
 void tp_init(void)

@@ -22,7 +22,7 @@
 #define SDK_VER_MAJOR                   1
 #define SDK_VER_MINOR                   0
 #define SDK_VER_BUILD                   2
-#define COMMIT_ID                       0xa7959a3a
+#define COMMIT_ID                       0xe00dd2bc
 
 static const sdk_version_t sdk_version = {SDK_VER_MAJOR,
                                           SDK_VER_MINOR,
@@ -130,18 +130,6 @@ uint8_t sys_device_reset_reason(void)
     }
 }
 
-void set_retention_level_by_efuse(void) {
-    extern efuse_trim0_t efuse_trim0;
-    uint8_t ret_level = efuse_trim0.reserved2[0];  //this bit is uesed to save retention level
-
-    if(ret_level == 2) {
-        ll_aon_pmu_set_retention_level(ret_level + 1);
-    }    //error case,make sure sram retenion is normal
-    else {
-        ll_aon_pmu_set_retention_level(4);
-    }
-}
-
 void first_class_task(void)
 {
     exflash_hp_init_t hp_init;
@@ -176,7 +164,6 @@ void first_class_task(void)
 
     /* platform init process. */
     platform_sdk_init();
-    set_retention_level_by_efuse();
 }
 
 extern bool clock_calibration_is_done(void);
