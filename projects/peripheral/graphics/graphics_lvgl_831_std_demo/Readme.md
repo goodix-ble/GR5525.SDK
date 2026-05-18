@@ -1,6 +1,6 @@
 # graphics_lvgl_831_std_demo 工程使用说明
 
-[TOC]
+
 
 ## 1. 工程简要说明
 
@@ -45,9 +45,6 @@
 
 -   当SK带的屏幕型号是 FLS 360p, 配置 SCREEN_TYPE 为1
 -   当SK带的屏幕型号是PSD 360p, 配置 SCREEN_TYPE 为2
--   屏幕的区别如下
-
-![](./sk_screen.png)
 
 
 
@@ -88,30 +85,3 @@
 
 
 
-## 3. 默认配置
-
-工程的默认配置如下：
-
-```c
-#define SCREEN_TYPE             2       // 1 - FLS-QSPI-360
-                                        // 2 - PSD-QSPI-360
-```
-
-```c
-// <o> SK version
-// <0=> Config as GR5525_SK
-// <1=> Config as GR5625_SK
-#define GR5625_SK               0
-// </h>
-```
-
-```c
- #define BINARY_RESOURCES (const uint8_t *) (QSPI0_XIP_BASE)
-```
-
-
-
-**即：**
-
-- 默认配置 支持搭载 PSD QSPI-360 屏幕的 GR5525 SK板, 且图片资源放置到外部QSPI0 所连接的Nor Flash, 偏移地址为 0x00000000
-- 如果实际环境和默认配置有差异, 请根据上述参考进行修改

@@ -247,20 +247,19 @@ void pcs_param_parse(uint8_t conn_idx, uint8_t *p_data, uint16_t length)
             break;
 
         case PCS_SETTING_TYPE_TX_POWER:
-            if (0x01 == p_data[1])
+            if (0x01 == p_data[1] || (0x00 == p_data[1]))
             {
-                tx_power_set = 0 - p_data[2];
+                tx_power_set = (p_data[1] == 0x01) ? (0 - p_data[2]) : p_data[2];
+                s_gap_adv_param.max_tx_pwr = tx_power_set;
+                error_code = ble_gap_tx_power_set(BLE_GAP_ACTIVITY_ROLE_CON, conn_idx, tx_power_set);
+                response[1] = (error_code == SDK_SUCCESS) ? PCS_SET_PARAM_SUCCESS : PCS_SET_PARAM_FAIL;
             }
-            else if (0x00 == p_data[1])
+            else
             {
-                tx_power_set = p_data[2];
+                response[1] = PCS_SET_PARAM_FAIL;
             }
-            s_gap_adv_param.max_tx_pwr = tx_power_set;
-
-            error_code = ble_gap_tx_power_set(BLE_GAP_ACTIVITY_ROLE_CON, conn_idx, tx_power_set);
 
             response[0] = PCS_SETTING_TYPE_TX_POWER;
-            response[1] = SDK_SUCCESS == error_code ? PCS_SET_PARAM_SUCCESS : PCS_SET_PARAM_FAIL;
 
             pcs_setting_reply(0, response, 2);
             break;

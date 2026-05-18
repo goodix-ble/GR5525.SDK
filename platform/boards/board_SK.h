@@ -76,6 +76,8 @@
 #define APP_UART1_RX_PIN                    APP_IO_PIN_6
 #define APP_UART1_TX_PINMUX                 APP_IO_MUX_3
 #define APP_UART1_RX_PINMUX                 APP_IO_MUX_3
+#define APP_UART1_TX_PULL                   APP_IO_NOPULL
+#define APP_UART1_RX_PULL                   APP_IO_PULLUP
 
 /*******KEY DRIVER IO CONFIG********************/
 #define APP_KEY_UP_IO_TYPE                  APP_IO_TYPE_AON
@@ -84,24 +86,24 @@
 #define APP_KEY_OK_PIN                      APP_IO_PIN_1
 #define APP_KEY_UP_MUX                      APP_IO_MUX_8
 #define APP_KEY_OK_MUX                      APP_IO_MUX_8
-#define APP_GPIO_PIN0                       APP_IO_PIN_0     /* GPIO16 */
+#define APP_GPIO_PIN0                       APP_IO_PIN_12     /* GPIO28 */
 #define APP_GPIO_PIN0_TYPE                  APP_IO_TYPE_GPIOB
 
-#define APP_GPIO_PIN1                       APP_IO_PIN_4     /* MSIO4 */
+#define APP_GPIO_PIN1                       APP_IO_PIN_0      /* MSIO0 */
 #define APP_GPIO_PIN1_TYPE                  APP_IO_TYPE_MSIO
 
-#define APP_GPIO_PIN2                       APP_IO_PIN_6      /* AON6 */
+#define APP_GPIO_PIN2                       APP_IO_PIN_7      /* AON7 */
 #define APP_GPIO_PIN2_TYPE                  APP_IO_TYPE_AON
 
-#define APP_GPIO_PIN3                       APP_IO_PIN_1      /* GOIO17 */
-#define APP_GPIO_PIN3_TYPE                  APP_IO_TYPE_GPIOB
+#define APP_GPIO_PIN3                       APP_IO_PIN_1      /* MSIO1 */
+#define APP_GPIO_PIN3_TYPE                  APP_IO_TYPE_MSIO
 /*******KEY TRIGGER & PULL MODE CONFIG*******************/
 #define APP_KEY_TRIGGER_MODE                APP_IO_MODE_IT_FALLING
 #define APP_KEY_PULL_MODE                   APP_IO_PULLUP
 
 /*******LED IO CONFIG FOR SK*********************/
-#define APP_LED_NUM_0_IO                    APP_IO_PIN_3
-#define APP_LED_NUM_1_IO                    APP_IO_PIN_2
+#define APP_LED_NUM_0_IO                    APP_IO_PIN_4
+#define APP_LED_NUM_1_IO                    APP_IO_PIN_5
 
 /*******ADC IO CONFIG***************************/
 #define APP_ADC_P_INPUT_PIN                 APP_IO_PIN_0
@@ -165,21 +167,21 @@
 #define APP_I2C_SLAVE_SDA_PINMUX            APP_IO_MUX_1
 
 /*******TP I2C IO CONFIG***************************/
-#define APP_TP_RST_IO_TYPE                  APP_IO_TYPE_GPIOB
+#define APP_TP_RST_IO_TYPE                  APP_IO_TYPE_AON
 #define APP_TP_RST_IO_MUX                   APP_IO_MUX_8
-#define APP_TP_RST_IO_PIN                   APP_IO_PIN_9
+#define APP_TP_RST_IO_PIN                   APP_IO_PIN_3
 
-#define APP_TP_INT_IO_TYPE                  APP_IO_TYPE_GPIOB
+#define APP_TP_INT_IO_TYPE                  APP_IO_TYPE_AON
 #define APP_TP_INT_IO_MUX                   APP_IO_MUX_8
-#define APP_TP_INT_IO_PIN                   APP_IO_PIN_8
+#define APP_TP_INT_IO_PIN                   APP_IO_PIN_4
 
-#define APP_TP_SCL_IO_TYPE                  APP_IO_TYPE_GPIOA
-#define APP_TP_SCL_IO_MUX                   APP_IO_MUX_1
-#define APP_TP_SCL_IO_PIN                   APP_IO_PIN_9
+#define APP_TP_SCL_IO_TYPE                  APP_IO_TYPE_GPIOB
+#define APP_TP_SCL_IO_MUX                   APP_IO_MUX_0
+#define APP_TP_SCL_IO_PIN                   APP_IO_PIN_14
 
-#define APP_TP_SDA_IO_TYPE                  APP_IO_TYPE_GPIOA
-#define APP_TP_SDA_IO_MUX                   APP_IO_MUX_1
-#define APP_TP_SDA_IO_PIN                   APP_IO_PIN_8
+#define APP_TP_SDA_IO_TYPE                  APP_IO_TYPE_GPIOB
+#define APP_TP_SDA_IO_MUX                   APP_IO_MUX_0
+#define APP_TP_SDA_IO_PIN                   APP_IO_PIN_10
 
 #define APP_TP_I2C_ID                       APP_I2C_ID_1
 #define APP_TP_PERIPH_DEVICE                PERIPH_DEVICE_NUM_I2C1
@@ -236,11 +238,11 @@
 #define APP_I2S_LOOPBACK_SCLK_TYPE          APP_IO_TYPE_GPIOB
 
 /*******PDM IO CONFIG***************************/
-#define APP_PDM_LOOPBACK_IO_MUX             APP_IO_MUX_1
-#define APP_PDM_LOOPBACK_CLK_PIN            APP_IO_PIN_2
-#define APP_PDM_LOOPBACK_DATA_PIN           APP_IO_PIN_3
-#define APP_PDM_LOOPBACK_CLK_TYPE           APP_IO_TYPE_GPIOA
-#define APP_PDM_LOOPBACK_DATA_TYPE          APP_IO_TYPE_GPIOA
+#define APP_PDM_LOOPBACK_IO_MUX             APP_IO_MUX_0
+#define APP_PDM_LOOPBACK_CLK_PIN            APP_IO_PIN_11
+#define APP_PDM_LOOPBACK_DATA_PIN           APP_IO_PIN_12
+#define APP_PDM_LOOPBACK_CLK_TYPE           APP_IO_TYPE_GPIOB
+#define APP_PDM_LOOPBACK_DATA_TYPE          APP_IO_TYPE_GPIOB
 
 /*******GPADC IO CONFIG***************************/
 #define APP_GPADC_P_INPUT_PIN               APP_IO_PIN_9
@@ -278,36 +280,34 @@
 
 /*******QSPI IO CONFIG***************************/
 #define APP_QSPI0_MODULE                    QSPI0
-//#define APP_QSPI0_PORT                      GPIO1
-#define APP_QSPI0_GPIO_MUX                  APP_IO_MUX_1
-#define APP_QSPI0_CS_IO_TYPE                APP_IO_TYPE_AON
-#define APP_QSPI0_CLK_IO_TYPE               APP_IO_TYPE_AON
-#define APP_QSPI0_IO0_IO_TYPE               APP_IO_TYPE_AON
-#define APP_QSPI0_IO1_IO_TYPE               APP_IO_TYPE_AON
-#define APP_QSPI0_IO2_IO_TYPE               APP_IO_TYPE_AON
-#define APP_QSPI0_IO3_IO_TYPE               APP_IO_TYPE_AON
-#define APP_QSPI0_CS_PIN                    APP_IO_PIN_2
-#define APP_QSPI0_CLK_PIN                   APP_IO_PIN_5
+#define APP_QSPI0_GPIO_MUX                  APP_IO_MUX_0
+#define APP_QSPI0_CS_IO_TYPE                APP_IO_TYPE_GPIOA
+#define APP_QSPI0_CLK_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_QSPI0_IO0_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_QSPI0_IO1_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_QSPI0_IO2_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_QSPI0_IO3_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_QSPI0_CS_PIN                    APP_IO_PIN_15
+#define APP_QSPI0_CLK_PIN                   APP_IO_PIN_2
 #define APP_QSPI0_IO0_PIN                   APP_IO_PIN_3
-#define APP_QSPI0_IO1_PIN                   APP_IO_PIN_4
-#define APP_QSPI0_IO2_PIN                   APP_IO_PIN_0
-#define APP_QSPI0_IO3_PIN                   APP_IO_PIN_1
+#define APP_QSPI0_IO1_PIN                   APP_IO_PIN_14
+#define APP_QSPI0_IO2_PIN                   APP_IO_PIN_13
+#define APP_QSPI0_IO3_PIN                   APP_IO_PIN_12
 
 #define APP_QSPI1_MODULE                    QSPI1
-//#define APP_QSPI1_PORT                      GPIO0
-#define APP_QSPI1_GPIO_MUX                  APP_IO_MUX_2
-#define APP_QSPI1_CS_IO_TYPE                APP_IO_TYPE_GPIOA
-#define APP_QSPI1_CLK_IO_TYPE               APP_IO_TYPE_GPIOA
-#define APP_QSPI1_IO0_IO_TYPE               APP_IO_TYPE_GPIOA
-#define APP_QSPI1_IO1_IO_TYPE               APP_IO_TYPE_GPIOA
-#define APP_QSPI1_IO2_IO_TYPE               APP_IO_TYPE_GPIOA
-#define APP_QSPI1_IO3_IO_TYPE               APP_IO_TYPE_GPIOA
-#define APP_QSPI1_CS_PIN                    APP_IO_PIN_15
-#define APP_QSPI1_CLK_PIN                   APP_IO_PIN_9
-#define APP_QSPI1_IO0_PIN                   APP_IO_PIN_8
-#define APP_QSPI1_IO1_PIN                   APP_IO_PIN_14
-#define APP_QSPI1_IO2_PIN                   APP_IO_PIN_13
-#define APP_QSPI1_IO3_PIN                   APP_IO_PIN_12
+#define APP_QSPI1_GPIO_MUX                  APP_IO_MUX_7
+#define APP_QSPI1_CS_IO_TYPE                APP_IO_TYPE_GPIOB
+#define APP_QSPI1_CLK_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_QSPI1_IO0_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_QSPI1_IO1_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_QSPI1_IO2_IO_TYPE               APP_IO_TYPE_GPIOC
+#define APP_QSPI1_IO3_IO_TYPE               APP_IO_TYPE_GPIOC
+#define APP_QSPI1_CS_PIN                    APP_IO_PIN_5
+#define APP_QSPI1_CLK_PIN                   APP_IO_PIN_6
+#define APP_QSPI1_IO0_PIN                   APP_IO_PIN_4
+#define APP_QSPI1_IO1_PIN                   APP_IO_PIN_7
+#define APP_QSPI1_IO2_PIN                   APP_IO_PIN_0
+#define APP_QSPI1_IO3_PIN                   APP_IO_PIN_1
 
 #define APP_QSPI2_MODULE                    QSPI2
 #define APP_QSPI2_PORT                      GPIO1
@@ -325,39 +325,21 @@
 #define APP_QSPI2_IO2_PIN                   APP_IO_PIN_2
 #define APP_QSPI2_IO3_PIN                   APP_IO_PIN_7
 
-#if 1
-    /* 5525 SK */
-    #define APP_FLASH_GPIO_MUX                  APP_IO_MUX_0
-    #define APP_FLASH_CS_IO_TYPE                APP_IO_TYPE_GPIOA
-    #define APP_FLASH_CLK_IO_TYPE               APP_IO_TYPE_GPIOB
-    #define APP_FLASH_IO0_IO_TYPE               APP_IO_TYPE_GPIOB
-    #define APP_FLASH_IO1_IO_TYPE               APP_IO_TYPE_GPIOA
-    #define APP_FLASH_IO2_IO_TYPE               APP_IO_TYPE_GPIOA
-    #define APP_FLASH_IO3_IO_TYPE               APP_IO_TYPE_GPIOA
-    #define APP_FLASH_CS_PIN                    APP_IO_PIN_15
-    #define APP_FLASH_CLK_PIN                   APP_IO_PIN_2
-    #define APP_FLASH_IO0_PIN                   APP_IO_PIN_3
-    #define APP_FLASH_IO1_PIN                   APP_IO_PIN_14
-    #define APP_FLASH_IO2_PIN                   APP_IO_PIN_13
-    #define APP_FLASH_IO3_PIN                   APP_IO_PIN_12
-    #define APP_FLASH_QSPI_ID                   APP_QSPI_ID_0
-#else
-    /* 5625 SK */
-    #define APP_FLASH_GPIO_MUX                  APP_QSPI0_GPIO_MUX
-    #define APP_FLASH_CS_IO_TYPE                APP_QSPI0_CS_IO_TYPE
-    #define APP_FLASH_CLK_IO_TYPE               APP_QSPI0_CLK_IO_TYPE
-    #define APP_FLASH_IO0_IO_TYPE               APP_QSPI0_IO0_IO_TYPE
-    #define APP_FLASH_IO1_IO_TYPE               APP_QSPI0_IO1_IO_TYPE
-    #define APP_FLASH_IO2_IO_TYPE               APP_QSPI0_IO2_IO_TYPE
-    #define APP_FLASH_IO3_IO_TYPE               APP_QSPI0_IO3_IO_TYPE
-    #define APP_FLASH_CS_PIN                    APP_QSPI0_CS_PIN
-    #define APP_FLASH_CLK_PIN                   APP_QSPI0_CLK_PIN
-    #define APP_FLASH_IO0_PIN                   APP_QSPI0_IO0_PIN
-    #define APP_FLASH_IO1_PIN                   APP_QSPI0_IO1_PIN
-    #define APP_FLASH_IO2_PIN                   APP_QSPI0_IO2_PIN
-    #define APP_FLASH_IO3_PIN                   APP_QSPI0_IO3_PIN
-    #define APP_FLASH_QSPI_ID                   APP_QSPI_ID_0
-#endif
+#define APP_FLASH_GPIO_MUX                  APP_IO_MUX_0
+#define APP_FLASH_CS_IO_TYPE                APP_IO_TYPE_GPIOA
+#define APP_FLASH_CLK_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_FLASH_IO0_IO_TYPE               APP_IO_TYPE_GPIOB
+#define APP_FLASH_IO1_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_FLASH_IO2_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_FLASH_IO3_IO_TYPE               APP_IO_TYPE_GPIOA
+#define APP_FLASH_CS_PIN                    APP_IO_PIN_15
+#define APP_FLASH_CLK_PIN                   APP_IO_PIN_2
+#define APP_FLASH_IO0_PIN                   APP_IO_PIN_3
+#define APP_FLASH_IO1_PIN                   APP_IO_PIN_14
+#define APP_FLASH_IO2_PIN                   APP_IO_PIN_13
+#define APP_FLASH_IO3_PIN                   APP_IO_PIN_12
+#define APP_FLASH_QSPI_ID                   APP_QSPI_ID_0
+
 /**
  * @defgroup BSP_MAROC Defines
  * @{

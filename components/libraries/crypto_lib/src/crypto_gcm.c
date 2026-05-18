@@ -1,3 +1,9 @@
+
+
+#include  "custom_config.h"
+#ifndef SOC_GR533X
+
+
 #include "crypto_gcm.h"
 #include "grx_hal.h"
 
@@ -442,3 +448,5 @@ int crypto_gcm_auth_decrypt( crypto_gcm_context *ctx, uint32_t length,
 
     return( 0 );
 }
+
+#endif

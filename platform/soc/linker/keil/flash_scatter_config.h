@@ -28,7 +28,6 @@
 #define RAM_START_ADDR            0x00100000
 #define HIGH_RAM_OFFSET           0x1FF00000
 #define FPB_DATA_SPACE_SIZE       0x50
-#define RAM_CODE_SPACE_SIZE       (0x2000 - FPB_DATA_SPACE_SIZE)
 
 /* size of ROM reserved RAM in retention cell */
 #ifndef ROM_RTN_RAM_SIZE
@@ -39,7 +38,6 @@
  * Warning: User App developer never change the six macros below
  */
 #define RAM_CODE_SPACE_START      (RAM_START_ADDR + ROM_RTN_RAM_SIZE)
-#define FPB_DATA_SPACE_START      (RAM_START_ADDR + ROM_RTN_RAM_SIZE + RAM_CODE_SPACE_SIZE + HIGH_RAM_OFFSET)
 
 #ifndef RAM_SIZE
 #define RAM_SIZE                  0x00040000

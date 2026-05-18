@@ -44,17 +44,6 @@
 #include "app_log.h"
 #include "qspi_norflash_v2.h"
 
-
-
-/********************************************************************************************
- *                       Defines
- ********************************************************************************************/
-
-#define DEFAULT_MODE_CONFIG                 {DMA0, DMA_Channel0, 1000, 0}
-#define DEFAULT_QSPI_CONFIG                 {2, QSPI_CLOCK_MODE_3, 0}
-#define DEFAULT_PARAM_CONFIG                {APP_QSPI_ID_0, g_qspi_pin_groups[QSPI0_PIN_GROUP_0], DEFAULT_MODE_CONFIG, DEFAULT_QSPI_CONFIG}
-
-
 /********************************************************************************************
  *                       Static Declarations
  ********************************************************************************************/
@@ -67,7 +56,21 @@ static void                         _qspi_norf_wait_busy(void);
 static void                         _qspi_norf_io_reinit(void);
 static void                         _qspi_norf_io_deinit(void);
 
-static          app_qspi_params_t   s_qspi_params;
+static app_qspi_params_t s_qspi_params = {
+    .id = APP_QSPI_ID_0,
+    .dma_cfg = {
+        .dma_instance = DMA0,
+        .dma_channel  = DMA_Channel0,
+        .wait_timeout_ms = 1000,
+        .extend = 0,
+    },
+    .init = {
+        .clock_mode      = 2,
+        .clock_prescaler = QSPI_CLOCK_MODE_3,
+        .rx_sample_delay = 0,
+    },
+};
+
 static          uint8_t             s_norflash_type = 0;
 static volatile uint8_t             s_qspi_tx_done  = 0;
 static volatile uint8_t             s_qspi_rx_done  = 0;
@@ -79,11 +82,9 @@ static volatile uint8_t             s_qspi_rx_done  = 0;
 
 uint8_t qspi_norf_init(app_qspi_id_t id, uint32_t clock_prescaler, app_qspi_pin_cfg_t * pin_cfg) {
     uint16_t ret;
-    app_qspi_params_t p_params = DEFAULT_PARAM_CONFIG;
     app_io_init_t io_init = APP_IO_DEFAULT_CONFIG;
 
-    s_qspi_params = p_params;
-
+    s_qspi_params.pin_cfg = g_qspi_pin_groups[QSPI0_PIN_GROUP_0];
     s_qspi_params.id                    = id;
     s_qspi_params.init.clock_prescaler  = clock_prescaler;
     if(clock_prescaler == 2) {

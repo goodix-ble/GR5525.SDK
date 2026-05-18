@@ -255,7 +255,7 @@ __STATIC_INLINE void ll_clk_stop_xo_pll(void)
   * @retval xo pll status value.
   *
   */
-__STATIC_INLINE uint32_t ll_clk_get_hf_status(void)
+__STATIC_FORCEINLINE uint32_t ll_clk_get_hf_status(void)
 {
     return READ_BITS(AON_PWR->XO_PLL_STAT, AON_PWR_XO_PLL_STAT_PLL_STAT |
                                            AON_PWR_XO_PLL_STAT_XO_STAT  |

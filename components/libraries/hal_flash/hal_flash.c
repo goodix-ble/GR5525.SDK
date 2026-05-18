@@ -163,9 +163,15 @@ uint32_t hal_flash_write_r(const uint32_t addr, const uint8_t *buf, const uint32
     return 0;
 }
 
-void hal_flash_set_security(bool enable)
+SECTION_RAM_CODE void hal_flash_set_security(bool enable)
 {
+    uint8_t temp_buf[4];
+    // Flush cache by read 4 byte in HAL_EXFLASH_UNENCRYPTED mode
+    GLOBAL_EXCEPTION_DISABLE();
+    hal_exflash_set_security(HAL_EXFLASH_UNENCRYPTED);
+    hal_exflash_read(EXFLASH_START_ADDR, temp_buf, sizeof(temp_buf));
     hal_exflash_set_security((enable ? HAL_EXFLASH_ENCRYPTED : HAL_EXFLASH_UNENCRYPTED));
+    GLOBAL_EXCEPTION_ENABLE();
     return;
 }
 

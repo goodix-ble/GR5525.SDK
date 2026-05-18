@@ -149,14 +149,14 @@ void bsp_log_init(void)
     app_log_init(&log_init, bsp_segger_rtt_send, NULL);
 #elif (APP_LOG_PORT == 2)
     app_log_init(&log_init, bsp_itm_send, NULL);
-#endif
+#endif /* APP_LOG_PORT */
 
-#endif
+#endif /* APP_LOG_PORT <= 2 */
+
+#endif /* APP_LOG_ENABLE == 1 */
 
 #ifndef BOOTLOADER_ENABLE
     app_assert_init();
-#endif
-
 #endif
 }
 

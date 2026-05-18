@@ -209,10 +209,6 @@ enum  BLE_L2CAP_EVTS
     BLE_L2CAP_EVT_SDU_RECV,                                  /**< L2cap SDU Receive event. */
     BLE_L2CAP_EVT_SDU_SEND,                                  /**< L2cap SDU Send event. */
     BLE_L2CAP_EVT_ADD_CREDITS_CPLT,                          /**< L2cap Credits Add Completed event. */
-    BLE_L2CAP_EVT_ENH_CONN_REQ,
-    BLE_L2CAP_EVT_ENH_CONN_IND,
-    BLE_L2CAP_EVT_ENH_RECONFIG_CPLT,
-    BLE_L2CAP_EVT_ENH_RECONFIG_IND,
     BLE_L2CAP_EVT_MAX,
 };
 /** @} */
@@ -255,12 +251,8 @@ do                                              \
     ble_evt.evt_status = status;                \
 } while(0);
 
-
-
 /** @} */
 bool ble_event_handle(const ble_evt_t *p_evt);
-uint16_t ble_l2cap_lecb_psm_register(uint16_t le_psm);
-
 
 #endif
 /** @} */

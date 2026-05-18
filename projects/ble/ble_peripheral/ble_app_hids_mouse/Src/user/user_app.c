@@ -314,7 +314,7 @@ static void app_sec_init(bool erase_bond)
     sdk_err_t    error_code;
 
     ble_gap_pair_enable(true);
-    error_code = ble_gap_device_name_set(BLE_GAP_WRITE_PERM_DISABLE, DEVICE_NAME, 
+    error_code = ble_gap_device_name_set(BLE_GAP_WRITE_PERM_DISABLE, (uint8_t *)DEVICE_NAME,
                                          strlen(DEVICE_NAME));
 
 #ifdef PTS_AUTO_TEST

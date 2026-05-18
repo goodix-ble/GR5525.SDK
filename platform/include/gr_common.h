@@ -8,6 +8,7 @@
 //lint -e9031 [required] Composite expression assigned to a wider essential type
 //lint -e9032 [required] Composite expression with smaller essential type than other operand
 //lint -e9053 [required] the shift value is at least the precision of the essential type of the left hand side
+//lint -e578  [required] Declaration of symbol 'xxx' hides symbol 'xxx'
 //lint -e715  [advisory] Symbol not referenced
 //lint -e750  [advisory][Info] local macro not referenced
 //lint -e765  [advisory][Info] XXX could be made static

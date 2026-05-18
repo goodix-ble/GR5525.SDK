@@ -61,6 +61,10 @@
 #define SLAVE_LATENCY                0             /**< Slave latency. */
 #define CONN_SUP_TIMEOUT             400           /**< Connection supervisory timeout (in units of 10 ms.). */
 #define DEFAULT_MTU_SIZE             247           /**< Default mtu size. */
+#define MAX_TX_OCTET_DEFUALT         251           /**< Default maximum transmitted number of payload octets. */
+#define MAX_TX_TIME_DEFUALT          17040         /**< Defualt maximum packet transmission time (us). */
+#define MAX_RX_OCTET_DEFUALT         251           /**< Default maximum received number of payload octets. */
+#define MAX_RX_TIME_DEFUALT          17040         /**< Defualt maximum packet recevie time (us). */
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -121,6 +125,12 @@ static void gap_params_init(void)
 
     error_code = ble_gap_privacy_params_set(900, true);
     APP_ERROR_CHECK(error_code);
+
+    error_code = ble_gap_data_length_set(MAX_TX_OCTET_DEFUALT, MAX_TX_TIME_DEFUALT);
+    APP_ERROR_CHECK(error_code);
+
+    extern void ble_rx_data_len_set(uint16_t rx_time, uint16_t rx_octets);
+    ble_rx_data_len_set(MAX_RX_TIME_DEFUALT, MAX_RX_OCTET_DEFUALT);
 
     // Set the default security parameters.
     ble_sec_param_t sec_param =
@@ -345,6 +355,15 @@ void ble_evt_handler(const ble_evt_t *p_evt)
 
         case BLE_SEC_EVT_LINK_ENC_REQUEST:
             app_sec_rcv_enc_req_handler(p_evt->evt.sec_evt.index, &(p_evt->evt.sec_evt.params.enc_req));
+            break;
+
+        case BLE_GAPC_EVT_CONN_INFO_GOT:
+            if (BLE_SUCCESS == p_evt->evt_status && BLE_GAP_GET_CON_RSSI == p_evt->evt.gapc_evt.params.conn_info.opcode)
+            {
+                thrpt_rssi_update(p_evt->evt.gapc_evt.params.conn_info.info.rssi);
+            }
+            break;
+        default:
             break;
     }
 }

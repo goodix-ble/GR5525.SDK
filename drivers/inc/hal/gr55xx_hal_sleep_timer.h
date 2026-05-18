@@ -123,6 +123,13 @@ typedef struct _pwr_handler
   */
 #define HAL_PWR_TIMEOUT_DEFAULT_VALUE ((uint32_t)0x000FFFFF)         /**< 0xFFFFF counts */
 /** @} */
+
+/** @defgroup Sleep_Timer_Overflow Overflow value definition
+ * @{
+  */
+#define HAL_SLP_TIMER_OVERFLOW_VALUE  (0xFFFFFFFFU)    /**< After counting to 0, the count value rolls over to 0xFFFFFFFF */
+/** @} */
+
 /** @} */
 /** @} */
 

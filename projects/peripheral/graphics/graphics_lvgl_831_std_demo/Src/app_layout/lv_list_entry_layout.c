@@ -90,10 +90,7 @@ static void icon_clicked_event_cb(lv_event_t *e)
     //APP_LOG_DEBUG("JUMP LAYOUT:");
 
 #if LV_GDX_PATCH_USE_FAST_TILEVIEW
-    if (p_icon_item->p_icon == &wd_img_bt_icon) {
-        lv_layout_router_show_bt(p_icon_item->p_obj);
-    }
-    else if (p_icon_item->p_icon == &wd_img_app_06_events) {
+    if (p_icon_item->p_icon == &wd_img_app_06_events) {
         lv_layout_router_show_app_list(p_icon_item->p_obj);
     }
 #endif

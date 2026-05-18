@@ -62,7 +62,11 @@ int main(void)
 
     if (is_enter_ultra_deep_sleep())
     {
+        #ifdef SOC_GR5410
+        pwr_mgmt_ultra_sleep(0, 0);
+        #else
         pwr_mgmt_ultra_sleep(0);
+        #endif
     }
 
     // Initialize ble stack.

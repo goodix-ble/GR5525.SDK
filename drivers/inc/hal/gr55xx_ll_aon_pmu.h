@@ -427,7 +427,7 @@ __STATIC_INLINE void ll_aon_pmu_set_clk_period(uint32_t value)
   * @retval None
   *
   */
-__STATIC_INLINE void ll_aon_pmu_set_clk_inject(uint32_t value)
+__STATIC_FORCEINLINE void ll_aon_pmu_set_clk_inject(uint32_t value)
 {
     MODIFY_REG(AON_PMU->RF_REG_1, AON_PMU_RF_REG_1_EN_INJ, (value << AON_PMU_RF_REG_1_EN_INJ_Pos));
 }

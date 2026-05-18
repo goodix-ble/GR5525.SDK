@@ -115,12 +115,11 @@ secs_ret time_in_secs(CORE_TICKS ticks) {
 
 ee_u32 default_num_contexts=1;
 
-#pragma arm section code = "RAM_CODE"
 /* Function : portable_init
     Target specific initialization code 
     Test for some common mistakes.
 */
-void portable_init(core_portable *p, int *argc, char *argv[])
+SECTION_RAM_CODE void portable_init(core_portable *p, int *argc, char *argv[])
 {
     /* #error "Call board initialization routines in portable init (if needed), in particular initialize UART!\n" */
     /* Initializes the Systick. */
@@ -137,7 +136,7 @@ void portable_init(core_portable *p, int *argc, char *argv[])
     }
     p->portable_id=1;
 }
-#pragma arm section code
+
 /* Function : portable_fini
     Target specific final code 
 */

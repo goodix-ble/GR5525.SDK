@@ -9,13 +9,13 @@
       <TargetName>GRxx_Soc</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.5.1</PackID>
+          <PackID>ARM.CMSIS.5.9.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x00000000,0x80000) IRAM(0x20000000,0x20000) CPUTYPE(&quot;Cortex-M4&quot;) FPU2 CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec/>
@@ -184,6 +184,8 @@
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -335,9 +337,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls> --no-multibyte-chars --diag_error=warning</MiscControls>
-              <Define>GR5526_SK,ENV_USE_FREERTOS,ENABLE_DFU_SPI_FLASH,DFU_V2,USE_EXTERNAL_RESOURCES=1 GR5625_SK</Define>
+              <Define>GR5526_SK,ENV_USE_FREERTOS,ENABLE_DFU_SPI_FLASH,DFU_V2,USE_EXTERNAL_RESOURCES=1</Define>
               <Undefine/>
-              <IncludePath>..\Src\config;..\..\..\..\..\platform\include;..\..\..\..\..\platform\soc\include;..\..\..\..\..\platform\arch\arm\cortex-m\cmsis\core\include;..\..\..\..\..\platform\soc\linker\keil;..\..\..\..\..\platform\boards;..\..\..\..\..\components\libraries\app_graphics_mem;..\..\..\..\..\components\boards;..\..\..\..\..\components\drivers_ext\gr55xx;..\..\..\..\..\components\drivers_ext\st7735;..\..\..\..\..\components\drivers_ext\vs1005;..\..\..\..\..\components\libraries\app_alarm;..\..\..\..\..\components\libraries\app_assert;..\..\..\..\..\components\libraries\app_error;..\..\..\..\..\components\libraries\app_key;..\..\..\..\..\components\libraries\app_log;..\..\..\..\..\components\libraries\app_queue;..\..\..\..\..\components\libraries\app_timer;..\..\..\..\..\components\libraries\at_cmd;..\..\..\..\..\components\libraries\dfu_master;..\..\..\..\..\components\libraries\dfu_port;..\..\..\..\..\components\libraries\gui;..\..\..\..\..\components\libraries\gui\gui_config;..\..\..\..\..\components\libraries\hal_flash;..\..\..\..\..\components\libraries\hci_uart;..\..\..\..\..\components\libraries\pmu_calibration;..\..\..\..\..\components\libraries\ring_buffer;..\..\..\..\..\components\libraries\sensorsim;..\..\..\..\..\components\libraries\utility;..\..\..\..\..\components\patch\ind;..\..\..\..\..\components\profiles\ams_c;..\..\..\..\..\components\profiles\ancs_c;..\..\..\..\..\components\profiles\ans;..\..\..\..\..\components\profiles\ans_c;..\..\..\..\..\components\profiles\bas;..\..\..\..\..\components\profiles\bas_c;..\..\..\..\..\components\profiles\bcs;..\..\..\..\..\components\profiles\bps;..\..\..\..\..\components\profiles\common;..\..\..\..\..\components\profiles\cscs;..\..\..\..\..\components\profiles\cts;..\..\..\..\..\components\profiles\cts_c;..\..\..\..\..\components\profiles\dis;..\..\..\..\..\components\profiles\dis_c;..\..\..\..\..\components\profiles\gls;..\..\..\..\..\components\profiles\gus;..\..\..\..\..\components\profiles\gus_c;..\..\..\..\..\components\profiles\hids;..\..\..\..\..\components\profiles\hrrcps;..\..\..\..\..\components\profiles\hrs;..\..\..\..\..\components\profiles\hrs_c;..\..\..\..\..\components\profiles\hts;..\..\..\..\..\components\profiles\ias;..\..\..\..\..\components\profiles\lls;..\..\..\..\..\components\profiles\ndcs;..\..\..\..\..\components\profiles\otas;..\..\..\..\..\components\profiles\otas_c;..\..\..\..\..\components\profiles\pass;..\..\..\..\..\components\profiles\pass_c;..\..\..\..\..\components\profiles\pcs;..\..\..\..\..\components\profiles\rscs;..\..\..\..\..\components\profiles\rscs_c;..\..\..\..\..\components\profiles\rtus;..\..\..\..\..\components\profiles\sample;..\..\..\..\..\components\profiles\ths;..\..\..\..\..\components\profiles\ths_c;..\..\..\..\..\components\profiles\thscps;..\..\..\..\..\components\profiles\tps;..\..\..\..\..\components\profiles\wechat;..\..\..\..\..\components\sdk\;..\..\..\..\..\components\drivers_ext\graphics_dc;..\..\..\..\..\components\drivers_ext\qspi_device\;..\..\..\..\..\components\graphics\gfx\common\;..\..\..\..\..\components\graphics\gfx\common\mem;..\..\..\..\..\components\graphics\gfx\configure;..\..\..\..\..\components\graphics\gfx\include;..\..\..\..\..\components\graphics\gfx\include\tsi;..\..\..\..\..\components\graphics\gfx\include\tsi\common;..\..\..\..\..\components\graphics\gfx\include\tsi\hal_gdc;..\..\..\..\..\components\graphics\gfx\include\tsi\hal_gfx;..\..\..\..\..\components\graphics\gfx\hal_gdc;..\..\..\..\..\components\graphics\gfx\hal_gfx;..\..\..\..\..\components\graphics\gfx\porting;..\..\..\..\..\components\libraries\app_graphics_mem;..\..\..\..\..\components\libraries\bt;..\..\..\..\..\components\libraries\bt_v2;..\..\..\..\..\components\libraries\fault_trace;..\..\..\..\..\drivers\inc;..\..\..\..\..\drivers\inc\hal;..\..\..\..\..\external\freertos\include;..\..\..\..\..\external\freertos\portable\RVDS\ARM_CM4F;..\..\..\..\..\external\segger_rtt;..\Src\lvgl_831;..\Src\lvgl_831\src;..\Src\lvgl_831\src\core;..\Src\lvgl_831\src\draw;..\Src\lvgl_831\src\draw\sw;..\Src\lvgl_831\src\extra;..\Src\lvgl_831\src\extra\layouts;..\Src\lvgl_831\src\extra\layouts\flex;..\Src\lvgl_831\src\extra\layouts\grid;..\Src\lvgl_831\src\extra\libs;..\Src\lvgl_831\src\extra\libs\bmp;..\Src\lvgl_831\src\extra\libs\freetype;..\Src\lvgl_831\src\extra\libs\fsdrv;..\Src\lvgl_831\src\extra\libs\gif;..\Src\lvgl_831\src\extra\libs\png;..\Src\lvgl_831\src\extra\libs\qrcode;..\Src\lvgl_831\src\extra\libs\rlottie;..\Src\lvgl_831\src\extra\libs\sjpg;..\Src\lvgl_831\src\extra\others;..\Src\lvgl_831\src\extra\others\snapshot;..\Src\lvgl_831\src\extra\themes;..\Src\lvgl_831\src\extra\themes\basic;..\Src\lvgl_831\src\extra\themes\default;..\Src\lvgl_831\src\extra\themes\mono;..\Src\lvgl_831\src\extra\widgets;..\Src\lvgl_831\src\extra\widgets\animimg;..\Src\lvgl_831\src\extra\widgets\calendar;..\Src\lvgl_831\src\extra\widgets\chart;..\Src\lvgl_831\src\extra\widgets\colorwheel;..\Src\lvgl_831\src\extra\widgets\imgbtn;..\Src\lvgl_831\src\extra\widgets\keyboard;..\Src\lvgl_831\src\extra\widgets\led;..\Src\lvgl_831\src\extra\widgets\list;..\Src\lvgl_831\src\extra\widgets\menu;..\Src\lvgl_831\src\extra\widgets\meter;..\Src\lvgl_831\src\extra\widgets\msgbox;..\Src\lvgl_831\src\extra\widgets\span;..\Src\lvgl_831\src\extra\widgets\spinbox;..\Src\lvgl_831\src\extra\widgets\spinner;..\Src\lvgl_831\src\extra\widgets\tabview;..\Src\lvgl_831\src\extra\widgets\tileview;..\Src\lvgl_831\src\extra\widgets\win;..\Src\lvgl_831\src\font;..\Src\lvgl_831\src\misc;..\Src\lvgl_831\src\widgets;..\Src\lvgl_831\src\hal;..\Src\lvgl_831\src\gpu;..\Src\lvgl_831\src\gpu\goodix;..\Src\lvgl_831\src\gpu\gr552x\porting;..\Src\app_font;..\Src\app_image;..\Src\app_layout;..\Src\app_main;..\Src\app_profiles;..\Src\app_tasks;..\Src\config;..\Src\dev_drivers;..\Src\lvgl_port;..\Src\system</IncludePath>
+              <IncludePath>..\Src\config;..\Src\config;..\..\..\..\..\platform\include;..\..\..\..\..\platform\soc\include;..\..\..\..\..\platform\arch\arm\cortex-m\cmsis\core\include;..\..\..\..\..\platform\soc\linker\keil;..\..\..\..\..\platform\boards;..\..\..\..\..\components\libraries\app_graphics_mem;..\..\..\..\..\components\boards;..\..\..\..\..\components\drivers_ext\gr55xx;..\..\..\..\..\components\drivers_ext\st7735;..\..\..\..\..\components\drivers_ext\vs1005;..\..\..\..\..\components\libraries\app_alarm;..\..\..\..\..\components\libraries\app_assert;..\..\..\..\..\components\libraries\app_error;..\..\..\..\..\components\libraries\app_key;..\..\..\..\..\components\libraries\app_log;..\..\..\..\..\components\libraries\app_queue;..\..\..\..\..\components\libraries\app_timer;..\..\..\..\..\components\libraries\at_cmd;..\..\..\..\..\components\libraries\dfu_master;..\..\..\..\..\components\libraries\dfu_port;..\..\..\..\..\components\libraries\gui;..\..\..\..\..\components\libraries\gui\gui_config;..\..\..\..\..\components\libraries\hal_flash;..\..\..\..\..\components\libraries\hci_uart;..\..\..\..\..\components\libraries\pmu_calibration;..\..\..\..\..\components\libraries\ring_buffer;..\..\..\..\..\components\libraries\sensorsim;..\..\..\..\..\components\libraries\utility;..\..\..\..\..\components\patch\ind;..\..\..\..\..\components\profiles\ams_c;..\..\..\..\..\components\profiles\ancs_c;..\..\..\..\..\components\profiles\ans;..\..\..\..\..\components\profiles\ans_c;..\..\..\..\..\components\profiles\bas;..\..\..\..\..\components\profiles\bas_c;..\..\..\..\..\components\profiles\bcs;..\..\..\..\..\components\profiles\bps;..\..\..\..\..\components\profiles\common;..\..\..\..\..\components\profiles\cscs;..\..\..\..\..\components\profiles\cts;..\..\..\..\..\components\profiles\cts_c;..\..\..\..\..\components\profiles\dis;..\..\..\..\..\components\profiles\dis_c;..\..\..\..\..\components\profiles\gls;..\..\..\..\..\components\profiles\gus;..\..\..\..\..\components\profiles\gus_c;..\..\..\..\..\components\profiles\hids;..\..\..\..\..\components\profiles\hrrcps;..\..\..\..\..\components\profiles\hrs;..\..\..\..\..\components\profiles\hrs_c;..\..\..\..\..\components\profiles\hts;..\..\..\..\..\components\profiles\ias;..\..\..\..\..\components\profiles\lls;..\..\..\..\..\components\profiles\ndcs;..\..\..\..\..\components\profiles\otas;..\..\..\..\..\components\profiles\otas_c;..\..\..\..\..\components\profiles\pass;..\..\..\..\..\components\profiles\pass_c;..\..\..\..\..\components\profiles\pcs;..\..\..\..\..\components\profiles\rscs;..\..\..\..\..\components\profiles\rscs_c;..\..\..\..\..\components\profiles\rtus;..\..\..\..\..\components\profiles\sample;..\..\..\..\..\components\profiles\ths;..\..\..\..\..\components\profiles\ths_c;..\..\..\..\..\components\profiles\thscps;..\..\..\..\..\components\profiles\tps;..\..\..\..\..\components\profiles\wechat;..\..\..\..\..\components\sdk\;..\..\..\..\..\components\drivers_ext\graphics_dc;..\..\..\..\..\components\drivers_ext\qspi_device\;..\..\..\..\..\components\graphics\gfx\common\;..\..\..\..\..\components\graphics\gfx\common\mem;..\..\..\..\..\components\graphics\gfx\configure;..\..\..\..\..\components\graphics\gfx\include;..\..\..\..\..\components\graphics\gfx\include\tsi;..\..\..\..\..\components\graphics\gfx\include\tsi\common;..\..\..\..\..\components\graphics\gfx\include\tsi\hal_gdc;..\..\..\..\..\components\graphics\gfx\include\tsi\hal_gfx;..\..\..\..\..\components\graphics\gfx\hal_gdc;..\..\..\..\..\components\graphics\gfx\hal_gfx;..\..\..\..\..\components\graphics\gfx\porting;..\..\..\..\..\components\libraries\app_graphics_mem;..\..\..\..\..\components\libraries\bt;..\..\..\..\..\components\libraries\bt_v2;..\..\..\..\..\components\libraries\fault_trace;..\..\..\..\..\drivers\inc;..\..\..\..\..\drivers\inc\hal;..\..\..\..\..\external\freertos\include;..\..\..\..\..\external\freertos\portable\RVDS\ARM_CM4F;..\..\..\..\..\external\segger_rtt;..\Src\lvgl_831;..\Src\lvgl_831\src;..\Src\lvgl_831\src\core;..\Src\lvgl_831\src\draw;..\Src\lvgl_831\src\draw\sw;..\Src\lvgl_831\src\extra;..\Src\lvgl_831\src\extra\layouts;..\Src\lvgl_831\src\extra\layouts\flex;..\Src\lvgl_831\src\extra\layouts\grid;..\Src\lvgl_831\src\extra\libs;..\Src\lvgl_831\src\extra\libs\bmp;..\Src\lvgl_831\src\extra\libs\freetype;..\Src\lvgl_831\src\extra\libs\fsdrv;..\Src\lvgl_831\src\extra\libs\gif;..\Src\lvgl_831\src\extra\libs\png;..\Src\lvgl_831\src\extra\libs\qrcode;..\Src\lvgl_831\src\extra\libs\rlottie;..\Src\lvgl_831\src\extra\libs\sjpg;..\Src\lvgl_831\src\extra\others;..\Src\lvgl_831\src\extra\others\snapshot;..\Src\lvgl_831\src\extra\themes;..\Src\lvgl_831\src\extra\themes\basic;..\Src\lvgl_831\src\extra\themes\default;..\Src\lvgl_831\src\extra\themes\mono;..\Src\lvgl_831\src\extra\widgets;..\Src\lvgl_831\src\extra\widgets\animimg;..\Src\lvgl_831\src\extra\widgets\calendar;..\Src\lvgl_831\src\extra\widgets\chart;..\Src\lvgl_831\src\extra\widgets\colorwheel;..\Src\lvgl_831\src\extra\widgets\imgbtn;..\Src\lvgl_831\src\extra\widgets\keyboard;..\Src\lvgl_831\src\extra\widgets\led;..\Src\lvgl_831\src\extra\widgets\list;..\Src\lvgl_831\src\extra\widgets\menu;..\Src\lvgl_831\src\extra\widgets\meter;..\Src\lvgl_831\src\extra\widgets\msgbox;..\Src\lvgl_831\src\extra\widgets\span;..\Src\lvgl_831\src\extra\widgets\spinbox;..\Src\lvgl_831\src\extra\widgets\spinner;..\Src\lvgl_831\src\extra\widgets\tabview;..\Src\lvgl_831\src\extra\widgets\tileview;..\Src\lvgl_831\src\extra\widgets\win;..\Src\lvgl_831\src\font;..\Src\lvgl_831\src\misc;..\Src\lvgl_831\src\widgets;..\Src\lvgl_831\src\hal;..\Src\lvgl_831\src\gpu;..\Src\lvgl_831\src\gpu\goodix;..\Src\lvgl_831\src\gpu\gr552x\porting;..\Src\app_font;..\Src\app_image;..\Src\app_layout;..\Src\app_main;..\Src\app_profiles;..\Src\app_tasks;..\Src\config;..\Src\dev_drivers;..\Src\lvgl_port;..\Src\system</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -350,7 +352,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls/>
               <Define/>
@@ -368,7 +370,7 @@
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x00060000</DataAddressRange>
             <pXoBase/>
-            <ScatterFile>..\Src\linker\flash_scatter_graphics.sct</ScatterFile>
+            <ScatterFile>..\..\..\..\..\platform\soc\linker\keil\flash_scatter_common.sct</ScatterFile>
             <IncludeLibs/>
             <IncludeLibsPath/>
             <Misc>..\..\..\..\..\platform\soc\linker\keil\rom_symbol.txt</Misc>
@@ -520,62 +522,16 @@
               <FileName>app_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\drivers\src\app_spi.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>1</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument/>
-                  <IncludeLibraryModules/>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>2</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls/>
-                      <Define/>
-                      <Undefine/>
-                      <IncludePath/>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
             </File>
             <File>
               <FileName>app_spi_dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\drivers\src\app_spi_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\drivers\src\app_pwm.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -859,87 +815,6 @@
               <FileName>croutine.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\..\..\external\freertos\croutine.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>bt_api</GroupName>
-          <Files>
-            <File>
-              <FileName>bt_api.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\components\libraries\bt_v2\bt_api.c</FilePath>
-            </File>
-            <File>
-              <FileName>bt_api_impl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\components\libraries\bt_v2\bt_api_impl.c</FilePath>
-            </File>
-            <File>
-              <FileName>bt_ifce.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\components\libraries\bt_v2\bt_ifce.c</FilePath>
-            </File>
-            <File>
-              <FileName>bt_ctl_ota_interface.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\components\libraries\bt\bt_ctl_ota_interface.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument/>
-                  <IncludeLibraryModules/>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>2</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls/>
-                      <Define/>
-                      <Undefine/>
-                      <IncludePath/>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>bt_ctl_debug_interface.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\components\libraries\bt\bt_ctl_debug_interface.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1573,9 +1448,44 @@
           <GroupName>lvgl_optimize</GroupName>
           <Files>
             <File>
-              <FileName>lvgl_831_optimize_lib.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\lvgl_optimize_lib\Objects\lvgl_831_optimize_lib.lib</FilePath>
+              <FileName>opt_lv_draw_label.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_draw_label.c</FilePath>
+            </File>
+            <File>
+              <FileName>opt_lv_draw_sw_letter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_draw_sw_letter.c</FilePath>
+            </File>
+            <File>
+              <FileName>opt_lv_font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_font.c</FilePath>
+            </File>
+            <File>
+              <FileName>opt_lv_indev_scroll.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_indev_scroll.c</FilePath>
+            </File>
+            <File>
+              <FileName>opt_lv_obj.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_obj.c</FilePath>
+            </File>
+            <File>
+              <FileName>opt_lv_obj_pos.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_obj_pos.c</FilePath>
+            </File>
+            <File>
+              <FileName>opt_lv_obj_style_gen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_obj_style_gen.c</FilePath>
+            </File>
+            <File>
+              <FileName>opt_lv_refr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\lvgl_831_optimize\opt_lv_refr.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1651,82 +1561,6 @@
               <FileName>app_lvgl_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_tasks\app_lvgl_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>bt_music_controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_tasks\bt_music_controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>bt_phonecall_controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_tasks\bt_phonecall_controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>bt_conn_controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_tasks\bt_conn_controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_ota_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_tasks\app_ota_task.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument/>
-                  <IncludeLibraryModules/>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>2</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls/>
-                      <Define/>
-                      <Undefine/>
-                      <IncludePath/>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>app_bt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_tasks\app_bt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1859,36 +1693,6 @@
               <FilePath>..\Src\app_layout\lv_watchface_switch_layout.c</FilePath>
             </File>
             <File>
-              <FileName>lv_bt_manage_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_manage_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_scan_device_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_scan_device_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_pair_device_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_pair_device_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_paired_device_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_paired_device_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_remove_device_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_remove_device_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_device_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_device_layout.c</FilePath>
-            </File>
-            <File>
               <FileName>lv_img_rgb565.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_layout\lv_img_rgb565.c</FilePath>
@@ -1897,16 +1701,6 @@
               <FileName>lv_img_gximg.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_layout\lv_img_gximg.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_dial_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_dial_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_phonecall_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_phonecall_layout.c</FilePath>
             </File>
             <File>
               <FileName>lv_general_list_generator.c</FileName>
@@ -1919,125 +1713,14 @@
               <FilePath>..\Src\app_layout\lv_general_options_page_generator.c</FilePath>
             </File>
             <File>
-              <FileName>lv_bt_ota_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_ota_layout.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument/>
-                  <IncludeLibraryModules/>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>2</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <uC99>2</uC99>
-                    <uGnu>2</uGnu>
-                    <useXO>2</useXO>
-                    <v6Lang>0</v6Lang>
-                    <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>2</v6Lto>
-                    <v6WtE>2</v6WtE>
-                    <v6Rtti>2</v6Rtti>
-                    <VariousControls>
-                      <MiscControls/>
-                      <Define/>
-                      <Undefine/>
-                      <IncludePath/>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
-              <FileName>lv_bt_contact_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_contact_layout.c</FilePath>
-            </File>
-            <File>
               <FileName>lv_virtual_list.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_layout\lv_virtual_list.c</FilePath>
             </File>
             <File>
-              <FileName>lv_bt_calling_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_calling_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_incoming_call_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_incoming_call_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_music_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_music_layout.c</FilePath>
-            </File>
-            <File>
               <FileName>lv_volume_ctrl.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\app_layout\lv_volume_ctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_discovery_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_discovery_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_reconn_times_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_reconn_times_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_disconnect_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_disconnect_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_reconn_times_confirm_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_reconn_times_confirm_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_no_entry_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_no_entry_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_local_audio_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_local_audio_layout.c</FilePath>
-            </File>
-            <File>
-              <FileName>lv_bt_factory_reset_layout.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Src\app_layout\lv_bt_factory_reset_layout.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2144,6 +1827,16 @@
               <FileType>1</FileType>
               <FilePath>..\Src\dev_drivers\display_fls_amo139_360p_qspi_drv.c</FilePath>
             </File>
+            <File>
+              <FileName>display_st77916_psd_360p_qspi_drv.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\dev_drivers\display_st77916_psd_360p_qspi_drv.c</FilePath>
+            </File>
+            <File>
+              <FileName>display_st77916_psd_360p_qspi_drv.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Src\dev_drivers\display_st77916_psd_360p_qspi_drv.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2175,5 +1868,14 @@
     <components/>
     <files/>
   </RTE>
+
+  <LayerInfo>
+    <Layers>
+      <Layer>
+        <LayName>graphics_lvgl_831_std_demo</LayName>
+        <LayPrjMark>1</LayPrjMark>
+      </Layer>
+    </Layers>
+  </LayerInfo>
 
 </Project>

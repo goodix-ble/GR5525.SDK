@@ -78,7 +78,7 @@ void app_aon_wdt(void)
     {
         delay_ms(300);
         app_aon_wdt_refresh();
-        printf("\r\n %dth feed dog.\r\n", i);
+        printf("\r\n %ldth feed dog.\r\n", i);
     }
 
     printf("\r\nSystem will reset.\r\n");

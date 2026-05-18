@@ -267,6 +267,12 @@ typedef struct _hal_adc_callback
 #define ADC_REF_SRC_IO3             LL_ADC_REF_SRC_IO3      /**< Select MSIO3 as reference                         */
 /** @} */
 
+/** @defgroup ADC_CFG_REG_DEFAULT ADC Config Register Default Value
+  * @{
+  */
+#define ADC_CFG_REG_DEFAULT         LL_ADC_CFG_REG_DEFAULT      /**< The default value of the SNSADC_CFG register in AON_PMU */
+/** @} */
+
 /**
   * @brief ADC_default_config initStruct default configuartion
   */
@@ -535,6 +541,7 @@ hal_status_t hal_adc_poll_for_conversion(adc_handle_t *p_adc, uint16_t *p_data, 
  * @param[in]  p_adc:  Pointer to an ADC handle.
  * @param[in]  p_data: Pointer to data buffer which to store ADC conversion results.
  * @param[in]  length: Length of data buffer,  ranging between 0 and 4095.
+ * Note: Length must be aligned on a four-byte boundary.
  *
  * @retval ::HAL_OK: Operation is OK.
  * @retval ::HAL_ERROR: Parameter error or operation not supported.

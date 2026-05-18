@@ -71,7 +71,7 @@ const uint32_t s_io_to_input_src[ADC_INPUT_SRC_REF + 1] =
  */
 adc_env_t *p_adc_env = NULL;
 
-const static app_sleep_callbacks_t adc_sleep_cb =
+static const app_sleep_callbacks_t adc_sleep_cb =
 {
     .app_prepare_for_sleep = adc_prepare_for_sleep,
     .app_wake_up_ind       = adc_wake_up_ind

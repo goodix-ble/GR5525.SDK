@@ -102,6 +102,22 @@
 #define RANGING_KE_MSG_ALLOC(id, param_str) \
         (param_str *) ble_ranging_ke_msg_alloc(id, sizeof(param_str))
 
+/**
+ ****************************************************************************************
+ * @brief Convenient wrapper to ble_ranging_hci_msg_alloc().
+ *
+ * This macro calls ble_ranging_hci_msg_alloc() and casts the returned pointer to the
+ * appropriate structure. Can only be used if a parameter structure exists for this message.
+ *
+ * @param[in] id        Message identifier. The number of messages is limited to 0xFFFF.
+ * @param[in] param_str Parameter structure type, which shall be a typedef type.
+ *
+ * @return Pointer to the allocated parameter structure.
+ ****************************************************************************************
+ */
+#define RANGING_HCI_MSG_ALLOC(id, param_str) \
+        (struct param_str *) ble_ranging_hci_msg_alloc(id, sizeof(struct param_str))
+
 typedef enum hci_msg_id hci_msg_id_t;
 typedef enum sdk_msg_id sdk_msg_id_t;
 
@@ -123,7 +139,7 @@ typedef uint16_t ra_task_id_t;
  * @param[in] opcode Vendor-specific HCI event or command code.
  * @param[in] p_evt  Pointer to the parameters of the message.
  */
-typedef void (*ble_ranging_evt_handler_t)(hci_msg_id_t msg_id, uint16_t opcode, void const *p_evt);
+typedef int (*ble_ranging_evt_handler_t)(hci_msg_id_t msg_id, uint16_t opcode, void const *p_evt);
 
 /**
  * @brief Handler for the message sent by ble_ranging_ke_msg_send().
@@ -156,6 +172,19 @@ typedef uint32_t (*ble_ranging_get_tick_callback_t)(void);
  * @return Clock frequency.
  */
 typedef uint32_t (*ble_ranging_get_freq_callback_t)(void);
+#endif
+
+#if CFG_CS_SUPPORT
+/**
+ * @brief Callback for dumping CS subevent result.
+ *
+ * @param[in] role CS role.
+ * @param[in] subevt_idx Subevent index in a CS procedure.
+ * @param[in] p_subevt Pointer to subevent result.
+ *
+ * @return Time increment. Unit: 0.01ms.
+ */
+typedef void (*ble_ranging_dump_cs_subevent_result_callback_t)(uint8_t role, uint8_t subevt_idx, cs_subevent_result_all_t *p_subevt);
 #endif
 
 /** @} */
@@ -279,16 +308,41 @@ extern "C"
 
 /** @addtogroup BLE_RANGING_FUNCTION Functions
  * @{ */
+/**
+ ****************************************************************************************
+ * @brief Register the HCI Event callback functions for each module (such as the RSSI module, Sniffer module, etc.).
+ *
+ * @note 1. This API can be used for both DK Central and DK Anchor.
+ *       2. This API needs to be called during module initialization.
+ *
+ * @param[in] module_id The identifier of the module.
+ * @param[in] evt_handler The HCI Event callback function of the module.
+ ****************************************************************************************
+ */
 void ble_ranging_register_evt_handler(ble_ranging_module_id_t module_id, ble_ranging_evt_handler_t evt_handler);
 
 /**
  ****************************************************************************************
  * @brief Set DK device information.
  *
+ * @note 1. This API can be used for both DK Central and DK Anchor.
+ *       2. This API should be called after the Bluetooth LE protocol stack has been initialized and before the ACL connection is established.
+ *
  * @param[in] p_dev_info Decide DK roles or other device information.
  ****************************************************************************************
  */
 void ble_set_dk_device_info(const ble_dk_dev_info_t *p_dev_info);
+
+#if CFG_CS_HANDOVER_SUPPORT
+/**
+ ****************************************************************************************
+ * @brief Set handover node number.
+ *
+ * @param[in] node_num Number of handover node.
+ ****************************************************************************************
+ */
+void ble_set_handover_node_num(uint8_t node_num);
+#endif
 
 #if CFG_SNIFFER_CLK_SYNC_SUPPORT
 /**
@@ -323,6 +377,9 @@ void ble_clock_sync_register_timestamp_callback(ble_ranging_get_tick_callback_t 
  ****************************************************************************************
  * @brief Set RSSI ranging status(start or stop).
  *
+ * @note 1. This API can be used for both DK Central and DK Anchor.
+ *       2. This API should be called after the Sniffer link has been established.
+ *
  * @param[in] p_status RSSI ranging status.
  ****************************************************************************************
  */
@@ -341,6 +398,10 @@ void ble_rssi_set_ranging_type(const ble_dk_rssi_set_ranging_type_t *p_type);
  ****************************************************************************************
  * @brief Get acl link info.
  *
+ * @note 1. This API is only used for DK Central.
+ *       2. This API should be called after the ACL connection has been established.
+ *       3. After this API is successfully called, the callback function will be triggered by an HCI Event (HCI_VS_LE_GET_LINK_INFO_CMP_EVT_SUBCODE).
+ *
  * @param[in] conidx Connection index.
  ****************************************************************************************
  */
@@ -349,6 +410,9 @@ void ble_sniffer_mng_get_acl_link_info(uint8_t conidx);
 /**
  ****************************************************************************************
  * @brief Create sniffer link.
+ *
+ * @note 1. This API is only used for DK Anchor.
+ *       2. This API should be called when the DK Anchor receives the creating sniffer link command sent by the DK Central.
  *
  * @param[in] p_params Create sniffer link parameters.
  ****************************************************************************************
@@ -359,6 +423,9 @@ void ble_sniffer_mng_create_sniffer_link(ble_sniffer_mng_create_sniffer_link_par
  ****************************************************************************************
  * @brief Disconnect sniffer link.
  *
+ * @note 1. This API is only used for DK Anchor.
+ *       2. This API should be called when the DK Anchor receives the disconnecting sniffer link command sent by the DK Central.
+ *
  * @param[in] sniffer_hdl Sniffer handle.
  ****************************************************************************************
  */
@@ -367,6 +434,9 @@ void ble_sniffer_mng_disc_sniffer_link(uint16_t sniffer_hdl);
 /**
  ****************************************************************************************
  * @brief Update sniffer link connection parameters.
+ *
+ * @note 1. This API is only used for DK Anchor.
+ *       2. This API should be called when the DK Anchor receives the updating connection parameters command sent by the DK Central.
  *
  * @param[in] p_params Update sniffer link connection parameters.
  ****************************************************************************************
@@ -377,6 +447,9 @@ void ble_sniffer_mng_upd_conn_params(ble_sniffer_mng_upd_conn_params_t *p_params
  ****************************************************************************************
  * @brief Update sniffer link channel map.
  *
+ * @note 1. This API is only used for DK Anchor.
+ *       2. This API should be called when the DK Anchor receives the updating channel map command sent by the DK Central.
+ *
  * @param[in] p_params Update sniffer link channel map parameters.
  ****************************************************************************************
  */
@@ -386,6 +459,9 @@ void ble_sniffer_mng_upd_ch_map(ble_sniffer_mng_upd_ch_map_t *p_params);
  ****************************************************************************************
  * @brief Update sniffer link channel map.
  *
+ * @note 1. This API is only used for DK Anchor.
+ *       2. This API should be called when the DK Anchor receives the updating PHY parameters command sent by the DK Central.
+ *
  * @param[in] p_params Update sniffer link phy parameters.
  ****************************************************************************************
  */
@@ -393,7 +469,9 @@ void ble_sniffer_mng_upd_phy(ble_sniffer_mng_upd_phy_t *p_params);
 
 /**
  ****************************************************************************************
- * @brief Register sniffer managemet callback to GAP module.
+ * @brief Register sniffer management callback to GAP module.
+ * 
+ * @note 1. This API is only used for DK Central.
  *
  * @param[in] p_params Pointer to callbacks' buffer.
  ****************************************************************************************
@@ -404,6 +482,9 @@ void ble_sniffer_mng_register_gap_callback(ble_ranging_gap_cb_t *p_gap_cb);
  ****************************************************************************************
  * @brief Register time delta callback to controller in order to get the time increment.
  *
+ * @note 1. This API can be used for both DK Central and DK Anchor.
+ *       2. The time precision of the timer is required to be 10 microseconds.
+ *
  * @param[in] get_delta_cb Callback to get the time increment of the current time relative to the baseline time.
  ****************************************************************************************
  */
@@ -411,52 +492,10 @@ void ble_sniffer_mng_register_time_delta_callback(ble_ranging_get_time_delta_cal
 
 /**
  ****************************************************************************************
- * @brief Handle ranging vendor-specific HCI command status event.
- *
- * @param[in] msgid   Id of the message received.
- * @param[in] param   Pointer to the parameters of the message.
- * @param[in] dest_id ID of the receiving task instance (TASK_SDK).
- * @param[in] src_id  HCI Operation code is filled in source message ID of the sending task instance.
- *
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
-int ble_sdk_ranging_cmd_status_handler(ra_msg_id_t const msgid, void const *p_param,
-    ra_task_id_t const dest_id, ra_task_id_t const src_id);
-
-/**
- ****************************************************************************************
- * @brief Handle ranging vendor-specific HCI command complete event.
- *
- * @param[in] msgid   Id of the message received.
- * @param[in] param   Pointer to the parameters of the message.
- * @param[in] dest_id ID of the receiving task instance (TASK_SDK).
- * @param[in] src_id  HCI operation code is filled in source message ID of the sending task instance.
- *
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
-int ble_sdk_ranging_cmd_cmp_handler(ra_msg_id_t const msgid, void const *p_param,
-    ra_task_id_t const dest_id, ra_task_id_t const src_id);
-
-/**
- ****************************************************************************************
- * @brief Handle ranging vendor-specific HCI event.
- *
- * @param[in] msgid   Id of the message received.
- * @param[in] param   Pointer to the parameters of the message.
- * @param[in] dest_id ID of the receiving task instance (TASK_SDK).
- * @param[in] src_id  HCI event code is filled in source message ID of the sending task instance, 0xFF for VS event.
- *
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
-int ble_sdk_ranging_vs_evt_handler(ra_msg_id_t const msgid, void const *p_param,
-    ra_task_id_t const dest_id, ra_task_id_t const src_id);
-
-/**
- ****************************************************************************************
  * @brief Change the Link Layer parameter of a connection.
+ *
+ * @note 1. This API is only used for DK Central.
+ *       2. This API should be called when the DK Central actively updates the connection parameters.
  *
  * @param[in] conidx   ACL connection index.
  * @param[in] interval Connection interval, unit: 1.25 ms, time range: 7.5 ms to 4 s.
@@ -471,6 +510,10 @@ void ble_ranging_update_gap_conn_param(uint8_t conidx, uint16_t interval, uint16
  ****************************************************************************************
  * @brief Handle memory allocation for localization ranging.
  *
+ * @note 1. This API can be used for both DK Central and DK Anchor.
+ *       2. This API should be called before ble_ranging_malloc() is used.
+ *       3. The application project needs to define the global macro CFG_LOC_RANGING_SUPPORT as 1.
+ *
  * @param[in] p_ranging_heap_buf Pointer to ranging heap buffer.
  * @param[in] ranging_heap_size  Ranging heap size.
  * @return None.
@@ -482,7 +525,9 @@ void ble_ranging_heap_init(uint8_t *p_ranging_heap_buf, uint32_t ranging_heap_si
  ****************************************************************************************
  * @brief Allocation of a block of memory for localization ranging.
  *
- * Allocate a memory block whose size is size; if no memory is available, return NULL.
+ * @note 1. Allocate a memory block whose size is size; if no memory is available, return NULL.
+ *       2. This API can be used for both DK Central and DK Anchor.
+ *       3. This API should be called after ble_ranging_heap_init() is used.
  *
  * @param[in] size Size of the memory area that need to be allocated.
  *
@@ -496,7 +541,9 @@ void *ble_ranging_malloc(uint32_t size);
  ****************************************************************************************
  * @brief Freeing of a block of memory.
  *
- * Free the memory area pointed by p_mem: mark the block as free and insert it in the pool of free block.
+ * @note 1. Free the memory area pointed by p_mem: mark the block as free and insert it in the pool of free block.
+ *       2. This API can be used for both DK Central and DK Anchor.
+ *       3. This API should be called after ble_ranging_malloc() is used.
  *
  * @param[in] p_mem Pointer to the memory area that need to be freed.
  *
@@ -508,17 +555,10 @@ void ble_ranging_free(void *p_mem);
  ****************************************************************************************
  * @brief Allocate memory for a message which will be sent to SDK TASK.
  *
- * This primitive allocates memory for a message that has to be sent. The memory
- * is allocated dynamically on the heap and the length of the variable parameter
- * structure has to be provided in order to allocate the correct size.
- *
- * Several additional parameters are provided which will be preset in the message
- * and which may be used internally to choose the kind of memory to allocate.
- *
- * The memory allocated will be automatically freed by the kernel, after the
- * pointer has been sent to ble_ranging_ke_msg_send().
- *
- * Allocation failure is considered critical and should not happen.
+ * @note 1. This API can be used for both DK Central and DK Anchor.
+ *       2. This API should be called after ble_ranging_heap_init() is used.
+ *       3. After sending a message using ble_ranging_ke_msg_send(), the allocated memory will be automatically released by the kernel.
+ *       4. If memory allocation fails, an ASSERT will be triggered directly.
  *
  * @param[in] id        Message identifier
  * @param[in] param_len Size of the message parameters to be allocated
@@ -533,14 +573,38 @@ void *ble_ranging_ke_msg_alloc(sdk_msg_id_t id, uint16_t param_len);
 
 /**
  ****************************************************************************************
+ * @brief Allocate memory for a message which will be sent over HCI (Host Controller Interface).
+ *
+ * This function allocates memory dynamically for a message that needs to be sent over the HCI.
+ * The length of the variable parameter structure must be provided to allocate the correct size.
+ *
+ * Several additional parameters are provided which will be preset in the message and which
+ * may be used internally to choose the kind of memory to allocate.
+ *
+ * The memory allocated will be automatically freed by the kernel after the pointer has been sent
+ * to ble_ranging_hci_msg_send().
+ *
+ * Allocation failure is considered critical and should not happen.
+ *
+ * @param[in] hci_msg_id    HCI message identifier. The HCI message ID allows to identify
+ *                          different types of messages that can be handled by the HCI layer.
+ * @param[in] param_len     Size of the message parameters to be allocated.
+ *
+ * @return Pointer to the parameter member of the HCI message. If the parameter structure is
+ *         empty, the pointer will point to the end of the message and should not be used
+ *         (except to retrieve the message pointer or to send the message).
+ ****************************************************************************************
+ */
+void *ble_ranging_hci_msg_alloc(uint16_t hci_msg_id, uint16_t param_len);
+
+/**
+ ****************************************************************************************
  * @brief Send message to SDK TASK.
  *
- * Send a message previously allocated with ble_ranging_ke_msg_alloc() function.
- *
- * The kernel will take care of freeing the message memory.
- *
- * Once the function have been called, it is not possible to access its data
- * anymore as the kernel may have copied the message and freed the original memory.
+ * @note 1. This API can be used for both DK Central and DK Anchor.
+ *       2. This API should be called after ble_ranging_ke_msg_alloc() is used.
+ *       3. After calling this API, you should no longer access the data pointed to p_msg_param,
+ *          as the memory allocated by ble_ranging_ke_msg_alloc will be automatically released by the kernel.
  *
  * @param[in] p_msg_param  Pointer to the parameter member of the message that should be sent.
  ****************************************************************************************
@@ -550,6 +614,9 @@ void ble_ranging_ke_msg_send(void const *p_msg_param);
 /**
  ****************************************************************************************
  * @brief Retrieve connection index from connection handle.
+ *
+ * @note 1. This API is only used for DK Central.
+ *       2. This API should be called after the ACL connection has been established.
  *
  * @param[in] conhdl Connection handle.
  *
@@ -562,12 +629,26 @@ uint8_t ble_ranging_get_conidx_by_conhdl(uint16_t conhdl);
  ****************************************************************************************
  * @brief Retrieve connection handle from connection index.
  *
+ * @note 1. This API is only used for DK Central.
+ *       2. This API should be called after the ACL connection has been established.
+ *
  * @param[in] conidx Connection index.
  *
  * @return Return found connection handle, RANGING_INVALID_CONHDL if not found.
  ****************************************************************************************
  */
 uint16_t ble_ranging_get_conhdl_by_conidx(uint8_t conidx);
+
+/**
+ ****************************************************************************************
+ * @brief Send a message to the BLE controller.
+ *
+ * @param[in] p_msg  Pointer to the message that will be sent to the BLE controller.
+ *
+ * @return Void.
+ ****************************************************************************************
+ */
+void ble_ranging_send_to_controller(void *p_msg);
 
 /** @} */
 

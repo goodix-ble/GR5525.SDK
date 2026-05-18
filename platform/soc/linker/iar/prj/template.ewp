@@ -292,11 +292,11 @@
                 </option>
                 <option>
                     <name>IExtraOptionsCheck</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IExtraOptions</name>
-                    <state></state>
+                    <state>--no_path_in_file_macros</state>
                 </option>
                 <option>
                     <name>CCLangConformance</name>
@@ -757,7 +757,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\gr5625.icf</state>
+                    <state>$PROJ_DIR$\gr5525.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>

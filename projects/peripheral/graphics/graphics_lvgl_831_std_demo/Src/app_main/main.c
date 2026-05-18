@@ -52,7 +52,6 @@
 #include "app_rtc.h"
 #include "app_key.h"
 #include "user_periph_setup.h"
-#include "app_bt.h"
 #include "user_app.h"
 
 /**
@@ -72,11 +71,6 @@ extern void app_create_lvgl_task(void);
 static void vStartTasks(void *arg)
 {
     app_create_lvgl_task();
-    app_create_bt_task();
-
-    bt_api_device_name_set("GR5625_SK", sizeof("GR5625_SK"));
-    bt_api_device_name_get();
-
     vTaskDelete(NULL);
 }
 
@@ -92,10 +86,6 @@ int main(void)
 
     // Initialize BLE stack
     ble_stack_init(ble_evt_handler, &heaps_table);
-
-    // Initialize BT stack
-    bt_api_init();
-
     xTaskCreate(vStartTasks, "create_task", 1024, NULL, 0, NULL);   /*< create some demo tasks via freertos */
     vTaskStartScheduler();                                          /*< freertos run all tasks*/
     for (;;);                                                       /*< Never perform here */

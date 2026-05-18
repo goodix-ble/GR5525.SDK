@@ -7,33 +7,18 @@
 #include "app_pwm.h"
 
 #if APP_DRIVER_CHIP_TYPE == APP_DRIVER_GR5525X
-    #if GR5625_SK
-        #define DISPLAY_RESET_IO_TYPE APP_IO_TYPE_GPIOA
-        #define DISPLAY_RESET_IO_PIN APP_IO_PIN_13
-        #define DISPLAY_RESET_IO_MUX APP_IO_MUX_8
+    #define DISPLAY_RESET_IO_TYPE APP_IO_TYPE_AON
+    #define DISPLAY_RESET_IO_PIN APP_IO_PIN_6
+    #define DISPLAY_RESET_IO_MUX APP_IO_MUX_8
 
-        #define DISPLAY_TE_IO_TYPE APP_IO_TYPE_GPIOA
-        #define DISPLAY_TE_IO_PIN APP_IO_PIN_12
-        #define DISPLAY_TE_IO_MUX APP_IO_MUX_8
+    #define DISPLAY_TE_IO_TYPE APP_IO_TYPE_AON
+    #define DISPLAY_TE_IO_PIN APP_IO_PIN_5
+    #define DISPLAY_TE_IO_MUX APP_IO_MUX_8
 
-        #define DISPLAY_BL_PWM_ID APP_PWM_ID_1
-        #define DISPLAY_BL_IO_TYPE APP_IO_TYPE_MSIO
-        #define DISPLAY_BL_IO_PIN APP_IO_PIN_4
-        #define DISPLAY_BL_IO_MUX APP_IO_MUX_0
-    #else
-        #define DISPLAY_RESET_IO_TYPE APP_IO_TYPE_AON
-        #define DISPLAY_RESET_IO_PIN APP_IO_PIN_6
-        #define DISPLAY_RESET_IO_MUX APP_IO_MUX_8
-
-        #define DISPLAY_TE_IO_TYPE APP_IO_TYPE_AON
-        #define DISPLAY_TE_IO_PIN APP_IO_PIN_5
-        #define DISPLAY_TE_IO_MUX APP_IO_MUX_8
-
-        #define DISPLAY_BL_PWM_ID APP_PWM_ID_0
-        #define DISPLAY_BL_IO_TYPE APP_IO_TYPE_GPIOB
-        #define DISPLAY_BL_IO_PIN APP_IO_PIN_15
-        #define DISPLAY_BL_IO_MUX APP_IO_MUX_3
-    #endif // GR5625_SK
+    #define DISPLAY_BL_PWM_ID APP_PWM_ID_0
+    #define DISPLAY_BL_IO_TYPE APP_IO_TYPE_GPIOB
+    #define DISPLAY_BL_IO_PIN APP_IO_PIN_15
+    #define DISPLAY_BL_IO_MUX APP_IO_MUX_3
 #else
     #error "NOT SUPPORT"
 #endif
@@ -174,11 +159,8 @@ void display_st77916_psd_360p_init(app_qspi_id_t id, uint32_t clock_prescaler, a
         .mux = DISPLAY_TE_IO_MUX,
     };
     app_io_event_register_cb(DISPLAY_TE_IO_TYPE, &te_pin_init, display_te_evt_callback, NULL);
-#if GR5625_SK
-    ll_gpio_disable_it(GPIO0, LL_GPIO_PIN_12);
-#else
+
     ll_aon_gpio_disable_it(LL_AON_GPIO_PIN_5);
-#endif // GR5625_SK
 
     // LEDK Pin
     app_io_init_t ledk_pin_init = {
@@ -276,20 +258,11 @@ void display_st77916_psd_360p_set_show_area(uint16_t x1, uint16_t x2, uint16_t y
 
 void display_st77916_psd_360p_wait_te_signal(void)
 {
-    // return;
-#if GR5625_SK
-    ll_gpio_enable_it(GPIO0, LL_GPIO_PIN_12);
-#else
     ll_aon_gpio_enable_it(LL_AON_GPIO_PIN_5);
-#endif // GR5625_SK
 
     xSemaphoreTake(s_te_sem, 100);
 
-#if GR5625_SK
-    ll_gpio_disable_it(GPIO0, LL_GPIO_PIN_12);
-#else
     ll_aon_gpio_disable_it(LL_AON_GPIO_PIN_5);
-#endif // GR5625_SK
 }
 
 static void display_te_evt_callback(app_io_evt_t *p_evt)

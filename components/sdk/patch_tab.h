@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef uint16_t task_id_t;
+typedef uint32_t task_id_t;
 typedef uint16_t msg_id_t;
 
 typedef int (*msg_func_t)(msg_id_t const msgid, void const *param,
@@ -44,6 +44,11 @@ extern int gapm_hci_handler_patch(msg_id_t const msgid, void const* event,
 extern int gapc_hci_handler_patch(msg_id_t const msgid, void const* event,
     task_id_t dest_id, task_id_t src_id);
 
+#if CFG_MAX_ADVS
+extern int hci_le_set_ext_scan_rsp_data_cmd_handler_patch(void const *param, uint16_t opcode);
+extern int hci_le_set_ext_adv_en_cmd_handler_patch(void const *param, uint16_t opcode);
+#endif
+
 #if CFG_MAX_CONNECTIONS
 extern int llc_op_ch_class_en_ind_handler_patch(msg_id_t const msgid, void const *param,
     task_id_t const dest_id, task_id_t const src_id);
@@ -51,7 +56,8 @@ extern int llc_op_ch_class_en_ind_handler_patch(msg_id_t const msgid, void const
 extern int llc_op_ch_class_rep_ind_handler_patch(msg_id_t const msgid, void const *param,
     task_id_t const dest_id, task_id_t const src_id);
 #endif
-
+extern int lld_con_offset_upd_ind_handler_patch(msg_id_t const msgid, void *param,
+    task_id_t const dest_id, task_id_t const src_id);
 #if CFG_CAR_KEY_SUPPORT
 // llm task for car key
 extern int llm_pub_key_gen_ind_handler_patch(msg_id_t const msgid, void const *param,
@@ -74,6 +80,7 @@ extern int lld_adv_end_ind_handler_patch(msg_id_t const msgid, void const *param
 // llm hci cmd handler for test
 extern int hci_le_tx_test_v4_cmd_handler_patch(void const *param, uint16_t opcode);
 #endif
+extern int hci_reset_cmd_handler_patch(void const *param, uint16_t opcode);
 
 ke_msg_tab_item_t ke_msg_tab[] =
 {
@@ -88,6 +95,7 @@ ke_msg_tab_item_t ke_msg_tab[] =
     #if CFG_MAX_CONNECTIONS
     {(msg_func_t)0x0002a83d, (msg_func_t)llc_op_ch_class_en_ind_handler_patch},
     {(msg_func_t)0x0002a8f9, (msg_func_t)llc_op_ch_class_rep_ind_handler_patch},
+    {(msg_func_t)0x00032fdd, (msg_func_t)lld_con_offset_upd_ind_handler_patch},
     #endif
 
     #if CFG_CAR_KEY_SUPPORT
@@ -113,21 +121,24 @@ extern int hci_le_set_addr_resol_en_cmd_handler_patch(void const *param, uint16_
 
 extern int hci_le_set_priv_mode_cmd_handler_patch(void const *param, uint16_t opcode);
 
-#if CFG_CAR_KEY_SUPPORT
+#if CFG_SC_PAIR_SUPPORT
 extern int hci_le_rd_local_p256_public_key_cmd_handler_patch(void const *param, uint16_t opcode);
 #endif
 
 llm_hci_cmd_tab_item_t llm_hci_cmd_tab[] =
 {
     {NULL, NULL},
-    
+
     #if (!DTM_TEST_ENABLE)
      // hci cmd for common
     {(llm_hci_cmd_hdl_func_t)0x0001c071, (llm_hci_cmd_hdl_func_t)hci_le_add_dev_to_rslv_list_cmd_handler_patch},
-    {(llm_hci_cmd_hdl_func_t)0x00020731, (llm_hci_cmd_hdl_func_t)hci_le_set_ext_scan_rsp_data_cmd_handler_patch},
     {(llm_hci_cmd_hdl_func_t)0x0001efd5, (llm_hci_cmd_hdl_func_t)hci_le_rmv_dev_from_rslv_list_cmd_handler_patch},
     {(llm_hci_cmd_hdl_func_t)0x0001c4bd, (llm_hci_cmd_hdl_func_t)hci_le_clear_rslv_list_cmd_handler_patch},
     {(llm_hci_cmd_hdl_func_t)0x0001f295, (llm_hci_cmd_hdl_func_t)hci_le_set_addr_resol_en_cmd_handler_patch},
+#if CFG_MAX_ADVS
+    {(llm_hci_cmd_hdl_func_t)0x00020731, (llm_hci_cmd_hdl_func_t)hci_le_set_ext_scan_rsp_data_cmd_handler_patch},
+    {(llm_hci_cmd_hdl_func_t)0x0001fefd, (llm_hci_cmd_hdl_func_t)hci_le_set_ext_adv_en_cmd_handler_patch},
+#endif
     {(llm_hci_cmd_hdl_func_t)0x00021005, (llm_hci_cmd_hdl_func_t)hci_le_set_priv_mode_cmd_handler_patch},
     #endif
 
@@ -136,9 +147,10 @@ llm_hci_cmd_tab_item_t llm_hci_cmd_tab[] =
     {(llm_hci_cmd_hdl_func_t)0x00021861, (llm_hci_cmd_hdl_func_t)hci_le_tx_test_v4_cmd_handler_patch},
     #endif
 
-    #if CFG_CAR_KEY_SUPPORT
+    #if CFG_SC_PAIR_SUPPORT
     {(llm_hci_cmd_hdl_func_t)0x0001e4e1, (llm_hci_cmd_hdl_func_t)hci_le_rd_local_p256_public_key_cmd_handler_patch},
     #endif
+    {(llm_hci_cmd_hdl_func_t)0x000221ed, (llm_hci_cmd_hdl_func_t)hci_reset_cmd_handler_patch},
 };
 
 gapm_hci_evt_tab_item_t gapm_hci_evt_tab[] =

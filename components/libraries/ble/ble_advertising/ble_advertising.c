@@ -86,36 +86,28 @@ static ble_adv_mode_t adv_mode_next_get(ble_adv_mode_t adv_mode)
 
 static ble_adv_mode_t adv_mode_next_avail_get(ble_adv_mode_cfg_t *p_adv_mode_cfg, ble_adv_mode_t adv_mode)
 {
-    switch (adv_mode)
+    if ((p_adv_mode_cfg->adv_directed_high_duty_enabled) && (!p_adv_mode_cfg->adv_extended_enabled) &&
+    adv_env.peer_addr_exist)
     {
-        case BLE_ADV_MODE_DIRECTED_HIGH_DUTY:
-            if ((p_adv_mode_cfg->adv_directed_high_duty_enabled) && (!p_adv_mode_cfg->adv_extended_enabled) &&
-                 adv_env.peer_addr_exist)
-            {
-                return BLE_ADV_MODE_DIRECTED_HIGH_DUTY;
-            }
-
-        case BLE_ADV_MODE_DIRECTED_LOW_DUTY:
-            if ((p_adv_mode_cfg->adv_directed_low_duty_enabled && adv_env.peer_addr_exist))
-            {
-                return BLE_ADV_MODE_DIRECTED_LOW_DUTY;
-            }
-
-        case BLE_ADV_MODE_FAST:
-            if (p_adv_mode_cfg->adv_fast_enabled)
-            {
-                return BLE_ADV_MODE_FAST;
-            }
-
-        case BLE_ADV_MODE_SLOW:
-            if (p_adv_mode_cfg->adv_slow_enabled)
-            {
-                return BLE_ADV_MODE_SLOW;
-            }
-
-        default:
-            return BLE_ADV_MODE_IDLE;
+        return BLE_ADV_MODE_DIRECTED_HIGH_DUTY;
     }
+
+    if ((p_adv_mode_cfg->adv_directed_low_duty_enabled && adv_env.peer_addr_exist))
+    {
+        return BLE_ADV_MODE_DIRECTED_LOW_DUTY;
+    }
+
+    if (p_adv_mode_cfg->adv_fast_enabled)
+    {
+        return BLE_ADV_MODE_FAST;
+    }
+
+    if (p_adv_mode_cfg->adv_slow_enabled)
+    {
+        return BLE_ADV_MODE_SLOW;
+    }
+
+    return BLE_ADV_MODE_IDLE;
 }
 
 static sdk_err_t directed_high_duty_adv_param_set(struct ble_adv_env_t *p_adv_env)

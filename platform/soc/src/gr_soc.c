@@ -21,8 +21,8 @@
 
 #define SDK_VER_MAJOR                   1
 #define SDK_VER_MINOR                   0
-#define SDK_VER_BUILD                   2
-#define COMMIT_ID                       0xe00dd2bc
+#define SDK_VER_BUILD                   3
+#define COMMIT_ID                       0x800f399a
 
 static const sdk_version_t sdk_version = {SDK_VER_MAJOR,
                                           SDK_VER_MINOR,
@@ -148,7 +148,7 @@ void first_class_task(void)
     platform_flash_enable_quad(&hp_init);
 
     /* Configure the sleep memory retention, it's modifed in ultra deep sleep.
-     * GR5525 dosen't support configuring memory retention bank separately,
+     * GR5525 doesn't support configuring memory retention bank separately,
      * so we configure all the memory being retained during deep sleep.
      */
     AON_PWR->MEM_PWR_SLP0 = 0x0000FFFF;
@@ -187,6 +187,8 @@ static bool wait_for_clock_calibration_done(uint32_t timeout)//unit:us
 
 void second_class_task(void)
 {
+//no need to init lp clk and trigger the pmu timer in DTM ate to save resource
+#ifndef DTM_ATE_ENABLE
 #if CFG_LPCLK_INTERNAL_EN
     platform_clock_init((mcu_clock_type_t)SYSTEM_CLOCK, (sdk_clock_type_t)RNG_OSC_CLK2, CFG_LF_ACCURACY_PPM, 0);
 #else
@@ -200,7 +202,7 @@ void second_class_task(void)
         system_pmu_calibration_init(30000);
     }
 #endif
-
+#endif
     system_pmu_init((mcu_clock_type_t)SYSTEM_CLOCK);
     SystemCoreSetClock((mcu_clock_type_t)SYSTEM_CLOCK);
     SetSerialClock(SERIAL_N96M_CLK);
@@ -211,6 +213,8 @@ void second_class_task(void)
         pmu_calibration_handler(NULL);
     }
 
+//no need to init low power feature in DTM ate to save resource
+#ifndef DTM_ATE_ENABLE
     /* Init peripheral sleep management */
     app_pwr_mgmt_init();
 
@@ -218,6 +222,7 @@ void second_class_task(void)
     {
         wait_for_clock_calibration_done(1000000);
     }
+#endif
 }
 
 static fun_t svc_user_func = NULL;
@@ -290,6 +295,17 @@ void warm_boot_process(void)
 void soc_init(void)
 {
     ultra_deep_sleep_wakeup_handle();
+#if !defined(WDT_RUN_ENABLE) || (!WDT_RUN_ENABLE)
+    // Disable AON WDT
+    ll_aon_wdt_enable_write_access();
+    ll_aon_wdt_disable();
+    ll_aon_wdt_disable_write_access();
+#else
+    // AON WDT is enabled by default. However, AON WDT CFG_0.EN is 0, so set CFG_0.EN to 1.
+    ll_aon_wdt_enable_write_access();
+    ll_aon_wdt_enable();
+    ll_aon_wdt_disable_write_access();
+#endif
     platform_init();
 }
 

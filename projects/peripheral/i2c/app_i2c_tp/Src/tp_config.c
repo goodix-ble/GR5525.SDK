@@ -70,13 +70,14 @@ static void tp_pin_init(void)
      /**
      * interrupt pin
      */
-    app_gpiote_param_t param[1] =
-    {
-         APP_TP_INT_IO_TYPE,
-         APP_TP_INT_IO_PIN,
-         APP_IO_MODE_IT_FALLING,
-         APP_IO_PULLUP,
-         tp_interrupt_callback,
+    app_gpiote_param_t param[1] = {
+        {
+            APP_TP_INT_IO_TYPE,
+            APP_TP_INT_IO_PIN,
+            APP_IO_MODE_IT_FALLING,
+            APP_IO_PULLUP,
+            tp_interrupt_callback,
+        }
      };
     app_gpiote_init(param, 1);
     GPIO2->INTENSET = 0x1;

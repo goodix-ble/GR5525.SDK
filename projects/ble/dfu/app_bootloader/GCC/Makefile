@@ -53,12 +53,12 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/profiles/otas/otas.c  \
 ../../../../../components/drivers_ext/gr55xx/gr55xx_spi_flash.c  \
 ../Src/platform/user_periph_setup.c  \
-../Src/sign_verify/src/rsa.c  \
-../Src/sign_verify/src/pkc.c  \
-../Src/sign_verify/src/sign_verify.c  \
+../../../../../components/libraries/app_bootloader/sign_verify/src/rsa.c  \
+../../../../../components/libraries/app_bootloader/sign_verify/src/pkc.c  \
+../../../../../components/libraries/app_bootloader/sign_verify/src/sign_verify.c  \
 ../Src/user/main.c  \
-../Src/user/bootloader_ota.c  \
-../Src/user/bootloader_boot_vendor.c  \
+../../../../../components/libraries/app_bootloader/bootloader_ota.c  \
+../../../../../components/libraries/app_bootloader/bootloader_boot_vendor.c  \
 ../Src/user/bootloader_boot_port.c  \
 
 
@@ -142,12 +142,15 @@ PRJ_C_INCLUDE_PATH :=   \
 ../../../../../platform/include  \
 ../../../../../platform/soc/include  \
 ../../../../../platform/soc/linker/keil  \
-../Src/sign_verify/inc  \
+../../../../../components/libraries/app_bootloader/sign_verify/inc  \
 ../../../../../components/libraries/app_crypto  \
+../../../../../components/libraries/app_bootloader  \
 
 
 PRJ_C_MICRO_DEFINES :=   \
 BOOTLOADER_ENABLE  \
+WDT_RUN_ENABLE=1  \
+BOOT_LONG_TIME=0  \
 
 
 PRJ_ASM_INCLUDE_PATH :=   \
@@ -211,9 +214,13 @@ endif
 
 ## Set LDFLAGS
 LDFLAGS += -Wl,--gc-sections
-#LDFLAGS += -specs=nano.specs
-LDFLAGS += -L../../../../../platform/soc/linker/gcc/ -lble_sdk
+LDFLAGS += -specs=nano.specs
+## When using the nano library, floating-point numbers cannot be printed by default.
+## If user needs to print floating-point numbers, please add the compile option -u_printf_float,
+## and then the code size for flash will increase.
+# LDFLAGS += -u_printf_float
 LDFLAGS += -L../../../../../components/libraries/app_crypto/gcc/ -lapp_crypto
+LDFLAGS += -L../../../../../platform/soc/linker/gcc/ -lble_sdk
 
 
 ## Set compile output directory
@@ -266,6 +273,9 @@ $(BUILD)/$(MAKE_TARGET_NAME).hex: $(BUILD_LST)/$(MAKE_TARGET_NAME).elf
 	$(ECHO) "compile hex file ..."
 	$(V_OBJCOPY) $(OBJCOPY) -O ihex $< $@
 
+	arm-none-eabi-objdump -d $(BUILD_LST)/$(MAKE_TARGET_NAME).elf > $(BUILD_LST)/$(MAKE_TARGET_NAME).s
+	arm-none-eabi-size $(BUILD_LST)/$(MAKE_TARGET_NAME).elf
+
 $(BUILD)/$(MAKE_TARGET_NAME).bin: $(BUILD_LST)/$(MAKE_TARGET_NAME).elf
 	$(ECHO) "compile binary file ..."
 	$(V_OBJCOPY) $(OBJCOPY) -O binary $< $@
@@ -280,9 +290,10 @@ mk_path :
 	mkdir -p  $(BUILD_OBJ)
 	mkdir -p  $(BUILD_LST)
 
-flash: $(BUILD)/$(MAKE_TARGET_APP).bin
+flash: $(BUILD)/$(MAKE_TARGET_NAME).bin
 	$(ECHO) "Writing $< to the GR55xx-SK board"
-	programer -t fw -p burn -i $(BUILD)/$(MAKE_TARGET_APP).bin
+	GR5xxx_console.exe eraseall 4 0
+	GR5xxx_console.exe program $(BUILD)/$(MAKE_TARGET_NAME).bin 'y' 0x200000 1024 4 0
 
 clean:
 	rm -rf $(BUILD)

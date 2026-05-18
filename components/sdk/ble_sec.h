@@ -52,22 +52,22 @@
 #include "ble_error.h"
 #include <stdbool.h>
 
-/**@addtogroup BLE_SM_DEFINES Defines 
- * @{ 
+/**@addtogroup BLE_SM_DEFINES Defines
+ * @{
  */
 /**@defgroup BLE_SEC_AUTH_FLAG  SEC Auth Flag
-* @{ 
+* @{
 */
 #define BLE_SEC_AUTH_NONE               0                 /**< No auth requirement. */
 #define BLE_SEC_AUTH_BOND              (1 << 0)           /**< Bond flag. */
 #define BLE_SEC_AUTH_MITM              (1 << 2)           /**< MITM flag. */
 #define BLE_SEC_AUTH_SEC_CON           (1 << 3)           /**< Security connection flag. */
 #define BLE_SEC_AUTH_KEY_PRESS_NOTIFY  (1 << 4)           /**< Key press notify flag. */
-#define BLE_SEC_AUTH_ALL               (AUTH_BOND | AUTH_MITM | AUTH_SEC_CON | AUTH_KEY_PRESS_NOTIFY)  /**< All authentication flags are on. */
+#define BLE_SEC_AUTH_ALL               (BLE_SEC_AUTH_BOND | BLE_SEC_AUTH_MITM | BLE_SEC_AUTH_SEC_CON | BLE_SEC_AUTH_KEY_PRESS_NOTIFY)  /**< All authentication flags are on. */
 /**@} */
 
 /**@defgroup BLE_SEC_KEY_DIST_FLAG  SEC Key Distribution Flag
-* @{ 
+* @{
 */
 #define BLE_SEC_KDIST_NONE      0            /**< No key needs to be distributed. */
 #define BLE_SEC_KDIST_ENCKEY   (1 << 0)      /**< Distribute encryption and master identification info. */
@@ -275,6 +275,21 @@ uint16_t ble_sec_params_set(ble_sec_param_t *p_sec_param);
  ****************************************************************************************
  */
 uint16_t ble_sec_enc_start(uint8_t conn_idx);
+
+/**
+ ****************************************************************************************
+ * @brief Send pair request, this interface is used only by master.
+ *
+ * @note Invoke this api, the master will send pair request whether the peer device is bonded or not.
+ *
+ * @param[in] conn_idx: ACL connection index, the first ACL connection index is 0, and increased one by one.
+ *
+ * @retval ::SDK_SUCCESS: Send pair request is successfully set to the BLE stack.
+ * @retval ::SDK_ERR_INVALID_CONN_IDX: Invalid connection index supplied.
+ * @retval ::SDK_ERR_DISALLOWED: Operation is disallowed.
+ ****************************************************************************************
+ */
+uint16_t ble_sec_send_pair_req(uint8_t conn_idx);
 
 /**
  ****************************************************************************************

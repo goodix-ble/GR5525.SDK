@@ -291,11 +291,11 @@
                 </option>
                 <option>
                     <name>IExtraOptionsCheck</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IExtraOptions</name>
-                    <state />
+                    <state>--no_path_in_file_macros</state>
                 </option>
                 <option>
                     <name>CCLangConformance</name>
@@ -755,7 +755,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$PROJ_DIR$\gr5625.icf</state>
+                    <state>$PROJ_DIR$\gr5525.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
@@ -1091,9 +1091,6 @@
 </file>
 <file>
 <name>$PROJ_DIR$\..\..\..\..\..\components\libraries\app_assert\app_assert.c</name>
-</file>
-<file>
-<name>$PROJ_DIR$\..\..\..\..\..\drivers\src\app_spi.c</name>
 </file>
 <file>
 <name>$PROJ_DIR$\..\..\..\..\..\components\libraries\app_key\app_key.c</name>

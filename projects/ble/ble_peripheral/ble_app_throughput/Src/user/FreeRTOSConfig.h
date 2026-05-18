@@ -52,6 +52,11 @@
 #include "custom_config.h"
 #include "grx_sys.h"
 
+#ifdef SOC_GR5410
+#define configENABLE_FPU                                1
+#define configENABLE_MPU                                0
+#define configENABLE_TRUSTZONE                          0
+#endif
 
 #define FREERTOS_USE_ONLY_RTC                           0 /* Only using RTC for RTOS tick */
 #define FREERTOS_USE_RTC_AND_SYSTICK                    1 /* Using RTC for RTOS tick in sleep and using systick in active mode */

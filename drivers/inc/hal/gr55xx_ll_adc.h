@@ -173,12 +173,18 @@ typedef struct _ll_adc_init
   * @{
   */
 #if defined(GR5X25)
-#define LL_ADC_REF_SRC_BUF_INT      (0x00000000UL)                            /**< Select buffered internal reference as reference   */
+#define LL_ADC_REF_SRC_BUF_INT      (0x00000000UL)                                /**< Select buffered internal reference as reference   */
 #define LL_ADC_REF_SRC_IO0          (3UL << AON_PMU_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO0 as reference                         */
 #define LL_ADC_REF_SRC_IO1          (4UL << AON_PMU_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO1 as reference                         */
 #define LL_ADC_REF_SRC_IO2          (5UL << AON_PMU_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO2 as reference                         */
 #define LL_ADC_REF_SRC_IO3          (6UL << AON_PMU_SNSADC_CFG_REF_SEL_Pos)       /**< Select MSIO3 as reference                         */
 #endif
+/** @} */
+
+/** @defgroup ADC_LL_CFG_REG_DEFAULT ADC Config Register Default Value
+  * @{
+  */
+#define LL_ADC_CFG_REG_DEFAULT      (0x0710070AU)   /**< The default value of the SNSADC_CFG register in AON_PMU */
 /** @} */
 
 /** @} */

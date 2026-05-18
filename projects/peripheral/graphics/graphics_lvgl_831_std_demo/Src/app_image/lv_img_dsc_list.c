@@ -7,9 +7,9 @@
 #endif // USE_EXTERNAL_RESOURCES
 
 #if USE_EXTERNAL_RESOURCES
-#define BINARY_RESOURCES (const uint8_t *)(0x00800000)
+    #define BINARY_RESOURCES (const uint8_t *) (QSPI0_XIP_BASE)     // External Data Flash. If using external flash, change to responding XIP Address
 #else
-extern const uint8_t BINARY_RESOURCES[];
+    extern const uint8_t BINARY_RESOURCES[];
 #endif // USE_EXTERNAL_RESOURCES
 
 const lv_img_dsc_t wd_img_10_power_off = {

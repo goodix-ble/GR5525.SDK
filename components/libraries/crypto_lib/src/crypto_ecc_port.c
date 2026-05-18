@@ -1,3 +1,8 @@
+
+
+#include  "custom_config.h"
+#ifndef SOC_GR533X
+
 #include "crypto_ecc_port.h"
 #include "crypto_pkc.h"
 #include "crypto_pkc_port.h"
@@ -22,23 +27,16 @@ uint32_t hw_ecc_rng32(void)
     return rng32;
 }
 
-void hw_ecc_point_mul(algo_ecc_config_t *ecc_calc_options,
+int hw_ecc_point_mul(algo_ecc_config_t *ecc_calc_options,
                       uint32_t k[ECC_U32_LENGTH],
                       algo_ecc_point_t *Q,
                       algo_ecc_point_t *result)
 {
-
-    hal_status_t err = HAL_OK;
     ecc_curve_init_t *ecc_curve = (ecc_curve_init_t *)ecc_calc_options->curve;
 
     hal_set_curve(ecc_curve);
 
-    err = hal_pkc_ecc_point_mul_handle(k, (ecc_point_t *)Q, (ecc_point_t *)result);
-
-    if (HAL_OK != err)
-    {
-//        printf("hw_ecc_point_mul error %d\n", __LINE__);
-    }
+    return  hal_pkc_ecc_point_mul_handle(k, (ecc_point_t *)Q, (ecc_point_t *)result);
 }
 
 void hw_ecc_sha(const uint8_t *message, uint32_t message_byte_length, uint8_t output[32])
@@ -190,3 +188,4 @@ uint32_t ecc_is_infinite_point(algo_ecc_point_t *point)
 
     return 1;
 }
+#endif

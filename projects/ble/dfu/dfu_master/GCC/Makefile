@@ -54,7 +54,7 @@ PRJ_C_SRC_FILES:=   \
 ../../../../../components/drivers_ext/gr55xx/gr55xx_spi_flash.c  \
 ../../../../../external/segger_rtt/SEGGER_RTT.c  \
 ../Src/platform/user_periph_setup.c  \
-../Src/platform/user_dfu_m_cfg.c  \
+../Src/platform/user_dfu_master.c  \
 ../Src/user/main.c  \
 ../Src/user/user_app.c  \
 
@@ -207,7 +207,12 @@ endif
 
 ## Set LDFLAGS
 LDFLAGS += -Wl,--gc-sections
-#LDFLAGS += -specs=nano.specs
+LDFLAGS += -specs=nano.specs
+## When using the nano library, floating-point numbers cannot be printed by default.
+## If user needs to print floating-point numbers, please add the compile option -u_printf_float,
+## and then the code size for flash will increase.
+# LDFLAGS += -u_printf_float
+LDFLAGS += -L../../../../../components/libraries/app_crypto/gcc/ -lapp_crypto
 LDFLAGS += -L../../../../../platform/soc/linker/gcc/ -lble_sdk
 
 
@@ -261,6 +266,9 @@ $(BUILD)/$(MAKE_TARGET_NAME).hex: $(BUILD_LST)/$(MAKE_TARGET_NAME).elf
 	$(ECHO) "compile hex file ..."
 	$(V_OBJCOPY) $(OBJCOPY) -O ihex $< $@
 
+	arm-none-eabi-objdump -d $(BUILD_LST)/$(MAKE_TARGET_NAME).elf > $(BUILD_LST)/$(MAKE_TARGET_NAME).s
+	arm-none-eabi-size $(BUILD_LST)/$(MAKE_TARGET_NAME).elf
+
 $(BUILD)/$(MAKE_TARGET_NAME).bin: $(BUILD_LST)/$(MAKE_TARGET_NAME).elf
 	$(ECHO) "compile binary file ..."
 	$(V_OBJCOPY) $(OBJCOPY) -O binary $< $@
@@ -275,9 +283,10 @@ mk_path :
 	mkdir -p  $(BUILD_OBJ)
 	mkdir -p  $(BUILD_LST)
 
-flash: $(BUILD)/$(MAKE_TARGET_APP).bin
+flash: $(BUILD)/$(MAKE_TARGET_NAME).bin
 	$(ECHO) "Writing $< to the GR55xx-SK board"
-	programer -t fw -p burn -i $(BUILD)/$(MAKE_TARGET_APP).bin
+	GR5xxx_console.exe eraseall 4 0
+	GR5xxx_console.exe program $(BUILD)/$(MAKE_TARGET_NAME).bin 'y' 0x200000 1024 4 0
 
 clean:
 	rm -rf $(BUILD)

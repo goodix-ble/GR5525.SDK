@@ -45,14 +45,13 @@
 #include "otas.h"
 #include "app_log.h"
 #include "app_error.h"
-#include "app_bt.h"
 
 /*
  * DEFINES
  *****************************************************************************************
  */
 /**@brief Gapm config data. */
-#define DEVICE_NAME                        "GR5625_SK"      /**< Device Name which will be set in GAP. */
+#define DEVICE_NAME                        "GR5525_SK"      /**< Device Name which will be set in GAP. */
 #define APP_ADV_FAST_MIN_INTERVAL          32               /**< The fast advertising min interval (in units of 0.625 ms). */
 #define APP_ADV_FAST_MAX_INTERVAL          48               /**< The fast advertising max interval (in units of 0.625 ms). */
 #define APP_ADV_SLOW_MIN_INTERVAL          160              /**< The slow advertising min interval (in units of 0.625 ms). */
@@ -91,7 +90,7 @@ static const uint8_t s_adv_rsp_data_set[] =                 /**< Scan responce d
 {
     0x0a,
     BLE_GAP_AD_TYPE_COMPLETE_NAME,
-    'G', 'R', '5', '6', '2', '5', '_', 'S', 'K',
+    'G', 'R', '5', '5', '2', '5', '_', 'S', 'K',
 };
 
 /*
@@ -228,47 +227,6 @@ static void app_sec_rcv_enc_req_handler(uint8_t conn_idx, const ble_sec_evt_enc_
     }
 
     ble_sec_enc_cfm(conn_idx, &cfm_enc);
-}
-
-static void app_sec_rcv_enc_ind_handler(uint16_t conn_idx, uint8_t evt_status, uint8_t auth)
-{
-#if CFG_BT_BREDR
-    if ((evt_status == BLE_SUCCESS) && (auth & BLE_SEC_AUTH_BOND))
-    {
-        uint8_t peer_addr[6] = {0};
-        uint8_t link_key[16] = {0};
-        extern void ble_sec_get_link_key(uint8_t idx, uint8_t* peer_addr, uint8_t*link_key);
-        ble_sec_get_link_key(conn_idx, peer_addr, link_key);
-
-        APP_LOG_DEBUG("security encryption peer_addr= %02x:%02x:%02x:%02x:%02x:%02x",
-                      peer_addr[5],
-                      peer_addr[4],
-                      peer_addr[3],
-                      peer_addr[2],
-                      peer_addr[1],
-                      peer_addr[0]);
-        APP_LOG_DEBUG("link_key= %02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x:%02x",
-                      link_key[0],
-                      link_key[1],
-                      link_key[2],
-                      link_key[3],
-                      link_key[4],
-                      link_key[5],
-                      link_key[6],
-                      link_key[7],
-                      link_key[8],
-                      link_key[9],
-                      link_key[10],
-                      link_key[11],
-                      link_key[12],
-                      link_key[13],
-                      link_key[14],
-                      link_key[15]);
-        //some phone may delay to get link key
-        delay_ms(100);
-        bt_api_pairing_info_store(peer_addr, link_key);
-    }
-#endif // CFG_BT_BREDR
 }
 
 /*
@@ -436,7 +394,6 @@ void ble_evt_handler(const ble_evt_t *p_evt)
             break;
 
         case BLE_SEC_EVT_LINK_ENCRYPTED:
-            app_sec_rcv_enc_ind_handler(p_evt->evt.sec_evt.index, p_evt->evt_status, p_evt->evt.sec_evt.params.enc_ind.auth);
             break;
 
         case BLE_SEC_EVT_KEY_PRESS_NTF:
@@ -488,12 +445,6 @@ void ble_app_init(void)
                  bd_addr.gap_addr.addr[1],
                  bd_addr.gap_addr.addr[0]);
     APP_LOG_INFO("GR5625 LVGL example started.");
-
-    bt_api_addr_t bt_addr;
-    memcpy(&bt_addr, bd_addr.gap_addr.addr, 6);
-    bt_api_addr_set(&bt_addr);
-    bt_api_addr_get();
-
     services_init();
     gap_params_init();
 

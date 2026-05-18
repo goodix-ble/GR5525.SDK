@@ -317,7 +317,7 @@ sdk_err_t fault_db_record_add(const uint8_t *p_data, uint16_t length)
         s_fault_info_db_env.usable_tag = s_fault_info_db_env.rec_tag[0];
         s_fault_info_db_env.rec_tag[FAULT_INFO_RECORDS_MAX - 1] = 0xFFFF;
         s_fault_info_db_env.rec_num--;
-        memcpy(&s_fault_info_db_env.rec_tag[0],
+        memmove(&s_fault_info_db_env.rec_tag[0],
                &s_fault_info_db_env.rec_tag[1],
                (FAULT_INFO_RECORDS_MAX - 1) * sizeof(NvdsTag_t));
     }

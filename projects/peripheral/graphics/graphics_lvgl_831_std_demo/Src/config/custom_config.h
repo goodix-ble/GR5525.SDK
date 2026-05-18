@@ -71,7 +71,7 @@
 #define APP_DRIVER_USE_ENABLE   1
 #endif
 
-// <o> Eanble APP log module
+// <o> Enable APP log module
 // <0=> DISABLE
 // <1=> ENABLE
 #ifndef APP_LOG_ENABLE
@@ -86,7 +86,7 @@
 #define APP_LOG_PORT              0
 #endif
 
-// <o> Eanble APP log store module
+// <o> Enable APP log store module
 // <0=> DISABLE
 // <1=> ENABLE
 #ifndef APP_LOG_STORE_ENABLE
@@ -144,7 +144,7 @@
 // <o> Chip version
 // <i> Default: 0x00
 #ifndef CHIP_VER
-#define CHIP_VER                0x5625
+#define CHIP_VER                0x5525
 #endif
 
 // <o> Code load address
@@ -208,13 +208,6 @@
 #define BOOT_CHECK_IMAGE        1
 #endif
 
-// <o> DAP boot mode
-// <0=> DISABLE
-// <1=> ENABLE
-#ifndef DAP_BOOT_ENABLE
-#define DAP_BOOT_ENABLE         1
-#endif
-
 // </h>
 
 // <h> BLE resource configuration
@@ -223,23 +216,23 @@
 // <o> Support maximum number of BLE profiles <1-64>
 // <i> Range: 1-64
 #ifndef CFG_MAX_PRFS
-#define CFG_MAX_PRFS             10
+#define CFG_MAX_PRFS             1
 #endif
 
 // <o> Support maximum number of bonded devices
 #ifndef CFG_MAX_BOND_DEVS
-#define CFG_MAX_BOND_DEVS        4
+#define CFG_MAX_BOND_DEVS        1
 #endif
 
 // <o> Support maximum number of BLE Links <1-10>
 // <i> Range: 1-10
 #ifndef CFG_MAX_CONNECTIONS
-#define CFG_MAX_CONNECTIONS      5
+#define CFG_MAX_CONNECTIONS      1
 #endif
 
-// <o> Support maximum number of BLE Legacy/Extended Advertisings <0-5>
+// <o> Support maximum number of BLE Legacy/Extended Advertising <0-5>
 // <i> Range: 0-5
-// <i> Note: The total number of BLE Legacy/Extended/Periodic Advertisings should not exceed the limit 5.
+// <i> Note: The total number of BLE Legacy/Extended/Periodic Advertising should not exceed the limit 5.
 #ifndef CFG_MAX_ADVS
 #define CFG_MAX_ADVS             1
 #endif
@@ -282,7 +275,7 @@
 // <0=> NOT SUPPORT
 // <1=> SUPPORT
 #ifndef CFG_MASTER_SUPPORT
-#define CFG_MASTER_SUPPORT               1
+#define CFG_MASTER_SUPPORT               0
 #endif
 
 // <o>  Support slave
@@ -366,6 +359,15 @@
 #endif
 // </h>
 
+// <h> WDT function configuration
+// <o> Mode select
+// <0=> Disable WDT run in background
+// <1=> Enable WDT run in background
+#ifndef WDT_RUN_ENABLE
+#define WDT_RUN_ENABLE                   0
+#endif
+// </h>
 
 // <<< end of configuration section >>>
 #endif //__CUSTOM_CONFIG_H__
+

@@ -207,6 +207,14 @@ void clock_calibration_irq_handler(void);
 
 /**
  ****************************************************************************************
+ * @brief  update comm wakeup timing settings according to lf clock
+ * @retval :  void
+ ****************************************************************************************
+ */
+void pwr_mgmt_update_comm_wkup_timing_param(void);
+
+/**
+ ****************************************************************************************
  * @brief  Platform init function.
  * @retval :  void
  ****************************************************************************************
@@ -266,11 +274,27 @@ void pmu_calibration_handler(void* p_arg);
 
 /**
  ****************************************************************************************
- * @brief  Register the clock calibration completion notification interface.
- * @param[in] calib_notify_cb : Calibration complete callback interface.
+ * @brief  Register the clock calibration completion callback.
+ * @param[in] calib_notify_cb : Calibration completion callback.
+ *
+ * @retval ::SDK_SUCCESS: Register callback Successfully.
+ * @retval ::SDK_ERR_POINTER_NULL: calib_notify_cb is null pointer.
+ * @retval ::SDK_ERR_LIST_FULL: Operation is failed, the clock calibration completion callback is full.
  ****************************************************************************************
  */
-void clock_calib_notify_register(clock_calib_notify_cb_t calib_notify_cb);
+uint16_t clock_calib_notify_register(clock_calib_notify_cb_t calib_notify_cb);
+
+/**
+ ****************************************************************************************
+ * @brief  Unregister the clock calibration completion callback.
+ * @param[in] calib_notify_cb : Calibration completion callback.
+ *
+ * @retval ::SDK_SUCCESS: Unregister callback Successfully.
+ * @retval ::SDK_ERR_POINTER_NULL: calib_notify_cb is null pointer.
+ * @retval ::SDK_ERR_LIST_ITEM_NOT_FOUND: Operation is failed, the clock calibration completion has not been registered.
+ ****************************************************************************************
+ */
+uint16_t clock_calib_notify_unregister(clock_calib_notify_cb_t calib_notify_cb);
 
 /**
  ****************************************************************************************

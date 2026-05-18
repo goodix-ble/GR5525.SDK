@@ -46,6 +46,8 @@
 #include "board_SK.h"
 #include "app_gpiote.h"
 
+#define PCS_LOG_ENABLE  0
+
 /*
  * LOCAL VARIABLE DEFINITIONS
  *****************************************************************************************
@@ -88,6 +90,14 @@ static void wkup_key_init(void)
 void app_periph_init(void)
 {
     SYS_SET_BD_ADDR(s_bd_addr);
+
+#if PCS_LOG_ENABLE
+    bsp_log_init();
+#endif
+
+#ifdef BOARD_IO_LEAKAGE_PROTECT
+    BOARD_IO_LEAKAGE_PROTECT();
+#endif
     wkup_key_init();
     pwr_mgmt_mode_set(PMR_MGMT_SLEEP_MODE);
 }

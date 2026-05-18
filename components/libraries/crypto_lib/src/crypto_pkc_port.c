@@ -1,3 +1,10 @@
+
+
+#include  "custom_config.h"
+#ifndef SOC_GR533X
+
+
+
 #include "crypto_pkc_port.h"
 
 static void pkc_random_delay(pkc_rng_func_ptr rng32_func)
@@ -139,3 +146,5 @@ void pkc_read_oct_string(uint32_t *number, uint8_t *buffer, uint32_t byte_size)
         x[i] = buffer[byte_size - 1 - i];
     }
 }
+
+#endif

@@ -40,7 +40,7 @@
  * @{
  * @brief Definitions and prototypes for the BLE SDK interface.
  */
- 
+
   /**
  * @addtogroup BLE_GAP Generic Access Profile (GAP)
  * @{
@@ -49,7 +49,7 @@
 
 #ifndef __BLE_GAPM_H__
 #define __BLE_GAPM_H__
- 
+
 /*
  * INCLUDE FILES
  ****************************************************************************************
@@ -65,11 +65,11 @@
  @{
  @brief Definitions and prototypes for the GAP Management interface.
  */
- 
+
 /** @addtogroup BLE_GAPM_DEFINES Defines
  * @{ */
 
-#define CO_BIT(pos)(1UL<<(pos))                         /**< Bit operation helper. */ 
+#define CO_BIT(pos)(1UL<<(pos))                         /**< Bit operation helper. */
 #define BLE_GAP_MAX_ADV_NUM              5              /**< Maximal advertising instance number. */
 #define BLE_GAP_MAX_PER_SYNC_NUM         5              /**< Maximal periodic syncronization instance number. */
 #define BLE_GAP_MAX_WL_NUM               10             /**< Maximal white list number. */
@@ -131,18 +131,9 @@
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_POD          5187     /**< Location Pod (Outdoor Sports Activity subtype). */
 #define BLE_APPEARANCE_OUTDOOR_SPORTS_ACT_LOC_AND_NAV_POD  5188     /**< Location and Navigation Pod (Outdoor Sports Activity subtype). */
 
-/**@defgroup BLE_GAP_PHYS GAP PHYs (bitmask)
- * @{ */
-#define BLE_GAP_PHY_ANY       0x00     /**< No preferred PHY. */
-#define BLE_GAP_PHY_LE_1MBPS  (1 << 0) /**< LE 1M PHY preferred for an active link. */
-#define BLE_GAP_PHY_LE_2MBPS  (1 << 1) /**< LE 2M PHY preferred for an active link. */
-#define BLE_GAP_PHY_LE_CODED  (1 << 2) /**< LE Coded PHY preferred for an active link. */
-/**@} */
-
-
 /**@defgroup BLE_GAP_ADV_CHANNEL GAP ADV CHANNEL (bitmask)
  * @{ */
-#define BLE_GAP_ADV_CHANNEL_37              0x01 /**< Advertising Channel 37 (2402MHz). */ 
+#define BLE_GAP_ADV_CHANNEL_37              0x01 /**< Advertising Channel 37 (2402MHz). */
 #define BLE_GAP_ADV_CHANNEL_38              0x02 /**< Advertising Channel 38 (2426MHz). */
 #define BLE_GAP_ADV_CHANNEL_39              0x04 /**< Advertising Channel 39 (2480MHz). */
 #define BLE_GAP_ADV_CHANNEL_37_38_39        0x07 /**< Advertising Channel 37, 38, 39. */
@@ -272,7 +263,7 @@ typedef enum
  */
 typedef enum
 {
-    BLE_GAP_ADV_PROP_CONNECTABLE_POS = 0, /**< Indicate that advertising is connectable, reception of CONNECT_REQ or 
+    BLE_GAP_ADV_PROP_CONNECTABLE_POS = 0, /**< Indicate that advertising is connectable, reception of CONNECT_REQ or
                                                UX_CONNECT_REQ PDUs is accepted. Not applicable for periodic advertising. */
     BLE_GAP_ADV_PROP_SCANNABLE_POS,       /**< Indicate that advertising is scannable, reception of SCAN_REQ or AUX_SCAN_REQ PDUs is accepted. */
     BLE_GAP_ADV_PROP_DIRECTED_POS,        /**< Indicate that advertising targets at a specific device. Only applicable in following cases:
@@ -406,7 +397,7 @@ enum gap_scan_prop
 /**
  * @brief Periodic synchronization types
  */
-typedef enum 
+typedef enum
 {
     BLE_GAP_PER_SYNC_TYPE_GENERAL = 0, /**< Do not use periodic advertiser list for synchronization. */
     BLE_GAP_PER_SYNC_TYPE_SELECTIVE,   /**< Use periodic advertiser list for synchronization. */
@@ -578,7 +569,7 @@ typedef struct
     uint32_t                adv_intv_min;       /**< Minimum advertising interval (in unit of 625 μs). Must be greater than 20 ms. */
     uint32_t                adv_intv_max;       /**< Maximum advertising interval (in unit of 625 μs). Must be greater than 20 ms. */
     uint8_t                 chnl_map;           /**< Bit field indicating the channel map. See @ref BLE_GAP_ADV_CHANNEL. */
-    ble_gap_le_phy_value_t  phy;                /**< Indicate on which PHY primary advertising has to be performed. See enum @ref ble_gap_le_phy_value_t. 
+    ble_gap_le_phy_value_t  phy;                /**< Indicate on which PHY primary advertising has to be performed. See enum @ref ble_gap_le_phy_value_t.
                                                      Note that LE 2M PHY is not allowed and that legacy advertising only supports LE 1M PHY. */
 } ble_gap_adv_prim_cfg_t;
 
@@ -611,7 +602,7 @@ typedef struct
     uint8_t                  type;                      /**< Advertising type (see enum @ref ble_gap_adv_type_t). */
     uint8_t                  disc_mode;                 /**< Discovery mode (see enum @ref ble_gap_disc_mode_t). */
     uint16_t                 prop;                      /**< Bit field value provided by advertising properties. See enum @ref ble_gap_adv_prop_t for bit signification. */
-    int8_t                   max_tx_pwr;                /**< Maximum power level at which the advertising packets have to be transmitted (between -127 and 127 dBm). */
+    int8_t                   max_tx_pwr;                /**< Maximum power level at which the advertising packets have to be transmitted (support value:[-21, -14, -8, -2, 0, 1, 2, 3, 4, 5, 6, 7]). */
     uint8_t                  filter_pol;                /**< Advertising filtering policy (see enum @ref ble_gap_adv_filter_policy_t). */
     ble_gap_bdaddr_t         peer_addr;                 /**< Peer address configuration (only used in case of directed advertising or used to locate the IRK list). */
     ble_gap_adv_prim_cfg_t   prim_cfg;                  /**< Configuration for primary advertising. */
@@ -624,8 +615,8 @@ typedef struct
  */
 typedef struct
 {
-    uint16_t duration;    /**< Advertising duration (in unit of 10ms). 0 means that advertising continues until the host disables it. 
-                               If Advertising discovery mode is GAP_DISC_MODE_LIM_DISCOVERABLE (see enum @ref ble_gap_disc_mode_t), 
+    uint16_t duration;    /**< Advertising duration (in unit of 10ms). 0 means that advertising continues until the host disables it.
+                               If Advertising discovery mode is GAP_DISC_MODE_LIM_DISCOVERABLE (see enum @ref ble_gap_disc_mode_t),
                                the setting duration range is [1, 18000].
                                If adv mode is high duty, duration time range is [1, 128]. */
     uint8_t  max_adv_evt; /**< Maximum number of extended advertising events. The controller shall attempt to send prior to terminating the extending advertising.
@@ -674,7 +665,7 @@ typedef struct
     uint8_t                     rsvd;               /**< Reserved for future use. */
     ble_gap_scan_wd_op_param_t  scan_param_1m;      /**< Scan window opening parameters for LE 1M PHY. */
     ble_gap_scan_wd_op_param_t  scan_param_coded;   /**< Scan window opening parameters for LE Coded PHY. */
-    uint16_t duration;                              /**< Scan duration (in unit of 10ms). 0 means that the controller will scan continuously 
+    uint16_t duration;                              /**< Scan duration (in unit of 10ms). 0 means that the controller will scan continuously
                                                          until receiving a stop command from the application (10 ms to 655.35s). */
     uint16_t period;                                /**< Scan period, which is the time interval between two consequent starts of a scan duration by the controller.
                                                          0 means that the scan procedure is not periodic, in unit of 1.28s (1.28s to 83,884.8s). */
@@ -694,7 +685,7 @@ typedef struct
  */
 typedef struct
 {
-    uint16_t                      skip;             /**< Number of periodic advertising that can be skipped after a successful reception. 
+    uint16_t                      skip;             /**< Number of periodic advertising that can be skipped after a successful reception.
                                                          Maximum authorized value is 499. */
     uint16_t                      sync_to;          /**< Synchronization timeout for the periodic advertising (in unit of 10ms between 100ms and 163.84s). */
     uint8_t                       type;             /**< Periodic synchronization type (see enum @ref ble_gap_per_sync_type_t). */
@@ -705,7 +696,7 @@ typedef struct
 } ble_gap_per_sync_param_t;
 
 /**
- * @brief Set connectionless CTE transmit parameters 
+ * @brief Set connectionless CTE transmit parameters
  */
 typedef struct
 {
@@ -799,7 +790,7 @@ typedef struct
 } ble_gap_bond_dev_list_t;
 
 /**
- * @brief White list 
+ * @brief White list
  */
 typedef struct
 {
@@ -817,7 +808,7 @@ typedef struct
 } ble_gap_period_adv_list_t;
 
 /**
- * @brief RPA list item info 
+ * @brief RPA list item info
  */
 typedef struct
 {
@@ -828,7 +819,7 @@ typedef struct
 } ble_gap_ral_dev_info_t;
 
 /**
- * @brief RPA list info 
+ * @brief RPA list info
  */
 typedef struct
 {
@@ -966,6 +957,30 @@ uint16_t ble_gap_addr_get(ble_gap_bdaddr_t *p_addr);
 
 /**
  ****************************************************************************************
+ * @brief send signal carrier wave
+ *
+ * @param[in] tx_freq_mhz: RF Channel (Center Frequency), 2402~2480
+ * @param[in] txpwr_dbm: Tx power, unit(dBm).
+ *                      support value:[-21, -14, -8, -2, 0, 1, 2, 3, 4, 5, 6, 7]
+ *
+ * @retval SDK_SUCCESS: Operation is Success.
+ * @retval others: Fail.
+ * @note: This function should be called in active mode to ensure the baseband had been powered on
+ ****************************************************************************************
+ */
+uint16_t ble_gap_signal_carrier_wave_send(uint16_t tx_freq_mhz, int8_t txpwr_dbm);
+
+/**
+ ****************************************************************************************
+ * @brief stop signal carrier wave
+ *
+ * @note: This function should be called in active mode to ensure the baseband had been powered on
+ ****************************************************************************************
+ */
+void ble_gap_signal_carrier_wave_stop(void);
+
+/**
+ ****************************************************************************************
  * @brief Set the tx power
  *
  * @param[in] role: Select the role to set tx power. @ref ble_gap_actv_role_t for possible roles.
@@ -973,7 +988,8 @@ uint16_t ble_gap_addr_get(ble_gap_bdaddr_t *p_addr);
  *              -If role is @ref BLE_GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
  *              -If role is @ref BLE_GAP_ACTIVITY_ROLE_CON, it's the index of connection.
  *              -For all other roles, it should be ignored.
- * @param[in] txpwr_dbm: The value of the tx power, Range: -127dbm to 127dbm.
+ * @param[in] txpwr_dbm: Tx power, unit(dBm).
+ *                      support value:[-21, -14, -8, -2, 0, 1, 2, 3, 4, 5, 6, 7]
  *
  * @retval SDK_SUCCESS: Operation is Success.
  * @retval SDK_ERR_INVALID_CONN_IDX: Invalid connection index supplied.
@@ -992,7 +1008,8 @@ uint16_t ble_gap_tx_power_set(ble_gap_actv_role_t role, uint8_t index, int8_t tx
  *                   If role is @ref BLE_GAP_ACTIVITY_ROLE_ADV, it's the index of Advertising.
  *                   If role is @ref BLE_GAP_ACTIVITY_ROLE_CON, it's the index of connection.
  *                   For all other roles, it should be ignored.
- * @param[in] txpwr_dbm: The value of the tx power, Range: -127dbm to 128dbm.
+ * @param[out] txpwr_dbm: Tx power, unit(dBm).
+ *                      support value:[-21, -14, -8, -2, 0, 1, 2, 3, 4, 5, 6, 7]
  *
  * @retval SDK_SUCCESS: Operation is Success.
  * @retval SDK_ERR_INVALID_CONN_IDX: Invalid connection index supplied.
@@ -1061,8 +1078,8 @@ uint16_t ble_gap_l2cap_params_set(uint16_t max_mtu,uint16_t max_mps,uint8_t max_
  ****************************************************************************************
  * @brief Set the preferred values for the transmitter PHY and receiver PHY.
  *
- * @param[in] tx_pref_phy: A bit field that indicates the transmitter PHYs that the Host prefers the Controller to use(see @ref BLE_GAP_PHYS).
- * @param[in] rx_pref_phy: A bit field that indicates the receiver PHYs that the Host prefers the Controller to use(see @ref BLE_GAP_PHYS).
+ * @param[in] tx_pref_phy: A bit field that indicates the transmitter PHYs that the Host prefers the Controller to use(see @ref ble_gap_phy_bit_t).
+ * @param[in] rx_pref_phy: A bit field that indicates the receiver PHYs that the Host prefers the Controller to use(see @ref ble_gap_phy_bit_t).
  ****************************************************************************************
  */
 void ble_gap_pref_phy_set(uint8_t tx_pref_phy, uint8_t rx_pref_phy);
@@ -1169,7 +1186,7 @@ uint16_t ble_gap_whitelist_get(ble_gap_white_list_t *p_whitelist);
  * @note  This API is asynchronous.
  * @note  Once the operation has completed, the event @ref BLE_GAP_OPCODE_WHITELIST_SET will be called.
  *
- * @param[in] p_whitelist: Pointer to input white list. 
+ * @param[in] p_whitelist: Pointer to input white list.
  *
  * @retval SDK_SUCCESS: Operation is successful.
  * @retval SDK_ERR_POINTER_NULL: Invalid pointer supplied.
@@ -1272,7 +1289,7 @@ uint16_t ble_gap_per_adv_list_del(const ble_gap_period_adv_list_t *p_pal_list);
  ****************************************************************************************
  * @brief Clear all the entries in the current periodic advertising list.
  * @note This API is asynchronous.
- * @note Once the operation has completed, the event @ref BLE_GAP_OPCODE_PER_ADV_LIST_SET will be called.  
+ * @note Once the operation has completed, the event @ref BLE_GAP_OPCODE_PER_ADV_LIST_SET will be called.
  *
  * @retval SDK_SUCCESS: Operation is successful.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
@@ -1320,9 +1337,9 @@ uint16_t ble_gap_dev_info_get(ble_gap_dev_info_get_type_t type);
  * @retval SDK_ERR_INVALID_ADV_IDX: Invalid advertising index supplied.
  * @retval SDK_ERR_INVALID_PARAM: Invalid parameter supplied.
  * @retval SDK_ERR_NO_RESOURCES: Not enough resources.
- * 
+ *
 
- * @note Discovery mode param contains Flags AD type, setting adv data should not set the Flags AD type. 
+ * @note Discovery mode param contains Flags AD type, setting adv data should not set the Flags AD type.
  * @note This API is for legacy advertsing (BT Core Spec version <= 4.2).
  ****************************************************************************************
  */
@@ -1401,9 +1418,9 @@ uint16_t ble_gap_update_adv_data(uint8_t adv_idx, ble_gap_adv_data_type_t type, 
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  * @retval SDK_ERR_NO_RESOURCES: Not enough resources.
  *
- * @note If advertising mode is directed high duty cycle mode, duration should be set nonzero and not be greater than 1.28s. 
- * @note This API is asynchronous. 
- * @note If the field scan_req_ind_en in @ref ble_gap_adv_param_t  is TRUE passed in @ref ble_gap_adv_param_set function, or if the 
+ * @note If advertising mode is directed high duty cycle mode, duration should be set nonzero and not be greater than 1.28s.
+ * @note This API is asynchronous.
+ * @note If the field scan_req_ind_en in @ref ble_gap_adv_param_t  is TRUE passed in @ref ble_gap_adv_param_set function, or if the
          GAP_ADV_PROP_SCAN_REQ_NTF_EN_BIT is set in @ref ble_gap_adv_prop_t and passed in @ref ble_gap_ext_adv_param_set function,
          @ref BLE_GAPM_EVT_SCAN_REQUEST event will be triggered once a scan request has been received.
  * @note @ref BLE_GAPM_EVT_ADV_START event will be triggered once the operation has completed.
@@ -1420,7 +1437,7 @@ uint16_t ble_gap_adv_start(uint8_t adv_idx, ble_gap_adv_time_param_t* p_timeout)
  * @retval SDK_ERR_INVALID_ADV_IDX: Invalid advertising index supplied.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  *
- * @note This API is asynchronous. 
+ * @note This API is asynchronous.
  * @note event @ref BLE_GAPM_EVT_ADV_STOP will be triggered once the operation has completed or advertising has been stopped.
  ****************************************************************************************
  */
@@ -1436,7 +1453,7 @@ uint16_t ble_gap_adv_stop(uint8_t adv_idx);
  * @retval SDK_ERR_POINTER_NULL: Invalid pointer supplied.
  * @retval SDK_ERR_INVALID_PARAM: Invalid parameter supplied.
  * @retval SDK_ERR_NO_RESOURCES: Not enough resources.
- * 
+ *
  * @note This API is for legacy scanning (BT Core Spec version <= 4.2).
  ****************************************************************************************
  */
@@ -1463,7 +1480,7 @@ uint16_t ble_gap_ext_scan_param_set(ble_gap_own_addr_t own_addr_type, ble_gap_ex
 /**
  ****************************************************************************************
  * @brief Start scanning
- * @note  This API is asynchronous. 
+ * @note  This API is asynchronous.
  * @note  Once the advertising report has been received, the event @ref BLE_GAPM_EVT_ADV_REPORT will be called.
  * @note  Once the scanning has been stopped, the event @ref BLE_GAPM_EVT_SCAN_STOP will be called.
  * @note  Once the operation has completed, the event @ref BLE_GAPM_EVT_SCAN_START will be called.
@@ -1483,7 +1500,7 @@ uint16_t ble_gap_scan_start(void);
  * @retval SDK_SUCCESS: Operation is successful.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  *
- * @note This API is asynchronous. 
+ * @note This API is asynchronous.
  * @note event @ref BLE_GAPM_EVT_SCAN_STOP will be triggered once the operation has completed or the scanning has been stopped.
  ****************************************************************************************
  */
@@ -1513,7 +1530,7 @@ uint16_t ble_gap_per_sync_param_set(uint8_t per_sync_idx, ble_gap_per_sync_param
  * @retval SDK_ERR_INVALID_PER_SYNC_IDX: Invalid periodic syncronization index supplied.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  *
- * @note This API is asynchronous. 
+ * @note This API is asynchronous.
  * @note event @ref BLE_GAPM_EVT_SYNC_ESTABLISH will be triggered once the periodic advertising synchronization has been established.
  ****************************************************************************************
  */
@@ -1528,7 +1545,7 @@ uint16_t ble_gap_per_sync_start(uint8_t per_sync_idx);
  * @retval SDK_ERR_INVALID_PER_SYNC_IDX: Invalid periodic syncronization index supplied.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  *
- * @note This API is asynchronous. 
+ * @note This API is asynchronous.
  * @note event @ref BLE_GAPM_EVT_SYNC_STOP will be triggered once the operation has completed.
  ****************************************************************************************
  */
@@ -1544,12 +1561,12 @@ uint16_t ble_gap_per_sync_stop(uint8_t per_sync_idx);
  * @retval SDK_ERR_POINTER_NULL: Invalid pointer supplied.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  * @retval SDK_ERR_NO_RESOURCES: Not enough resources.
- * 
+ *
  * @note This API is for legacy connection (BT Core Spec version <= 4.2).
  *
- * @note This API is asynchronous. 
- * @note event @ref BLE_GAPC_EVT_CONNECTED will be triggered once the operation has completed or the connection has been completed. 
- * @note event @ref BLE_GAPC_EVT_PEER_NAME_GOT will be triggered once the peer name has been got for the 
+ * @note This API is asynchronous.
+ * @note event @ref BLE_GAPC_EVT_CONNECTED will be triggered once the operation has completed or the connection has been completed.
+ * @note event @ref BLE_GAPC_EVT_PEER_NAME_GOT will be triggered once the peer name has been got for the
          Name Discovery Procedure. See enum @ref BLE_GAP_INIT_TYPE_NAME_DISC of type @ref ble_gap_init_type_t.
  ****************************************************************************************
  */
@@ -1565,10 +1582,10 @@ uint16_t ble_gap_connect(ble_gap_own_addr_t own_addr_type, ble_gap_init_param_t*
  * @retval SDK_ERR_POINTER_NULL: Invalid pointer supplied.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  * @retval SDK_ERR_NO_RESOURCES: Not enough resources.
- * 
+ *
  * @note This API is for extended connection (BT Core Spec version >= 5.0).
  *
- * @note This API is asynchronous. 
+ * @note This API is asynchronous.
  * @note event @ref BLE_GAPC_EVT_CONNECTED will be triggered once the operation has completed or the connection has been completed.
  ****************************************************************************************
  */
@@ -1581,7 +1598,7 @@ uint16_t ble_gap_ext_connect(ble_gap_own_addr_t own_addr_type, ble_gap_ext_init_
  * @retval SDK_SUCCESS: Operation is successful.
  * @retval SDK_ERR_DISALLOWED: Operation is disallowed.
  *
- * @note This API is asynchronous. 
+ * @note This API is asynchronous.
  * @note event @ref BLE_GAPC_EVT_CONNECT_CANCLE will be triggered once the operation has completed.
  ****************************************************************************************
  */
@@ -1670,7 +1687,7 @@ uint16_t ble_gap_device_name_get(uint8_t *p_dev_name, uint16_t *p_length);
  * @retval SDK_ERR_INVALID_PSM_EXCEEDED_MAX_PSM_NUM: The maximum psm number limit is exceeded.
  * @retval SDK_ERR_INVALID_PSM_ALREADY_REGISTERED: The psm number has been registered.
  *
- * @note This API is asynchronous. 
+ * @note This API is asynchronous.
  *       @ref BLE_GAPM_EVT_LEPSM_REGISTER event with op_id: @ref BLE_GAP_OPCODE_LEPSM_REGISTER will be triggered.
  ****************************************************************************************
  */
@@ -1685,8 +1702,8 @@ uint16_t ble_gap_lepsm_register(ble_gap_lepsm_register_t* p_lepsm);
  * @retval SDK_ERR_INVALID_PSM_NUM: Invalid psm number.
  * @retval SDK_ERR_NO_RESOURCES: Not enough resources.
  *
- * @note This API is asynchronous. 
- *       @ref BLE_GAPM_EVT_LEPSM_UNREGISTER event with op_id: @ref BLE_GAP_OPCODE_LEPSM_UNREGISTER will be triggered.  
+ * @note This API is asynchronous.
+ *       @ref BLE_GAPM_EVT_LEPSM_UNREGISTER event with op_id: @ref BLE_GAP_OPCODE_LEPSM_UNREGISTER will be triggered.
  ****************************************************************************************
  */
 uint16_t ble_gap_lepsm_unregister(uint16_t le_psm);

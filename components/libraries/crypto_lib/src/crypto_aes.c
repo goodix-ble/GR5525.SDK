@@ -1,3 +1,8 @@
+
+
+#include  "custom_config.h"
+#ifndef SOC_GR533X
+
 #include "crypto_aes.h"
 #include "grx_hal.h"
 
@@ -261,7 +266,7 @@ int crypto_aes_crypt_ecb(crypto_aes_context *ctx, uint8_t mode, uint8_t *input, 
         return -1;
     }
 
-    if (0 != crypto_internal_aes_ecb_crypt(ctx, mode, p_input, compute_len, p_output))
+    if (compute_len > 0 && 0 != crypto_internal_aes_ecb_crypt(ctx, mode, p_input, compute_len, p_output))
     {
         return -1;
     }
@@ -383,7 +388,7 @@ int crypto_aes_crypt_cbc(crypto_aes_context *ctx, uint8_t mode, uint8_t iv[16], 
         return -1;
     }
 
-    if (0 != crypto_internal_aes_cbc_crypt(ctx, mode, iv, p_input, compute_len, p_output))
+    if (compute_len > 0 && 0 != crypto_internal_aes_cbc_crypt(ctx, mode, iv, p_input, compute_len, p_output))
     {
         return -1;
     }
@@ -613,3 +618,5 @@ exit:
     aes_hardware_reset();
     return( ret );
 }
+
+#endif
